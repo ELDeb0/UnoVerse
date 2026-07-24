@@ -5,302 +5,298 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UnoVerse | 1 OF 1 EXCLUSIVE</title>
     
-    <!-- مكتبات Firebase السحابية -->
+    <link rel="icon" type="image/png" href="icon.png">
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <!-- خطوط UnoVerse الأصلية -->
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,600;0,900;1,600&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Tajawal:wght@300;400;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* ================= ثوابت التصميم ================= */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        /* ================= الهوية البصرية الأرشيفية ================= */
         :root {
-            --bg-void: #030303;
-            --bg-dark: #070707;
-            --accent-yellow: #FFD700;
-            --gold-glow: rgba(255, 215, 0, 0.15);
-            --text-main: #F4F3EF;
-            --text-dim: #888888;
-            --border-fine: rgba(255, 215, 0, 0.12); 
-            --font-ar: 'Tajawal', sans-serif;
-            --font-en: 'Oswald', sans-serif;
+            --bg-deep: #04060A;       
+            --bg-card: #080C14;       
+            --text-cream: #E6E1D6;    
+            --text-muted: #6B8096;    
+            --accent-blue: #4A6B8C;   
+            --line-color: rgba(230, 225, 214, 0.08); 
         }
 
-        /* ================= حماية المحتوى (CSS) ================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
         body { 
-            background-color: var(--bg-void); 
-            color: var(--text-main); 
-            font-family: var(--font-ar); 
+            background-color: var(--bg-deep); 
+            color: var(--text-cream); 
+            font-family: 'Tajawal', sans-serif; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased; 
-            cursor: none; 
-            
-            /* منع تحديد ونسخ النصوص */
-            -webkit-user-select: none; /* Safari */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* IE10+/Edge */
-            user-select: none; /* Standard */
-            /* منع قائمة الهاتف */
+            cursor: none;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
             -webkit-touch-callout: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='400' cy='400' r='399' fill='none' stroke='%23E6E1D6' stroke-opacity='0.03' stroke-width='1' stroke-dasharray='4 12'/%3E%3Ccircle cx='400' cy='400' r='200' fill='none' stroke='%23E6E1D6' stroke-opacity='0.02' stroke-width='1' stroke-dasharray='4 12'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+            background-position: center;
         }
 
-        /* منع سحب الصور */
-        img {
-            -webkit-user-drag: none;
-            -khtml-user-drag: none;
-            -moz-user-drag: none;
-            -o-user-drag: none;
-            user-drag: none;
-            pointer-events: none;
-        }
-
-        .slide-arrow, .checkout-btn, .close-cart, .size-btn, .add-to-cart-btn, a { pointer-events: auto; }
-
+        img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+        .slide-arrow, .checkout-btn, .close-cart, .login-btn, .size-btn, .add-to-cart-btn, a, button { pointer-events: auto; }
         *, *::before, *::after { cursor: none !important; }
 
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg-void); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
 
-        /* ================= الماوس المخصص (بدون لاج - GPU Accelerated) ================= */
-        .cursor-wrapper {
-            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999;
-            will-change: transform; mix-blend-mode: exclusion;
-        }
-        .cursor-dot {
-            width: 14px; height: 14px; background-color: var(--accent-yellow); border-radius: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease;
-            box-shadow: 0 0 15px var(--accent-yellow); will-change: transform;
-        }
-        .cursor-wrapper.hovered .cursor-dot {
-            transform: translate(-50%, -50%) scale(4.5); 
-            background-color: #fff; box-shadow: none; 
+        /* ================= النسيج السينمائي ================= */
+        .cinematic-grain { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            pointer-events: none; z-index: 99998; opacity: 0.06; 
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
         }
 
-        /* ================= شريط الأخبار السلس (مخفي افتراضياً) ================= */
-        .news-ticker-bar {
-            position: fixed; top: 0; left: 0; width: 100%; background: var(--accent-yellow); color: #000;
-            z-index: 10000; overflow: hidden; padding: 7px 0; display: none; align-items: center; border-bottom: 1px solid #000;
-        }
-        .ticker-track { display: flex; white-space: nowrap; will-change: transform; animation: marqueeScroll 25s linear infinite; }
-        .ticker-msg { padding: 0 40px; font-family: var(--font-ar); font-size: 13px; font-weight: 800; letter-spacing: 1px; display: inline-block; }
-        @keyframes marqueeScroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
-
-        /* ================= نغمشة سينمائية ================= */
-        .cinematic-grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 99998; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        /* ================= الماوس ================= */
+        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 999999; will-change: transform; mix-blend-mode: exclusion; }
+        .cursor-dot { width: 10px; height: 10px; background-color: var(--text-cream); border-radius: 50%; transform: translate(-50%, -50%) scale(1); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease; box-shadow: 0 0 15px rgba(230, 225, 214, 0.2); will-change: transform; }
+        .cursor-wrapper.hovered .cursor-dot { transform: translate(-50%, -50%) scale(5); background-color: transparent; border: 1px solid var(--text-cream); box-shadow: none; }
 
         /* ================= خلفية الحروف الإنجليزية الفاخرة ================= */
         .eng-typography-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 5vh; }
-        .eng-typography-bg .word-1 { font-family: var(--font-en); font-size: 18vw; font-weight: 700; color: rgba(255, 215, 0, 0.02); line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanRight 45s linear infinite; }
-        .eng-typography-bg .word-2 { font-family: 'Playfair Display', serif; font-size: 15vw; font-weight: 900; font-style: italic; color: rgba(255, 255, 255, 0.015); line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanLeft 55s linear infinite; }
+        .eng-typography-bg .word-1 { font-family: 'Oswald', sans-serif; font-size: 18vw; font-weight: 700; color: rgba(132, 155, 179, 0.08); line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanRight 45s linear infinite; }
+        .eng-typography-bg .word-2 { font-family: 'Playfair Display', serif; font-size: 15vw; font-weight: 900; font-style: italic; color: rgba(132, 155, 179, 0.05); line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanLeft 55s linear infinite; }
         @keyframes smoothPanRight { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(50%, 0, 0); } }
         @keyframes smoothPanLeft { 0% { transform: translate3d(50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
 
-        /* ================= HEADER ================= */
+        /* ================= شريط الأخبار الفخم ================= */
+        .news-ticker-bar {
+            position: fixed; top: 0; left: 0; width: 100%; background: var(--bg-card); color: var(--text-cream);
+            z-index: 10000; overflow: hidden; padding: 8px 0; display: none; align-items: center; border-bottom: 1px solid var(--line-color);
+        }
+        .ticker-track { display: flex; white-space: nowrap; will-change: transform; animation: marqueeScroll 25s linear infinite; }
+        .ticker-msg { padding: 0 40px; font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 300; letter-spacing: 4px; display: inline-block; text-transform: uppercase; color: var(--text-muted);}
+        @keyframes marqueeScroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
+
+        /* ================= الهيدر ================= */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
-            width: 100%; padding: 20px 5%; position: fixed; top: 0; right: 0; 
-            z-index: 9999; background: linear-gradient(to bottom, rgba(3,3,3,0.98) 0%, rgba(3,3,3,0) 100%); transition: top 0.3s ease;
+            width: 100%; height: 85px; padding: 0 6%; 
+            position: fixed; top: 0; right: 0; z-index: 9999; 
+            background: linear-gradient(to bottom, rgba(4, 6, 10, 0.9) 0%, rgba(4, 6, 10, 0) 100%); 
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
         }
-        .main-header .logo { font-family: var(--font-en); font-size: 24px; font-weight: 700; letter-spacing: 5px; text-decoration: none; color: var(--text-main); text-shadow: 0 0 10px rgba(0,0,0,0.5);}
-        .main-header .logo span { color: var(--accent-yellow); }
-        .main-header .main-nav ul { display: flex; gap: 40px; list-style: none; }
-        .main-header .main-nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 13px; font-weight: 700; letter-spacing: 1px; transition: 0.3s; }
-        .main-header .main-nav ul li a:hover { color: var(--text-main); }
-        .header-actions { display: flex; align-items: center; gap: 25px; }
-        .action-link { color: var(--text-main); text-decoration: none; font-size: 14px; font-family: var(--font-en); transition: 0.3s; letter-spacing: 1px; }
-        .action-link:hover { color: var(--accent-yellow); }
+        .main-header.scrolled { 
+            height: 65px; background: rgba(4, 6, 10, 0.85); 
+            border-bottom: 1px solid var(--line-color); backdrop-filter: blur(15px); 
+        }
+        
+        .main-header .logo { 
+            font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700; 
+            letter-spacing: 6px; text-decoration: none; color: var(--text-cream); 
+            transition: 0.4s ease; display: flex; align-items: center; height: 100%;
+        }
+        .main-header .logo span { color: var(--text-muted); font-weight: 300;}
+        .main-header.scrolled .logo { font-size: 20px; }
+        
+        .main-header .main-nav ul { display: flex; gap: 50px; list-style: none; }
+        .main-header .main-nav ul li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; transition: 0.3s; opacity: 0.7;}
+        .main-header .main-nav ul li a:hover { opacity: 1; color: #fff;}
+        
+        .main-header .header-actions { display: flex; gap: 40px; }
+        .action-link { color: var(--text-cream); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 12px; font-weight: 300; text-transform: uppercase; letter-spacing: 4px; transition: 0.3s; opacity: 0.8;}
+        .action-link:hover { opacity: 1; color: #fff;}
 
-        /* ================= CART DRAWER ================= */
-        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 90000; opacity: 0; visibility: hidden; transition: 0.4s; }
+        /* ================= السلة الجانبية ================= */
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.9); z-index: 90000; opacity: 0; visibility: hidden; transition: 0.4s; backdrop-filter: blur(8px); }
         .cart-overlay.active { opacity: 1; visibility: visible; }
-        .cart-drawer { position: fixed; top: 0; right: 0; transform: translateX(100%); width: 420px; max-width: 100%; height: 100vh; background: var(--bg-dark); border-left: 1px solid #222; z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); padding: 40px 30px; display: flex; flex-direction: column; will-change: transform; }
-        .cart-drawer.active { transform: translateX(0); }
-        .cart-header { padding-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-        .cart-header h3 { font-family: var(--font-ar); font-size: 18px; font-weight: 800; color: var(--accent-yellow);}
-        .close-cart { font-size: 22px; color: var(--text-dim); transition: 0.3s; cursor: pointer !important; }
-        .close-cart:hover { color: #fff; transform: rotate(90deg); }
-        .cart-items { flex: 1; padding: 25px 0; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-        .cart-item { display: flex; gap: 15px; border-bottom: 1px solid #222; padding-bottom: 15px;}
-        .cart-item img { width: 70px; height: 90px; object-fit: cover; border: 1px solid #333; pointer-events: none;}
-        .cart-item-info h4 { font-family: var(--font-ar); font-size: 14px; margin-bottom: 5px; font-weight: 700;}
-        .cart-item-info p { color: var(--accent-yellow); font-size: 13px; font-family: var(--font-en);}
-        .cart-footer { padding-top: 20px; border-top: 1px solid #222; }
-        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: var(--font-en); font-size: 18px; }
-        .checkout-btn { width: 100%; padding: 20px; background-color: var(--accent-yellow); color: #000; border: none; font-family: var(--font-ar); font-size: 16px; font-weight: 800; transition: 0.3s; letter-spacing: 1px; cursor: pointer !important; }
-        .checkout-btn:hover { background-color: #fff; }
+        .cart-drawer { position: fixed; top: 0; right: -450px; width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding: 40px 30px; display: flex; flex-direction: column; }
+        .cart-drawer.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 20px; margin-bottom: 20px;}
+        .cart-header h3 { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 6px; color: var(--text-cream); font-weight: 300; text-transform: uppercase;}
+        .close-cart { font-size: 24px; transition: 0.3s; color: var(--text-muted); cursor: pointer !important;}
+        .close-cart:hover { color: var(--text-cream); transform: rotate(90deg); }
+        .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; padding-right: 10px;}
+        .empty-msg { font-family: 'Oswald', sans-serif; color: var(--text-muted); letter-spacing: 4px; text-align: center; margin-top: 50px; text-transform: uppercase; font-size: 12px;}
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 15px; }
+        .cart-item img { border: 1px solid var(--line-color); width: 60px; height: 80px; object-fit: cover;}
+        .cart-footer { border-top: 1px solid var(--line-color); padding-top: 30px; margin-top: 20px;}
+        .cart-total { display: flex; justify-content: space-between; margin-bottom: 25px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream); font-weight: 400; letter-spacing: 2px;}
+        .checkout-btn { width: 100%; padding: 20px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 6px; transition: 0.4s; cursor: pointer !important; text-transform: uppercase;}
+        .checkout-btn:hover { background-color: transparent; border: 1px solid var(--text-cream); color: var(--text-cream);}
 
-        /* ================= THE LAYOUT (عرض القطعة) ================= */
-        .product-container { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; min-height: 100vh; padding: 150px 5% 60px 5%; max-width: 1600px; margin: 0 auto; gap: 6%; }
+        /* ================= تفاصيل المنتج (Editorial Layout) ================= */
+        .product-container { 
+            position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; 
+            min-height: 100vh; padding: 150px 6% 80px 6%; max-width: 1500px; margin: 0 auto; gap: 8%; 
+        }
 
-        /* ----- اللوحة اليمين: تفاصيل المنتج ----- */
-        .product-details { width: 45%; padding-right: 2%; display: flex; flex-direction: column; justify-content: center; position: relative; }
-        .product-id-badge { font-family: var(--font-en); font-size: 13px; letter-spacing: 3px; color: var(--accent-yellow); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; background: rgba(255,215,0,0.05); padding: 6px 12px; width: fit-content; border: 1px solid var(--border-fine); transition: 0.3s;}
-        .product-id-badge::before { content: ''; width: 8px; height: 8px; background: var(--accent-yellow); border-radius: 50%; box-shadow: 0 0 10px var(--accent-yellow); }
-        .product-title { font-family: var(--font-ar); font-size: 46px; font-weight: 900; line-height: 1.15; margin-bottom: 25px; color: #ffffff; letter-spacing: -1px; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .product-price { font-family: var(--font-en); font-size: 30px; font-weight: 700; color: var(--text-main); margin-bottom: 35px; display: flex; align-items: baseline; gap: 15px; }
-        .product-price .old { font-size: 16px; color: var(--text-dim); text-decoration: line-through; font-weight: 300; }
-        .desc-label { font-size: 14px; color: var(--accent-yellow); margin-bottom: 10px; font-weight: 800; }
-        .product-desc { font-size: 16px; line-height: 2.1; color: #cccccc; font-weight: 400; margin-bottom: 45px; border-right: 2px solid var(--accent-yellow); padding-right: 18px; }
+        /* اللوحة اليمين: تفاصيل المنتج */
+        .product-details { width: 42%; padding-right: 2%; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        
+        .product-id-badge { 
+            font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; 
+            text-transform: uppercase; margin-bottom: 25px; display: inline-flex; align-items: center; gap: 10px; 
+            width: fit-content; padding: 6px 14px; transition: 0.3s;
+            background: rgba(4, 6, 10, 0.3); backdrop-filter: blur(8px);
+            border: 1px solid rgba(230, 225, 214, 0.2); color: var(--text-cream);
+        }
+        .product-id-badge.sold-out {
+            color: var(--text-muted); border-color: rgba(107, 128, 150, 0.3); background: rgba(4, 6, 10, 0.6);
+        }
+
+        .product-title { font-family: 'Tajawal', sans-serif; font-size: 42px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; color: var(--text-cream); }
+        .product-price { font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 300; color: var(--text-cream); margin-bottom: 40px; display: flex; align-items: baseline; gap: 15px; letter-spacing: 2px;}
+        .product-price .old { font-size: 14px; color: var(--text-muted); text-decoration: line-through; opacity: 0.6;}
+        
+        .desc-label { font-size: 11px; color: var(--text-muted); margin-bottom: 15px; font-weight: 300; font-family: 'Oswald', sans-serif; letter-spacing: 4px; text-transform: uppercase;}
+        .product-desc { font-size: 15px; line-height: 2.2; color: var(--text-muted); font-weight: 300; margin-bottom: 50px; font-family: 'Tajawal', sans-serif;}
 
         /* المقاسات */
-        .sizes-section { margin-bottom: 45px; }
-        .size-header { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-dim); margin-bottom: 15px; font-weight: 700;}
+        .sizes-section { margin-bottom: 50px; }
+        .size-header { display: flex; justify-content: space-between; font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 15px; font-weight: 300; text-transform: uppercase;}
         .size-grid { display: flex; gap: 12px; flex-wrap: wrap; }
         .size-btn { 
-            width: 55px; height: 55px; background: #111; border: 1px solid #333; 
-            color: var(--text-main); font-family: var(--font-en); font-size: 16px; 
+            width: 50px; height: 50px; background: transparent; border: 1px solid var(--line-color); 
+            color: var(--text-muted); font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 300;
             transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; 
             cursor: pointer !important; 
         }
-        .size-btn:not([disabled]):hover { border-color: var(--accent-yellow); color: var(--accent-yellow); }
-        .size-btn.active { border-color: var(--accent-yellow); background: var(--accent-yellow); color: #000; font-weight: bold; }
+        .size-btn:not([disabled]):hover { border-color: var(--text-cream); color: var(--text-cream); }
+        .size-btn.active { border-color: var(--text-cream); background: var(--text-cream); color: var(--bg-deep); font-weight: 700; }
 
         /* زر الشراء */
-        .add-to-cart-btn { width: 100%; padding: 22px; background: var(--text-main); color: #000; border: none; font-family: var(--font-ar); font-size: 16px; font-weight: 900; letter-spacing: 1px; transition: 0.4s; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); cursor: pointer !important; }
-        .add-to-cart-btn:not([disabled])::before { content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--accent-yellow); transition: 0.4s ease-in-out; z-index: 1; }
-        .add-to-cart-btn:not([disabled]):hover::before { width: 100%; }
-        .add-to-cart-btn span { position: relative; z-index: 2; transition: 0.3s; }
-        .add-to-cart-btn:not([disabled]):hover span { color: #000; }
+        .add-to-cart-btn { 
+            width: 100%; padding: 22px; background: var(--text-cream); color: var(--bg-deep); border: 1px solid var(--text-cream); 
+            font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 6px; 
+            transition: 0.4s; display: flex; justify-content: center; align-items: center; cursor: pointer !important; text-transform: uppercase;
+        }
+        .add-to-cart-btn:not([disabled]):hover { background: transparent; color: var(--text-cream); }
 
-        /* ----- اللوحة الشمال: معرض الصور والختم الدوار ----- */
-        .product-gallery { width: 48%; display: flex; flex-direction: column; align-items: center; position: relative; }
-        .seal-1of1 { position: absolute; top: -30px; left: -30px; width: 140px; height: 140px; z-index: 20; background: #000; border-radius: 50%; border: 1px solid var(--accent-yellow); display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: 0.3s; }
-        .seal-text { position: absolute; width: 100%; height: 100%; animation: rotateSeal 15s linear infinite; }
-        .seal-text svg { width: 100%; height: 100%; fill: var(--accent-yellow); font-family: var(--font-en); font-size: 14px; font-weight: bold; letter-spacing: 2px;}
-        .seal-center { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; color: var(--text-main); font-style: italic; text-shadow: 0 0 15px var(--accent-yellow); }
+        /* اللوحة الشمال: معرض الصور والختم الدوار */
+        .product-gallery { width: 50%; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .seal-1of1 { position: absolute; top: -30px; left: -30px; width: 130px; height: 130px; z-index: 20; background: var(--bg-deep); border-radius: 50%; border: 1px solid var(--line-color); display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .seal-text { position: absolute; width: 100%; height: 100%; animation: rotateSeal 20s linear infinite; }
+        .seal-text svg { width: 100%; height: 100%; fill: var(--text-muted); font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 300; letter-spacing: 3px;}
+        .seal-center { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900; color: var(--text-cream); font-style: italic; }
         @keyframes rotateSeal { 100% { transform: rotate(360deg); } }
 
-        .spotlight-wrapper { width: 100%; height: 75vh; min-height: 550px; background: radial-gradient(circle at center, #151515 0%, #020202 80%); border: 1px solid var(--border-fine); position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); cursor: crosshair !important; }
-        .main-image { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.9)); transition: opacity 0.3s ease; pointer-events: none;}
-        .lens { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; background-repeat: no-repeat; transition: opacity 0.3s; z-index: 2; }
-        .spotlight-wrapper:hover .main-image { opacity: 0; }
+        .spotlight-wrapper { 
+            width: 100%; height: 75vh; min-height: 550px; 
+            background: var(--bg-card); border: 1px solid var(--line-color); 
+            position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; padding: 20px; cursor: crosshair !important; 
+        }
+        .main-image { max-width: 100%; max-height: 100%; object-fit: contain; transition: opacity 0.4s ease; pointer-events: none; filter: grayscale(0.2) contrast(1.1);}
+        .lens { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; background-repeat: no-repeat; transition: opacity 0.4s; z-index: 2; }
+        .spotlight-wrapper:hover .main-image { opacity: 0.2; filter: grayscale(1); }
         .spotlight-wrapper:hover .lens { opacity: 1; }
 
         .thumbnails-strip { display: flex; gap: 15px; margin-top: 25px; width: 100%; justify-content: center; flex-wrap: wrap; }
-        .thumb { width: 75px; height: 95px; border: 1px solid #333; background: #000; opacity: 0.5; transition: 0.3s; cursor: pointer !important; }
-        .thumb img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-        .thumb.active, .thumb:hover { opacity: 1; border-color: var(--accent-yellow); box-shadow: 0 0 10px var(--gold-glow); }
+        .thumb { width: 70px; height: 90px; border: 1px solid var(--line-color); background: var(--bg-card); opacity: 0.4; transition: 0.3s; cursor: pointer !important; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; filter: grayscale(0.5);}
+        .thumb.active, .thumb:hover { opacity: 1; border-color: var(--text-cream); }
+        .thumb.active img, .thumb:hover img { filter: grayscale(0);}
 
         /* ================= INFO TABS ================= */
-        .info-tabs-container { position: relative; z-index: 10; width: 90%; max-width: 1500px; margin: 0 auto 100px auto; border-top: 1px solid var(--border-fine); display: flex; background: #080808; }
-        .tab-col { flex: 1; padding: 40px 30px; border-left: 1px solid var(--border-fine); }
+        .info-tabs-container { position: relative; z-index: 10; width: 90%; max-width: 1500px; margin: 0 auto 100px auto; border-top: 1px solid var(--line-color); border-bottom: 1px solid var(--line-color); display: flex; background: transparent; }
+        .tab-col { flex: 1; padding: 50px 40px; border-left: 1px solid var(--line-color); text-align: center;}
         .tab-col:first-child { border-left: none; }
-        .tab-title { font-family: var(--font-ar); font-size: 18px; color: var(--accent-yellow); margin-bottom: 15px; font-weight: 800;}
-        .tab-text { font-size: 14px; color: #bbb; line-height: 2; font-weight: 400;}
+        .tab-title { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--text-cream); margin-bottom: 20px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase;}
+        .tab-text { font-size: 13px; color: var(--text-muted); line-height: 2.4; font-weight: 300;}
 
-        /* ================= FOOTER ================= */
-        footer { position: relative; z-index: 10; padding: 40px 5%; border-top: 1px solid var(--border-fine); text-align: center; color: var(--text-dim); font-size: 13px; font-family: var(--font-en); letter-spacing: 2px; background: #000; }
-        footer span { color: var(--accent-yellow); }
+        /* ================= الفوتر ================= */
+        footer { position: relative; z-index: 10; padding: 40px 5%; border-top: 1px solid var(--line-color); text-align: center; color: var(--text-muted); font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 4px; background: var(--bg-deep); text-transform: uppercase;}
+        footer span { color: var(--text-cream); font-weight: 400;}
 
-        /* ================= RESPONSIVE ================= */
+        /* ================= الموبايل ================= */
         @media (max-width: 992px) {
-            body, *, *::before, *::after { cursor: auto !important; }
-            .cursor-wrapper { display: none !important; }
-            .lens { display: none !important; }
-            .spotlight-wrapper:hover .main-image,
-            .spotlight-wrapper:active .main-image { opacity: 1 !important; }
-
-            .main-header { padding: 15px 5%; }
-            .main-header .logo { font-size: 20px; letter-spacing: 2px; }
+            .main-header { padding: 15px 5%; height: 75px;}
+            .main-header .logo { font-size: 20px; letter-spacing: 3px; }
             .main-nav { display: none; } 
             .header-actions { gap: 15px; }
-            .action-link { font-size: 12px; letter-spacing: 0; }
+            .action-link { font-size: 11px; letter-spacing: 1px; }
 
-            .product-container { flex-direction: column-reverse; padding-top: 100px; gap: 40px; }
-            .product-details, .product-gallery { width: 100%; padding: 0; border: none; }
-            .spotlight-wrapper { height: 60vh; min-height: 400px; }
-            .seal-1of1 { top: -15px; left: -5px; width: 90px; height: 90px; }
-            .seal-center { font-size: 20px; }
-            .product-title { font-size: 30px; margin-bottom: 15px; }
+            .product-container { flex-direction: column-reverse; padding: 120px 5% 60px; gap: 50px; }
+            .product-details, .product-gallery { width: 100%; padding: 0; }
+            .spotlight-wrapper { height: auto; aspect-ratio: 3/4; min-height: auto; }
+            .spotlight-wrapper:hover .main-image { opacity: 1; filter: grayscale(0.2) contrast(1.1); }
+            .lens { display: none !important; } /* تعطيل الزووم في الموبايل */
             
-            .size-btn { width: 45px; height: 45px; font-size: 14px; }
-            .size-grid { gap: 8px; }
+            .seal-1of1 { top: -15px; left: -10px; width: 100px; height: 100px; }
+            .seal-center { font-size: 22px; }
+            .product-title { font-size: 32px; margin-bottom: 15px; }
+            .product-price { font-size: 22px; }
             
-            .info-tabs-container { flex-direction: column; width: 100%; margin-top: 40px;}
-            .tab-col { border-left: none; border-bottom: 1px solid var(--border-fine); padding: 25px 5%;}
+            .size-btn { width: 45px; height: 45px; font-size: 12px; }
             
-            .eng-typography-bg .word-1 { font-size: 25vw; margin-top: 10vh; }
-            .eng-typography-bg .word-2 { font-size: 22vw; margin-bottom: 10vh; }
+            .info-tabs-container { flex-direction: column; width: 100%; border: none;}
+            .tab-col { border-left: none; border-bottom: 1px solid var(--line-color); padding: 30px 5%; border-top: 1px solid var(--line-color);}
+            .tab-col:first-child { border-top: none; }
             
-            /* حل مشكلة اختفاء السلة في الموبايل */
             .cart-drawer { width: 100%; padding: 30px 20px;}
         }
     </style>
 </head>
 <body>
 
-    <!-- نغمشة الشاشة السينمائية -->
     <div class="cinematic-grain"></div>
 
-    <!-- شريط الأخبار العلوي -->
+    <!-- شريط الأخبار الفخم (يظهر فقط لو فيه رسالة) -->
     <div class="news-ticker-bar" id="newsTickerBar">
         <div class="ticker-track" id="tickerTrack"></div>
     </div>
 
-    <!-- الخلفية التايبوجرافي الإنجليزية الفاخرة -->
+    <!-- التايبوجرافي الخلفي -->
     <div class="eng-typography-bg">
         <div class="word-1">UNOVERSE</div>
         <div class="word-2">ONE OF ONE ARCHIVE</div>
         <div class="word-1" style="font-size: 15vw; opacity: 0.5;">EXCLUSIVE</div>
     </div>
 
-    <!-- الماوس المخصص الأصلي فائق السلاسة -->
-    <div class="cursor-wrapper" id="cursorWrapper">
-        <div class="cursor-dot"></div>
-    </div>
+    <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
     <!-- السلة الجانبية -->
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
-            <h3>حقيبة التسوق // CART</h3>
+            <h3>CART.</h3>
             <span class="close-cart" id="closeCart">✕</span>
         </div>
         <div class="cart-items" id="cartItemsContainer">
-            <p style="text-align:center; color:#555;">[ الحقيبة فارغة ]</p>
+            <p class="empty-msg">EMPTY ARCHIVE.</p>
         </div>
         <div class="cart-footer">
             <div class="cart-total">
-                <span>الإجمالي:</span>
-                <span id="cartTotalPrice">0 ج.م</span>
+                <span>TOTAL</span>
+                <span id="cartTotalPrice">0 EGP</span>
             </div>
-            <button class="checkout-btn" onclick="window.location.href='checkout.html'">إتمام الطلب // CHECKOUT</button>        
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">CHECKOUT</button>        
         </div>
     </div>
 
     <!-- الهيدر -->
     <header class="main-header" id="mainHeader">
-        <a href="index.html" class="logo">UNO<span>VERSE</span></a>
+        <a href="index.html" class="logo" dir="ltr">UNO<span>VERSE</span></a>
         <nav class="main-nav">
             <ul>
-                <li><a href="index.html#hero">الرئيسية</a></li>
-                <li><a href="index.html#support">الدعم</a></li>
+                <li><a href="index.html#hero">HOME</a></li>
+                <li><a href="index.html#support">SUPPORT</a></li>
             </ul>
         </nav>
         <div class="header-actions">
-            <a href="#" id="openCart" class="action-link">الحقيبة [<span id="cartBadge">0</span>]</a>
+            <a href="#" id="openCart" class="action-link">CART [<span id="cartBadge">0</span>]</a>
         </div>
     </header>
 
-    <!-- منطقة عرض المنتج الرئيسية -->
+    <!-- منطقة عرض المنتج -->
     <main id="productPageContent">
-        <div style="position:relative; z-index:10; width: 100%; text-align: center; padding: 250px 0; font-family: 'Oswald', sans-serif; letter-spacing: 5px; color: var(--accent-yellow);">
+        <div style="position:relative; z-index:10; width: 100%; text-align: center; padding: 250px 0; font-family: 'Oswald', sans-serif; letter-spacing: 5px; color: var(--text-muted);">
             LOADING EXCLUSIVE PIECE...
         </div>
     </main>
 
-    <!-- الفوتر -->
     <footer>
         <p>© 2026 <span>UNOVERSE</span>. ALL RIGHTS RESERVED. 1 OF 1 EXCLUSIVE PIECES.</p>
     </footer>
 
-    <!-- سكريبتات الفايربيس والتفاعل -->
     <script>
-        // ================= حماية المحتوى (منع النسخ والـ F12) =================
         document.addEventListener('contextmenu', event => event.preventDefault());
 
         document.addEventListener('keydown', function(e) {
@@ -314,7 +310,6 @@
             if(e.target.nodeName.toUpperCase() == "IMG") { e.preventDefault(); }
         });
 
-        // ================= مفاتيح الفايربيس =================
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -327,7 +322,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- تطبيق نص شريط الأخبار المخصص فقط (بدون الشريط العام) ---
         function applyTickerText(customProductTicker) {
             const tickerBar = document.getElementById('newsTickerBar');
             const header = document.getElementById('mainHeader');
@@ -335,18 +329,17 @@
 
             if (customProductTicker && typeof customProductTicker === 'string' && customProductTicker.trim() !== '') {
                 tickerBar.style.display = 'flex';
-                header.style.top = window.scrollY > 50 ? '0px' : '32px'; // يترفع لو سكرول
+                header.style.top = window.scrollY > 50 ? '0px' : '35px'; 
                 track.innerHTML = '';
                 for(let i=0; i<10; i++) {
                     track.innerHTML += `<span class="ticker-msg">✦ ${customProductTicker} ✦</span>`;
                 }
             } else {
                 tickerBar.style.display = 'none';
-                header.style.top = '0px'; // الهيدر يفضل فوق دايماً
+                header.style.top = '0px'; 
             }
         }
 
-        // --- تفعيل الماوس المخصص بنعومة فائقة ---
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100;
         let cursorX = -100, cursorY = -100;
@@ -375,24 +368,22 @@
         function addHover() { cursorWrapper.classList.add('hovered'); }
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
 
-        // --- قراءة الـ ID ---
         const urlParams = new URLSearchParams(window.location.search);
         const currentProductId = urlParams.get('id');
         let selectedSize = '';
         let currentProductData = null;
 
-        // --- جلب البيانات الأساسية للمنتج ---
         async function fetchProductData() {
             const wrapper = document.getElementById('productPageContent');
             if (!currentProductId) {
-                wrapper.innerHTML = '<h2 style="position:relative; z-index:10; width:100%; text-align:center; padding:200px 0; color:#555;">لم يتم تحديد أي قطعة للعرض.</h2>';
-                applyTickerText(null); // التأكد من إخفاء الشريط
+                wrapper.innerHTML = '<h2 style="position:relative; z-index:10; width:100%; text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">NO PIECE SELECTED.</h2>';
+                applyTickerText(null); 
                 return;
             }
             try {
                 const doc = await db.collection("products").doc(currentProductId).get();
                 if (!doc.exists) {
-                    wrapper.innerHTML = '<h2 style="position:relative; z-index:10; width:100%; text-align:center; padding:200px 0; color:#555;">القطعة المطلوبة غير متاحة حالياً أو تم بيعها.</h2>';
+                    wrapper.innerHTML = '<h2 style="position:relative; z-index:10; width:100%; text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">PIECE IS UNAVAILABLE OR ARCHIVED.</h2>';
                     applyTickerText(null); 
                     return;
                 }
@@ -405,64 +396,61 @@
             }
         }
 
-        // --- رسم تفاصيل المنتج ---
         function renderProductPage(prod) {
             const wrapper = document.getElementById('productPageContent');
             const price = parseFloat(prod.price) || 0;
             const discount = parseFloat(prod.discount) || price;
             
-            // تطبيق نص شريط الأخبار المخصص للقطعة (أو إخفاؤه لو مش موجود)
             applyTickerText(prod.tickerText);
             
             let priceHTML = (discount < price)
-                ? `<span>${discount} ج.م</span> <span class="old">${price} ج.م</span>`
-                : `<span>${price} ج.م</span>`;
+                ? `<span>${discount} EGP</span> <span class="old">${price} EGP</span>`
+                : `<span>${price} EGP</span>`;
 
             let gallery = (prod.gallery && prod.gallery.length > 0) ? prod.gallery : [prod.image];
             let activeMainImg = gallery[0];
 
             let thumbsHTML = gallery.map((img, i) => `
                 <div class="thumb ${i===0?'active':''}" onclick="changeMainImage(this, '${img}')">
-                    <img src="${img}" alt="صورة إضافية">
+                    <img src="${img}" alt="Thumb">
                 </div>
             `).join('');
 
             const isSoldOut = prod.status === 'out';
-            let sealColor = isSoldOut ? '#ff3333' : 'var(--accent-yellow)';
-            let sealText = isSoldOut ? 'SOLD OUT ✦ ARCHIVED PIECE ✦' : 'UNOVERSE ✦ 1 OF 1 EXCLUSIVE ✦';
-            let badgeText = isSoldOut ? '<span style="color:#ff3333;">نفذت الكمية // SOLD OUT</span>' : `رقم الإصدار: ${prod.id.slice(-6).toUpperCase()}`;
-            let badgeColor = isSoldOut ? '#ff3333' : 'var(--accent-yellow)';
+            let sealColor = isSoldOut ? 'var(--text-muted)' : 'var(--text-cream)';
+            let sealText = isSoldOut ? 'ARCHIVED PIECE ✦ UNAVAILABLE ✦ ' : 'UNOVERSE ✦ 1 OF 1 EXCLUSIVE ✦ ';
+            let badgeStyle = isSoldOut ? 'color: var(--text-muted); border-color: rgba(107, 128, 150, 0.3); background: rgba(4, 6, 10, 0.6);' : '';
+            let badgeText = isSoldOut ? 'ARCHIVED // SOLD OUT' : `EDITION: ${prod.id.slice(-6).toUpperCase()}`;
 
             let sizes = prod.sizes || ['S', 'M', 'L', 'XL'];
-            selectedSize = isSoldOut ? 'غير متاح' : sizes[0]; 
+            selectedSize = isSoldOut ? 'N/A' : sizes[0]; 
             let sizesHTML = sizes.map((s, i) => {
                 let activeClass = (i===0 && !isSoldOut) ? 'active' : '';
-                let disabledAttr = isSoldOut ? 'disabled style="opacity:0.3; cursor:not-allowed !important;"' : '';
+                let disabledAttr = isSoldOut ? 'disabled style="opacity:0.2; cursor:not-allowed !important;"' : '';
                 return `<button type="button" class="size-btn ${activeClass}" ${disabledAttr} onclick="${isSoldOut ? '' : `selectSize(this, '${s}')`}">${s}</button>`;
             }).join('');
 
             let btnHTML = isSoldOut 
-                ? `<button class="add-to-cart-btn" style="background:#111; color:#555; cursor:not-allowed !important;" disabled>
-                       <span style="position:relative; z-index:2;">نفذت الكمية (SOLD OUT)</span>
+                ? `<button class="add-to-cart-btn" style="background:transparent; color:var(--text-muted); border-color:var(--line-color); cursor:not-allowed !important;" disabled>
+                       <span>ARCHIVED (SOLD OUT)</span>
                    </button>`
                 : `<button class="add-to-cart-btn" onclick="addToCartDetailed()">
-                       <span style="position:relative; z-index:2;">إضافة للحقيبة</span>
-                       <span style="position:relative; z-index:2; font-family:'Oswald', sans-serif;">+</span>
+                       <span>ADD TO CART</span>
                    </button>`;
 
             wrapper.innerHTML = `
                 <div class="product-container">
                     
                     <div class="product-details">
-                        <div class="product-id-badge" style="color:${badgeColor}; border-color:${badgeColor};">${badgeText}</div>
+                        <div class="product-id-badge" style="${badgeStyle}">${badgeText}</div>
                         <h1 class="product-title">${prod.name}</h1>
                         <div class="product-price">${priceHTML}</div>
-                        <div class="desc-label" style="color:${badgeColor};">✦ تفاصيل القطعة:</div>
-                        <p class="product-desc" style="border-color:${badgeColor};">${prod.description || 'إصدار حصري مميز جداً. تعكس هذه القطعة فخامة الخامات وجودة التنفيذ العالية التي تتميز بها علامة UnoVerse. تصميم فريد بإنتاج فردي (1 of 1).'}</p>
+                        <div class="desc-label">DESCRIPTION //</div>
+                        <p class="product-desc">${prod.description || 'إصدار حصري مميز جداً. تعكس هذه القطعة فخامة الخامات وجودة التنفيذ العالية التي تتميز بها علامة UnoVerse. تصميم فريد بإنتاج فردي (1 of 1).'}</p>
                         
                         <div class="sizes-section">
                             <div class="size-header">
-                                <span>المقاس المحدد: <strong id="selectedSizeLabel" style="color:${badgeColor}; margin-right:5px;">${selectedSize}</strong></span>
+                                <span>SIZE // <strong id="selectedSizeLabel" style="color:var(--text-cream); margin-right:5px; font-weight:400;">${selectedSize}</strong></span>
                             </div>
                             <div class="size-grid">${sizesHTML}</div>
                         </div>
@@ -470,14 +458,14 @@
                     </div>
 
                     <div class="product-gallery">
-                        <div class="seal-1of1" style="border-color:${sealColor};">
+                        <div class="seal-1of1">
                             <div class="seal-text">
                                 <svg viewBox="0 0 100 100">
                                     <path d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" id="circlePath" fill="none"/>
                                     <text><textPath href="#circlePath" startOffset="0%" fill="${sealColor}">${sealText}</textPath></text>
                                 </svg>
                             </div>
-                            <div class="seal-center" style="text-shadow: 0 0 15px ${sealColor};">1/1</div>
+                            <div class="seal-center">1/1</div>
                         </div>
 
                         <div class="spotlight-wrapper" id="zoomContainer">
@@ -490,15 +478,15 @@
 
                 <div class="info-tabs-container">
                     <div class="tab-col">
-                        <h4 class="tab-title">تفاصيل الخامات ✦</h4>
+                        <h4 class="tab-title">MATERIALS ✦</h4>
                         <p class="tab-text">يتم اختيار الأقمشة الثقيلة والمعالجة بدقة لضمان المتانة والشكل الانسيابي الفاخر، مع اهتمام بالغ بجودة الخياطة اليدوية والتفاصيل النهائية.</p>
                     </div>
                     <div class="tab-col">
-                        <h4 class="tab-title">معلومات الشحن ✦</h4>
+                        <h4 class="tab-title">SHIPPING ✦</h4>
                         <p class="tab-text">تُغلف القطعة في صناديق UnoVerse المميزة التي تحافظ عليها أثناء النقل. يتم التوصيل السريع والمؤمن لضمان وصول القطعة إليك في أفضل حالة.</p>
                     </div>
                     <div class="tab-col">
-                        <h4 class="tab-title">سياسة الإصدار ✦</h4>
+                        <h4 class="tab-title">POLICY ✦</h4>
                         <p class="tab-text">جميع قطعنا هي إصدارات فردية بتصميم (1 of 1). بمجرد إتمامك للطلب، يتم إزالة القطعة من الموقع نهائياً وتصبح حصرياً ملكاً لك وحدك.</p>
                     </div>
                 </div>
@@ -508,7 +496,6 @@
             attachCursorEffects(); 
         }
 
-        // --- تغيير الصورة ---
         function changeMainImage(thumb, src) {
             document.getElementById('mainArtImg').src = src;
             document.getElementById('artLens').style.backgroundImage = `url('${src}')`;
@@ -516,7 +503,6 @@
             thumb.classList.add('active');
         }
 
-        // --- عدسة التكبير ---
         function initImageZoom() {
             const container = document.getElementById('zoomContainer');
             const lens = document.getElementById('artLens');
@@ -534,7 +520,6 @@
             });
         }
 
-        // --- اختيار المقاس ---
         function selectSize(btn, size) {
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -542,7 +527,6 @@
             document.getElementById('selectedSizeLabel').innerText = size;
         }
 
-        // --- الإضافة للسلة ---
         function addToCartDetailed() {
             if (!currentProductData || currentProductData.status === 'out') return;
             let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
@@ -571,7 +555,6 @@
             document.getElementById('cartOverlay').classList.add('active');
         }
 
-        // --- تحديث السلة ---
         function updateCartUI() {
             const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
             const container = document.getElementById('cartItemsContainer');
@@ -581,23 +564,23 @@
             if (!container) return;
 
             if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#555;">[ الحقيبة فارغة ]</p>';
+                container.innerHTML = '<p class="empty-msg">EMPTY ARCHIVE.</p>';
             } else {
                 container.innerHTML = cart.map((item, idx) => `
                     <div class="cart-item">
                         <img src="${item.image}" alt="${item.name}">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <p>المقاس: ${item.size} // ${item.price} ج.م</p>
+                        <div class="cart-item-info" style="flex:1; padding:0 15px; text-align:left;">
+                            <h4 style="color:var(--text-cream); font-family:'Oswald'; font-weight:400; font-size:14px; text-transform:uppercase;">${item.name}</h4>
+                            <p style="color:var(--text-muted); font-size:12px; margin-top:5px; font-family:'Oswald'; letter-spacing:2px;">SIZE: ${item.size} // ${item.price} EGP</p>
                         </div>
-                        <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:#ff3333; font-size:18px; cursor:pointer; margin-right:auto; font-family:'Oswald', sans-serif;">✕</button>
+                        <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:18px; cursor:pointer; font-family:'Oswald', sans-serif;">✕</button>
                     </div>
                 `).join('');
             }
 
             const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
             const totalEl = document.getElementById('cartTotalPrice');
-            if (totalEl) totalEl.innerText = total + ' ج.م';
+            if (totalEl) totalEl.innerText = total + ' EGP';
             attachCursorEffects();
         }
 
@@ -608,7 +591,6 @@
             updateCartUI();
         }
 
-        // --- تشغيل الدوال عند التحميل والتمرير ---
         document.addEventListener('DOMContentLoaded', () => {
             fetchProductData();
             updateCartUI();
@@ -617,16 +599,13 @@
             window.addEventListener('scroll', () => {
                 const header = document.getElementById('mainHeader');
                 const ticker = document.getElementById('newsTickerBar');
-                
-                // تحقق هل الشريط معروض أم مخفي
                 const hasTicker = ticker.style.display === 'flex';
                 
                 if(window.scrollY > 50) {
                     header.style.top = '0px';
                     if(hasTicker) ticker.style.transform = 'translateY(-100%)';
                 } else {
-                    // لو في شريط، نزل الهيدر تحتيه، لو مفيش خليه لازق فوق
-                    header.style.top = hasTicker ? '32px' : '0px'; 
+                    header.style.top = hasTicker ? '35px' : '0px'; 
                     if(hasTicker) ticker.style.transform = 'translateY(0)';
                 }
             });
