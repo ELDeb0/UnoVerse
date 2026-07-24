@@ -3,722 +3,657 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UnoVerse | The Exclusive Piece</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>UnoVerse | 1 OF 1 EXCLUSIVE</title>
+    
+    <!-- مكتبات Firebase السحابية -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- خطوط UnoVerse الأصلية -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,600;0,900;1,600&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --bg-dark: #070707;
-            --accent-gold: #D4AF37;
-            --text-light: #F4F3EF;
-            --gray-card: #111111;
-            --gray-border: #222222;
-            --text-muted: #888888;
-        }
-
+        /* ================= ثوابت التصميم ================= */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        ::selection { background: var(--accent-gold); color: #000; }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            font-family: 'Tajawal', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
+        
+        :root {
+            --bg-void: #030303;
+            --bg-dark: #070707;
+            --accent-yellow: #FFD700;
+            --gold-glow: rgba(255, 215, 0, 0.15);
+            --text-main: #F4F3EF;
+            --text-dim: #888888;
+            --border-fine: rgba(255, 215, 0, 0.12); 
+            --font-ar: 'Tajawal', sans-serif;
+            --font-en: 'Oswald', sans-serif;
         }
 
-        /* ---------------- STRICT POINTER EVENTS SAFETY ---------------- */
-        /* أي عنصر ديكوري خلفي لازم يمرر الكليكات للتحتية */
-        .ambient-glow, .cursor-dot, .cursor-outline, #preloader, .toast-notification {
-            pointer-events: none !important;
-        }
+        body { background-color: var(--bg-void); color: var(--text-main); font-family: var(--font-ar); overflow-x: hidden; -webkit-font-smoothing: antialiased; cursor: none; }
+        *, *::before, *::after { cursor: none !important; }
 
-        /* الأزرار والروابط تتمتع بأعلى أولوية في الضغط */
-        button, a, .acc-header, .thumb-img, .fav-heart-btn {
-            pointer-events: auto !important;
-            cursor: pointer !important;
-            position: relative;
-            z-index: 10;
-        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-void); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
-        /* Dynamic Ambient Glow */
-        .ambient-glow {
-            position: fixed;
+        /* ================= الماوس المخصص ================= */
+        .custom-cursor { 
+            position: fixed !important; 
             top: 0; left: 0;
-            width: 450px; height: 450px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            z-index: 0;
-            transform: translate3d(-50%, -50%, 0);
+            width: 14px !important; 
+            height: 14px !important; 
+            background-color: var(--accent-yellow) !important; 
+            border-radius: 50% !important; 
+            pointer-events: none !important; 
+            z-index: 9999999 !important; 
+            transition: width 0.25s ease-out, height 0.25s ease-out, background-color 0.25s ease-out !important; 
+            mix-blend-mode: exclusion !important; 
+            box-shadow: 0 0 15px var(--accent-yellow);
+            will-change: transform;
+        }
+        .cursor-hover { 
+            width: 60px !important; 
+            height: 60px !important; 
+            background-color: var(--text-main) !important; 
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5) !important;
         }
 
-        /* Custom Pointer Cursor */
-        .cursor-dot {
-            position: fixed; top: 0; left: 0;
-            width: 8px; height: 8px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            z-index: 999999;
+        /* ================= شريط الأخبار السلس ================= */
+        .news-ticker-bar {
+            position: fixed; top: 0; left: 0; width: 100%; background: var(--accent-yellow); color: #000;
+            z-index: 10000; overflow: hidden; padding: 7px 0; display: flex; align-items: center;
+            border-bottom: 1px solid #000;
+        }
+        .ticker-track {
+            display: flex; white-space: nowrap; 
+            will-change: transform;
+            animation: marqueeScroll 25s linear infinite;
+        }
+        .ticker-msg {
+            padding: 0 40px; font-family: var(--font-ar); font-size: 13px; font-weight: 800; letter-spacing: 1px; display: inline-block;
+        }
+        @keyframes marqueeScroll { 
+            0% { transform: translate3d(0, 0, 0); } 
+            100% { transform: translate3d(100%, 0, 0); } 
         }
 
-        .cursor-outline {
-            position: fixed; top: 0; left: 0;
-            width: 36px; height: 36px;
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            border-radius: 50%;
-            z-index: 999998;
-            transition: width 0.2s ease, height 0.2s ease;
+        /* ================= نغمشة سينمائية ================= */
+        .cinematic-grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 99998; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+        /* ================= خلفية الحروف الإنجليزية الفاخرة ================= */
+        .eng-typography-bg { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; 
+            display: flex; flex-direction: column; justify-content: center; gap: 5vh;
         }
-
-        /* Toast Notification */
-        .toast-notification {
-            position: fixed;
-            top: 25px; left: 50%;
-            transform: translate3d(-50%, -100px, 0);
-            background: #111111;
-            border: 1px solid var(--accent-gold);
-            padding: 14px 28px;
-            border-radius: 4px;
-            font-family: 'Oswald', sans-serif;
-            letter-spacing: 1px;
-            color: #fff;
-            z-index: 99999;
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .eng-typography-bg .word-1 { 
+            font-family: var(--font-en); font-size: 18vw; font-weight: 700; color: rgba(255, 215, 0, 0.02); 
+            line-height: 0.8; white-space: nowrap; 
+            will-change: transform; animation: smoothPanRight 45s linear infinite; 
         }
-
-        .toast-notification.show {
-            transform: translate3d(-50%, 0, 0);
-            opacity: 1;
+        .eng-typography-bg .word-2 { 
+            font-family: 'Playfair Display', serif; font-size: 15vw; font-weight: 900; font-style: italic; color: rgba(255, 255, 255, 0.015); 
+            line-height: 0.8; white-space: nowrap; 
+            will-change: transform; animation: smoothPanLeft 55s linear infinite; 
         }
+        @keyframes smoothPanRight { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(50%, 0, 0); } }
+        @keyframes smoothPanLeft { 0% { transform: translate3d(50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
 
-        /* Header Navigation */
-        header {
-            padding: 25px 8%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--gray-border);
-            position: relative;
-            z-index: 20;
+        /* ================= HEADER ================= */
+        .main-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            width: 100%; padding: 20px 5%; position: fixed; top: 32px; right: 0; 
+            z-index: 9999; background: linear-gradient(to bottom, rgba(3,3,3,0.98) 0%, rgba(3,3,3,0) 100%);
+            transition: top 0.3s ease;
         }
+        .main-header .logo { font-family: var(--font-en); font-size: 24px; font-weight: 700; letter-spacing: 5px; text-decoration: none; color: var(--text-main); text-shadow: 0 0 10px rgba(0,0,0,0.5);}
+        .main-header .logo span { color: var(--accent-yellow); }
+        .main-header .main-nav ul { display: flex; gap: 40px; list-style: none; }
+        .main-header .main-nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 13px; font-weight: 700; letter-spacing: 1px; transition: 0.3s; }
+        .main-header .main-nav ul li a:hover { color: var(--text-main); }
+        .header-actions { display: flex; align-items: center; gap: 25px; }
+        .action-link { color: var(--text-main); text-decoration: none; font-size: 14px; font-family: var(--font-en); transition: 0.3s; letter-spacing: 1px; }
+        .action-link:hover { color: var(--accent-yellow); }
 
-        .brand-logo {
-            font-family: 'Oswald', sans-serif;
-            font-size: 28px;
-            color: #fff;
-            text-decoration: none;
-            letter-spacing: 4px;
-            font-weight: 700;
+        /* ================= CART DRAWER ================= */
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 90000; opacity: 0; visibility: hidden; transition: 0.4s; }
+        .cart-overlay.active { opacity: 1; visibility: visible; }
+        .cart-drawer { position: fixed; top: 0; right: -450px; width: 420px; max-width: 100%; height: 100vh; background: var(--bg-dark); border-left: 1px solid #222; z-index: 99999; transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding: 40px 30px; display: flex; flex-direction: column; }
+        .cart-drawer.active { right: 0; }
+        .cart-header { padding-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
+        .cart-header h3 { font-family: var(--font-ar); font-size: 18px; font-weight: 800; color: var(--accent-yellow);}
+        .close-cart { font-size: 22px; color: var(--text-dim); transition: 0.3s; }
+        .close-cart:hover { color: #fff; }
+        .cart-items { flex: 1; padding: 25px 0; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .cart-item { display: flex; gap: 15px; border-bottom: 1px solid #222; padding-bottom: 15px;}
+        .cart-item img { width: 70px; height: 90px; object-fit: cover; border: 1px solid #333; }
+        .cart-item-info h4 { font-family: var(--font-ar); font-size: 14px; margin-bottom: 5px; font-weight: 700;}
+        .cart-item-info p { color: var(--accent-yellow); font-size: 13px; font-family: var(--font-en);}
+        .cart-footer { padding-top: 20px; border-top: 1px solid #222; }
+        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: var(--font-en); font-size: 18px; }
+        .checkout-btn { width: 100%; padding: 20px; background-color: var(--accent-yellow); color: #000; border: none; font-family: var(--font-ar); font-size: 16px; font-weight: 800; transition: 0.3s; letter-spacing: 1px; }
+        .checkout-btn:hover { background-color: #fff; }
+
+        /* ================= THE LAYOUT (عرض القطعة) ================= */
+        .product-container { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; min-height: 100vh; padding: 150px 5% 60px 5%; max-width: 1600px; margin: 0 auto; gap: 6%; }
+
+        /* ----- اللوحة اليمين: تفاصيل المنتج ----- */
+        .product-details { width: 45%; padding-right: 2%; display: flex; flex-direction: column; justify-content: center; position: relative; }
+
+        .product-id-badge { font-family: var(--font-en); font-size: 13px; letter-spacing: 3px; color: var(--accent-yellow); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; background: rgba(255,215,0,0.05); padding: 6px 12px; width: fit-content; border: 1px solid var(--border-fine); transition: 0.3s;}
+        .product-id-badge::before { content: ''; width: 8px; height: 8px; background: var(--accent-yellow); border-radius: 50%; box-shadow: 0 0 10px var(--accent-yellow); }
+
+        .product-title { font-family: var(--font-ar); font-size: 46px; font-weight: 900; line-height: 1.15; margin-bottom: 25px; color: #ffffff; letter-spacing: -1px; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+
+        .product-price { font-family: var(--font-en); font-size: 30px; font-weight: 700; color: var(--text-main); margin-bottom: 35px; display: flex; align-items: baseline; gap: 15px; }
+        .product-price .old { font-size: 16px; color: var(--text-dim); text-decoration: line-through; font-weight: 300; }
+
+        .desc-label { font-size: 14px; color: var(--accent-yellow); margin-bottom: 10px; font-weight: 800; }
+
+        .product-desc { font-size: 16px; line-height: 2.1; color: #cccccc; font-weight: 400; margin-bottom: 45px; border-right: 2px solid var(--accent-yellow); padding-right: 18px; }
+
+        /* المقاسات */
+        .sizes-section { margin-bottom: 45px; }
+        .size-header { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-dim); margin-bottom: 15px; font-weight: 700;}
+        .size-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+        .size-btn { width: 55px; height: 55px; background: rgba(0,0,0,0.6); border: 1px solid #444; color: var(--text-main); font-family: var(--font-en); font-size: 16px; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .size-btn:not([disabled]):hover { border-color: var(--accent-yellow); color: var(--accent-yellow); }
+        .size-btn.active { border-color: var(--accent-yellow); background: var(--accent-yellow); color: #000; font-weight: bold; box-shadow: 0 0 15px var(--gold-glow); }
+
+        /* زر الشراء الفخم */
+        .add-to-cart-btn { width: 100%; padding: 22px; background: var(--text-main); color: #000; border: none; font-family: var(--font-ar); font-size: 16px; font-weight: 900; letter-spacing: 1px; transition: 0.4s; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .add-to-cart-btn:not([disabled])::before { content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--accent-yellow); transition: 0.4s ease-in-out; z-index: 1; }
+        .add-to-cart-btn:not([disabled]):hover::before { width: 100%; }
+        .add-to-cart-btn span { position: relative; z-index: 2; transition: 0.3s; }
+        .add-to-cart-btn:not([disabled]):hover span { color: #000; }
+
+        /* ----- اللوحة الشمال: معرض الصور والختم الدوار ----- */
+        .product-gallery { width: 48%; display: flex; flex-direction: column; align-items: center; position: relative; }
+
+        /* ختم الـ 1OF1 الدوار المميز */
+        .seal-1of1 {
+            position: absolute; top: -30px; left: -30px; width: 140px; height: 140px; z-index: 20;
+            background: rgba(0,0,0,0.6); border-radius: 50%; border: 1px solid var(--accent-yellow);
+            display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: 0.3s;
         }
-        .brand-logo span { color: var(--accent-gold); }
-
-        .nav-actions { display: flex; gap: 15px; align-items: center; }
-
-        .nav-btn {
-            color: var(--text-light);
-            text-decoration: none;
-            font-family: 'Oswald', sans-serif;
-            font-size: 13px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding: 8px 16px;
-            border: 1px solid transparent;
-            transition: 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .seal-text {
+            position: absolute; width: 100%; height: 100%; animation: rotateSeal 15s linear infinite;
         }
-
-        .nav-btn:hover {
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
+        .seal-text svg { width: 100%; height: 100%; fill: var(--accent-yellow); font-family: var(--font-en); font-size: 14px; font-weight: bold; letter-spacing: 2px;}
+        .seal-center {
+            font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; color: var(--text-main); font-style: italic; text-shadow: 0 0 15px var(--accent-yellow);
         }
+        @keyframes rotateSeal { 100% { transform: rotate(360deg); } }
 
-        .badge-count {
-            background: var(--accent-gold);
-            color: #000;
-            font-size: 11px;
-            padding: 2px 7px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
+        .spotlight-wrapper { width: 100%; height: 75vh; min-height: 550px; background: radial-gradient(circle at center, #151515 0%, #020202 80%); border: 1px solid var(--border-fine); position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
+        .main-image { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.9)); transition: opacity 0.3s ease; }
 
-        /* Main Section */
-        .showcase-wrapper {
-            max-width: 1350px;
-            margin: 40px auto;
-            padding: 0 5%;
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 60px;
-            position: relative;
-            z-index: 10;
-        }
+        /* عدسة استكشاف التفاصيل */
+        .lens { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; background-repeat: no-repeat; transition: opacity 0.3s; z-index: 2; }
+        .spotlight-wrapper:hover .main-image { opacity: 0; }
+        .spotlight-wrapper:hover .lens { opacity: 1; }
 
+        .thumbnails-strip { display: flex; gap: 15px; margin-top: 25px; width: 100%; justify-content: center; flex-wrap: wrap; }
+        .thumb { width: 75px; height: 95px; border: 1px solid #333; background: #000; opacity: 0.5; transition: 0.3s; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .thumb.active, .thumb:hover { opacity: 1; border-color: var(--accent-yellow); box-shadow: 0 0 10px var(--gold-glow); }
+
+        /* ================= INFO TABS (معلومات إضافية سفلية) ================= */
+        .info-tabs-container { position: relative; z-index: 10; width: 90%; max-width: 1500px; margin: 0 auto 100px auto; border-top: 1px solid var(--border-fine); display: flex; background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); }
+        .tab-col { flex: 1; padding: 40px 30px; border-left: 1px solid var(--border-fine); }
+        .tab-col:first-child { border-left: none; }
+        .tab-title { font-family: var(--font-ar); font-size: 18px; color: var(--accent-yellow); margin-bottom: 15px; font-weight: 800;}
+        .tab-text { font-size: 14px; color: #bbb; line-height: 2; font-weight: 400;}
+
+        /* ================= FOOTER ================= */
+        footer { position: relative; z-index: 10; padding: 40px 5%; border-top: 1px solid var(--border-fine); text-align: center; color: var(--text-dim); font-size: 13px; font-family: var(--font-en); letter-spacing: 2px; background: #000; }
+        footer span { color: var(--accent-yellow); }
+
+        /* ================= التوافق مع الموبايل (RESPONSIVE) ================= */
         @media (max-width: 992px) {
-            .showcase-wrapper { grid-template-columns: 1fr; gap: 30px; }
-        }
+            /* تظبيط الهيدر عشان ميكونش داخل في بعضه */
+            .main-header { padding: 15px 5%; top: 32px; }
+            .main-header .logo { font-size: 20px; letter-spacing: 2px; }
+            .main-nav { display: none; } /* إخفاء الروابط في الموبايل لتوفير المساحة للوجو والأيقونات */
+            .header-actions { gap: 15px; }
+            .action-link { font-size: 12px; letter-spacing: 0; }
 
-        /* Visual Column */
-        .visual-side { display: flex; flex-direction: column; gap: 15px; }
-
-        .image-card-3d {
-            width: 100%;
-            height: 600px;
-            background: var(--gray-card);
-            border: 1px solid var(--gray-border);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .image-card-3d img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s ease;
-        }
-
-        .edition-badge {
-            position: absolute;
-            top: 20px; right: 20px;
-            background: rgba(10, 10, 10, 0.85);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            padding: 6px 14px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            z-index: 5;
-        }
-
-        .fav-heart-btn {
-            position: absolute;
-            bottom: 20px; left: 20px;
-            width: 48px; height: 48px;
-            background: rgba(10, 10, 10, 0.85);
-            border: 1px solid var(--gray-border);
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            color: #fff;
-            font-size: 20px;
-            transition: all 0.2s ease;
-            z-index: 15;
-            outline: none;
-        }
-
-        .fav-heart-btn.active {
-            color: #ff4d4d;
-            border-color: #ff4d4d;
-            background: rgba(255, 77, 77, 0.15);
-        }
-
-        .thumbnails-strip { display: flex; gap: 12px; }
-
-        .thumb-img {
-            width: 80px; height: 90px;
-            object-fit: cover;
-            border: 1px solid var(--gray-border);
-            opacity: 0.5;
-            transition: all 0.2s ease;
-        }
-
-        .thumb-img.active, .thumb-img:hover {
-            opacity: 1;
-            border-color: var(--accent-gold);
-        }
-
-        /* Details Column */
-        .details-side { display: flex; flex-direction: column; justify-content: center; }
-
-        .tagline {
-            font-family: 'Oswald', sans-serif;
-            font-size: 12px;
-            letter-spacing: 3px;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        .tagline::before {
-            content: ''; width: 20px; height: 1px; background: var(--accent-gold);
-        }
-
-        h1.product-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 42px;
-            font-weight: 700;
-            line-height: 1.15;
-            margin-bottom: 12px;
-            color: #fff;
-        }
-
-        .price-tag {
-            font-family: 'Oswald', sans-serif;
-            font-size: 34px;
-            color: var(--accent-gold);
-            font-weight: 700;
-            margin-bottom: 18px;
-            display: flex; align-items: baseline; gap: 8px;
-        }
-
-        .urgency-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px dashed var(--accent-gold);
-            padding: 6px 14px;
-            font-size: 12px;
-            color: var(--accent-gold);
-            margin-bottom: 20px;
-            width: fit-content;
-        }
-
-        .pulse-dot {
-            width: 7px; height: 7px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.4; }
-            100% { transform: scale(0.95); opacity: 1; }
-        }
-
-        .description-box {
-            color: var(--text-muted);
-            font-size: 14px;
-            line-height: 1.7;
-            margin-bottom: 25px;
-            border-right: 2px solid var(--accent-gold);
-            padding-right: 15px;
-        }
-
-        .btn-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
-
-        .cta-btn {
-            width: 100%;
-            padding: 20px;
-            background: var(--accent-gold);
-            color: #000;
-            border: none;
-            font-family: 'Oswald', sans-serif;
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: all 0.2s ease;
-            outline: none;
-        }
-
-        .cta-btn:hover {
-            background: #fff;
-            transform: translateY(-2px);
-        }
-
-        .secondary-btn {
-            width: 100%;
-            padding: 16px;
-            background: transparent;
-            color: var(--text-light);
-            border: 1px solid var(--gray-border);
-            font-family: 'Oswald', sans-serif;
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: all 0.2s ease;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-        }
-
-        .secondary-btn:hover {
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
-        }
-
-        /* Accordions */
-        .accordion-section { border-top: 1px solid var(--gray-border); }
-        .acc-item { border-bottom: 1px solid var(--gray-border); }
-
-        .acc-header {
-            padding: 16px 0;
-            display: flex; justify-content: space-between; align-items: center;
-            font-family: 'Oswald', sans-serif;
-            font-size: 14px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            transition: color 0.2s ease;
-        }
-
-        .acc-header:hover { color: var(--accent-gold); }
-        .acc-icon { font-size: 16px; color: var(--accent-gold); transition: transform 0.2s ease; }
-
-        .acc-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-            color: var(--text-muted);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .acc-item.active .acc-content {
-            max-height: 120px;
-            padding-bottom: 15px;
-        }
-
-        .acc-item.active .acc-icon { transform: rotate(45deg); }
-
-        /* Similar Grid */
-        .similar-section {
-            max-width: 1350px;
-            margin: 60px auto 40px;
-            padding: 40px 5% 0;
-            border-top: 1px solid var(--gray-border);
-        }
-
-        .section-title {
-            font-family: 'Oswald', sans-serif;
-            font-size: 24px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            color: #fff;
-        }
-        .section-title span { color: var(--accent-gold); }
-
-        .similar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 25px;
-        }
-
-        .sim-card {
-            background: var(--gray-card);
-            border: 1px solid var(--gray-border);
-            padding: 14px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .sim-card:hover {
-            border-color: var(--accent-gold);
-            transform: translateY(-5px);
-        }
-
-        .sim-card img {
-            width: 100%; height: 240px;
-            object-fit: cover;
-            margin-bottom: 12px;
-        }
-
-        .sim-card h3 {
-            font-family: 'Oswald', sans-serif;
-            font-size: 16px;
-            margin-bottom: 6px;
-        }
-
-        .sim-card .sim-link {
-            color: var(--accent-gold);
-            text-decoration: none;
-            font-family: 'Oswald', sans-serif;
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid var(--gray-border);
-            font-family: 'Oswald', sans-serif;
-            color: #444;
-            letter-spacing: 2px;
-            font-size: 12px;
+            /* تظبيط هيكل الصفحة */
+            .product-container { flex-direction: column-reverse; padding-top: 100px; gap: 40px; }
+            .product-details, .product-gallery { width: 100%; padding: 0; border: none; }
+            
+            .spotlight-wrapper { height: 60vh; min-height: 400px; }
+            
+            /* تصغير الختم عشان مياخدش نص الصورة في الموبايل */
+            .seal-1of1 { top: -15px; left: -5px; width: 90px; height: 90px; }
+            .seal-center { font-size: 20px; }
+            
+            .product-title { font-size: 30px; margin-bottom: 15px; }
+            
+            /* تظبيط المقاسات للموبايل */
+            .size-btn { width: 45px; height: 45px; font-size: 14px; }
+            .size-grid { gap: 8px; }
+            
+            .info-tabs-container { flex-direction: column; width: 100%; margin-top: 40px;}
+            .tab-col { border-left: none; border-bottom: 1px solid var(--border-fine); padding: 25px 5%;}
+            .cart-drawer { width: 100%; right: -100%; padding: 30px 20px;}
+            
+            /* خلفية الحروف */
+            .eng-typography-bg .word-1 { font-size: 25vw; margin-top: 10vh; }
+            .eng-typography-bg .word-2 { font-size: 22vw; margin-bottom: 10vh; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Toast Popup -->
-    <div class="toast-notification" id="toast">
-        <span id="toastIcon">✨</span>
-        <span id="toastMsg">تمت العملية بنجاح</span>
+    <!-- نغمشة الشاشة السينمائية -->
+    <div class="cinematic-grain"></div>
+
+    <!-- شريط الأخبار العلوي فائق السلاسة -->
+    <div class="news-ticker-bar" id="newsTickerBar">
+        <div class="ticker-track" id="tickerTrack">
+            <!-- سيتم تكرار النص هنا برمجياً لضمان سلاسة الحركة -->
+        </div>
     </div>
 
-    <!-- Ambient Dynamic Light -->
-    <div class="ambient-glow" id="ambientGlow"></div>
+    <!-- الخلفية التايبوجرافي الإنجليزية الفاخرة -->
+    <div class="eng-typography-bg">
+        <div class="word-1">UNOVERSE</div>
+        <div class="word-2">ONE OF ONE ARCHIVE</div>
+        <div class="word-1" style="font-size: 15vw; opacity: 0.5;">EXCLUSIVE</div>
+    </div>
 
-    <!-- Dual Pointer Cursor -->
-    <div class="cursor-dot" id="cursorDot"></div>
-    <div class="cursor-outline" id="cursorOutline"></div>
+    <!-- الماوس المخصص الأصلي فائق السلاسة -->
+    <div class="custom-cursor" id="cursor"></div>
 
-    <!-- Navigation Header -->
-    <header>
-        <a href="index.html" class="brand-logo">UNO<span>VERSE</span></a>
-        <div class="nav-actions">
-            <a href="favorites.html" class="nav-btn">
-                ♥ المفضلة <span class="badge-count" id="favBadge">0</span>
-            </a>
-            <a href="index.html?openCart=true" class="nav-btn">
-                🛒 الحقيبة <span class="badge-count" id="cartBadge">0</span>
-            </a>
-            <a href="index.html" class="nav-btn">الكوليكشن</a>
+    <!-- السلة الجانبية -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3>حقيبة التسوق // CART</h3>
+            <span class="close-cart" id="closeCart">✕</span>
+        </div>
+        <div class="cart-items" id="cartItemsContainer">
+            <p style="text-align:center; color:#555;">[ الحقيبة فارغة ]</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>الإجمالي:</span>
+                <span id="cartTotalPrice">0 ج.م</span>
+            </div>
+            <button class="checkout-btn" onclick="alert('سيتم تحويلك لصفحة الدفع الآمن!')">إتمام الطلب // CHECKOUT</button>
+        </div>
+    </div>
+
+    <!-- الهيدر -->
+    <header class="main-header" id="mainHeader">
+        <a href="index.html" class="logo">UNO<span>VERSE</span></a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html#hero">الرئيسية</a></li>
+                <li><a href="index.html#support">الدعم</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <a href="favorites.html" class="action-link" title="المفضلة">♥</a>
+            <a href="#" id="openCart" class="action-link">الحقيبة [<span id="cartBadge">0</span>]</a>
         </div>
     </header>
 
-    <!-- Main Showcase -->
-    <main class="showcase-wrapper" id="mainShowcase">
-        <!-- Visual Gallery -->
-        <div class="visual-side">
-            <div class="image-card-3d">
-                <span class="edition-badge">Exclusive // 1 of 1</span>
-                <button class="fav-heart-btn" id="favToggleBtn" title="إضافة للمفضلة">♥</button>
-                <img src="" id="productImg" alt="UnoVerse Piece">
-            </div>
-            <div class="thumbnails-strip" id="thumbStrip"></div>
-        </div>
-
-        <!-- Details -->
-        <div class="details-side">
-            <div class="tagline">إصدار حصري محدودة النطاق</div>
-            <h1 class="product-title" id="productTitle">قطعة UnoVerse الحصرية</h1>
-            
-            <div class="price-tag">
-                <span id="productPrice">850</span>
-                <span style="font-size: 16px; color: var(--text-muted); font-weight: 300;">ج.م</span>
-            </div>
-
-            <div class="urgency-badge">
-                <div class="pulse-dot"></div>
-                <span>قطعة واحدة متوفرة فقط - متواجدة في سلة 3 أشخاص الآن</span>
-            </div>
-
-            <div class="description-box">
-                هذه القطعة تم إنتاجها كنسخة منفردة وحصرية (One of One). صُممت بعناية فائقة لتضمن أعلى مستويات التميز. خامات فاخرة، وتفاصيل دقيقة لا تتكرر في أي قطعة أخرى.
-            </div>
-
-            <div class="btn-group">
-                <button class="cta-btn" id="addToCartBtn">إضافة للحقيبة // ADD TO BAG</button>
-                <a href="index.html?openCart=true" class="secondary-btn">معاينة الحقيبة في الموقع الرئيسي ←</a>
-            </div>
-
-            <!-- Accordions -->
-            <div class="accordion-section">
-                <div class="acc-item">
-                    <div class="acc-header">
-                        <span>الخامة والچودة // FABRIC & QUALITY</span>
-                        <span class="acc-icon">+</span>
-                    </div>
-                    <div class="acc-content">
-                        قطن مصري 100% عالي الكثافة، معالَج ضد الانكماش والوبرة. خياطة متينة مزدوجة وتفاصيل مخصصة بلمسة UnoVerse.
-                    </div>
-                </div>
-
-                <div class="acc-item">
-                    <div class="acc-header">
-                        <span>الشحن والتوصيل // SHIPPING & DELIVERY</span>
-                        <span class="acc-icon">+</span>
-                    </div>
-                    <div class="acc-content">
-                        يتم تجهيز وشحن القطعة خلال 24 إلى 48 ساعة عمل. التوصيل سريع ومؤمن لجميع المحافظات.
-                    </div>
-                </div>
-
-                <div class="acc-item">
-                    <div class="acc-header">
-                        <span>سياسة الاستبدال // RETURNS</span>
-                        <span class="acc-icon">+</span>
-                    </div>
-                    <div class="acc-content">
-                        نظراً لأن جميع قطع UnoVerse إصدارات حصرية جِداً (One of One)، فإن الاستبدال متاح فقط في حالة وجود عيب تصنيع خلال 48 ساعة من الاستلام.
-                    </div>
-                </div>
-            </div>
+    <!-- منطقة عرض المنتج الرئيسية -->
+    <main id="productPageContent">
+        <div style="position:relative; z-index:10; width: 100%; text-align: center; padding: 250px 0; font-family: 'Oswald', sans-serif; letter-spacing: 5px; color: var(--accent-yellow);">
+            LOADING EXCLUSIVE PIECE...
         </div>
     </main>
 
-    <!-- Similar Grid -->
-    <section class="similar-section" id="similarSection">
-        <h2 class="section-title">قطع قد <span>تعجبك</span></h2>
-        <div class="similar-grid" id="similarGrid"></div>
-    </section>
-
+    <!-- الفوتر -->
     <footer>
-        © 2026 UNOVERSE | ALL RIGHTS RESERVED. EXCLUSIVE FASHION EXPERIENCE.
+        <p>© 2026 <span>UNOVERSE</span>. ALL RIGHTS RESERVED. 1 OF 1 EXCLUSIVE PIECES.</p>
     </footer>
 
+    <!-- سكريبتات الفايربيس والتفاعل -->
     <script>
-        // ---------------- 1. TOAST SYSTEM ----------------
-        function showToast(message, icon = "✨") {
-            const toast = document.getElementById('toast');
-            if (!toast) return;
-            document.getElementById('toastMsg').innerText = message;
-            document.getElementById('toastIcon').innerText = icon;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
-        }
+        // 1. مفاتيح الفايربيس
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
+            authDomain: "unoverse-5babd.firebaseapp.com",
+            projectId: "unoverse-5babd",
+            storageBucket: "unoverse-5babd.firebasestorage.app",
+            messagingSenderId: "543082257571",
+            appId: "1:543082257571:web:28b1d5931cbc75e6793316"
+        };
 
-        // ---------------- 2. CURSOR & GLOW (PASS-THROUGH) ----------------
-        const dot = document.getElementById('cursorDot');
-        const outline = document.getElementById('cursorOutline');
-        const glow = document.getElementById('ambientGlow');
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // --- جلب نص شريط الأخبار من الفايربيس ---
+        async function fetchTickerText() {
+            try {
+                const doc = await db.collection("settings").doc("general").get();
+                let msg = "مرحباً بك في أونوفيرس - قطع حصرية بإنتاج فردي لا يتكرر";
+                if (doc.exists && doc.data().tickerText) {
+                    msg = doc.data().tickerText;
+                }
+                
+                const track = document.getElementById('tickerTrack');
+                track.innerHTML = '';
+                for(let i=0; i<8; i++) {
+                    track.innerHTML += `<span class="ticker-msg">✦ ${msg} ✦</span>`;
+                }
+            } catch (err) {
+                console.log("استخدام النص الافتراضي لشريط الأخبار");
+            }
+        }
+        fetchTickerText();
+
+        // --- 2. تفعيل الماوس المخصص بنعومة فائقة (120fps Smooth Lerp) ---
+        const cursor = document.getElementById('cursor');
+        let mouseX = -100, mouseY = -100;
+        let cursorX = -100, cursorY = -100;
 
         document.addEventListener('mousemove', (e) => {
-            const x = e.clientX;
-            const y = e.clientY;
-            if (dot) dot.style.transform = `translate3d(${x - 4}px, ${y - 4}px, 0)`;
-            if (outline) outline.style.transform = `translate3d(${x - 18}px, ${y - 18}px, 0)`;
-            if (glow) glow.style.transform = `translate3d(${x - 225}px, ${y - 225}px, 0)`;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
         });
 
-        // ---------------- 3. ACCORDIONS ----------------
-        document.querySelectorAll('.acc-header').forEach(header => {
-            header.addEventListener('click', (e) => {
-                e.preventDefault();
-                const item = header.parentElement;
-                const isActive = item.classList.contains('active');
-                document.querySelectorAll('.acc-item').forEach(i => i.classList.remove('active'));
-                if (!isActive) item.classList.add('active');
-            });
-        });
-
-        // ---------------- 4. HEADER BADGES ----------------
-        function updateBadges() {
-            const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-            const favs = JSON.parse(localStorage.getItem('unoFavorites')) || [];
-            
-            const cartBadge = document.getElementById('cartBadge');
-            const favBadge = document.getElementById('favBadge');
-            if (cartBadge) cartBadge.innerText = cart.length;
-            if (favBadge) favBadge.innerText = favs.length;
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.2;
+            cursorY += (mouseY - cursorY) * 0.2;
+            cursor.style.transform = `translate3d(calc(${cursorX}px - 50%), calc(${cursorY}px - 50%), 0)`;
+            requestAnimationFrame(animateCursor);
         }
+        animateCursor();
 
-        // ---------------- 5. MAIN CORE ENGINE ----------------
-        document.addEventListener('DOMContentLoaded', () => {
-            // أخد رقم المنتج من الـ URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = String(urlParams.get('id'));
-            
-            // سحب المنتجات
-            const products = JSON.parse(localStorage.getItem('unoProducts')) || [];
-            let currentProduct = products.find(p => String(p.id) === productId);
-
-            // منتج تجريبي احتياطي في حالة عدم وجود منتجات في الذاكرة لضمان العمل التام
-            if (!currentProduct) {
-                currentProduct = {
-                    id: productId !== 'null' && productId !== '' ? productId : 'uno-demo-1',
-                    name: "تيشيرت UnoVerse - الإصدار الذهبي",
-                    price: "850",
-                    image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800",
-                    gallery: [
-                        "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800",
-                        "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800"
-                    ]
-                };
-            }
-
-            // عرض البيانات في الصفحة
-            document.getElementById('productTitle').innerText = currentProduct.name;
-            document.getElementById('productPrice').innerText = currentProduct.price;
-            document.getElementById('productImg').src = currentProduct.image;
-
-            // عرض الصور المصغرة
-            const gallery = currentProduct.gallery && currentProduct.gallery.length > 0 
-                ? currentProduct.gallery 
-                : [currentProduct.image];
-            
-            const thumbStrip = document.getElementById('thumbStrip');
-            thumbStrip.innerHTML = '';
-            gallery.forEach((imgSrc, idx) => {
-                const imgEl = document.createElement('img');
-                imgEl.src = imgSrc;
-                imgEl.className = `thumb-img ${idx === 0 ? 'active' : ''}`;
-                imgEl.onclick = () => {
-                    document.getElementById('productImg').src = imgSrc;
-                    document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
-                    imgEl.classList.add('active');
-                };
-                thumbStrip.appendChild(imgEl);
+        function attachCursorEffects() {
+            document.querySelectorAll('a, button, input, textarea, .thumb, .spotlight-wrapper, .seal-1of1').forEach(el => {
+                el.removeEventListener('mouseenter', addHover);
+                el.removeEventListener('mouseleave', removeHover);
+                el.addEventListener('mouseenter', addHover);
+                el.addEventListener('mouseleave', removeHover);
             });
+        }
+        function addHover() { cursor.classList.add('cursor-hover'); }
+        function removeHover() { cursor.classList.remove('cursor-hover'); }
 
-            // فحص حالة المفضلة للزرار
-            const favs = JSON.parse(localStorage.getItem('unoFavorites')) || [];
-            const favBtn = document.getElementById('favToggleBtn');
-            if (favs.some(f => String(f.id) === String(currentProduct.id))) {
-                favBtn.classList.add('active');
+        // 3. قراءة الـ ID من الرابط
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentProductId = urlParams.get('id');
+        let selectedSize = '';
+        let currentProductData = null;
+
+        // 4. جلب بيانات القطعة المباشرة من Firestore
+        async function fetchProductData() {
+            const wrapper = document.getElementById('productPageContent');
+            if (!currentProductId) {
+                wrapper.innerHTML = '<h2 style="position:relative; z-index:10; width:100%; text-align:center; padding:200px 0; color:#555;">لم يتم تحديد أي قطعة للعرض.</h2>';
+                return;
             }
 
-            // --- تشغيل زر الإضافة للحقيبة ---
-            document.getElementById('addToCartBtn').onclick = function(e) {
-                e.preventDefault();
-                let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-                
-                cart.push({
-                    id: currentProduct.id,
-                    name: currentProduct.name,
-                    price: currentProduct.price,
-                    image: currentProduct.image
-                });
-
-                localStorage.setItem('unoCart', JSON.stringify(cart));
-                updateBadges();
-                showToast("تمت إضافة القطعة للحقيبة بنجاح!", "🛍️");
-            };
-
-            // --- تشغيل زر المفضلة ---
-            favBtn.onclick = function(e) {
-                e.preventDefault();
-                let currentFavs = JSON.parse(localStorage.getItem('unoFavorites')) || [];
-                const index = currentFavs.findIndex(f => String(f.id) === String(currentProduct.id));
-
-                if (index > -1) {
-                    currentFavs.splice(index, 1);
-                    favBtn.classList.remove('active');
-                    showToast("تم إزالة القطعة من المفضلة", "💔");
-                } else {
-                    currentFavs.push({
-                        id: currentProduct.id,
-                        name: currentProduct.name,
-                        price: currentProduct.price,
-                        image: currentProduct.image
-                    });
-                    favBtn.classList.add('active');
-                    showToast("تمت إضافة القطعة للمفضلة!", "♥");
+            try {
+                const doc = await db.collection("products").doc(currentProductId).get();
+                if (!doc.exists) {
+                    wrapper.innerHTML = '<h2 style="position:relative; z-index:10; width:100%; text-align:center; padding:200px 0; color:#555;">القطعة المطلوبة غير متاحة حالياً أو تم بيعها.</h2>';
+                    return;
                 }
 
-                localStorage.setItem('unoFavorites', JSON.stringify(currentFavs));
-                updateBadges();
-            };
+                currentProductData = doc.data();
+                currentProductData.id = doc.id;
+                renderProductPage(currentProductData);
+            } catch (err) {
+                console.error("Error:", err);
+            }
+        }
 
-            // عرض المنتجات المشابهة
-            const similarGrid = document.getElementById('similarGrid');
-            const similarProducts = products.filter(p => String(p.id) !== String(currentProduct.id)).slice(0, 3);
+        // 5. رسم تفاصيل واجهة المنتج والتعامل مع حالة القطعة
+        function renderProductPage(prod) {
+            const wrapper = document.getElementById('productPageContent');
+            const price = parseFloat(prod.price) || 0;
+            const discount = parseFloat(prod.discount) || price;
+            
+            let priceHTML = (discount < price)
+                ? `<span>${discount} ج.م</span> <span class="old">${price} ج.م</span>`
+                : `<span>${price} ج.م</span>`;
 
-            if (similarProducts.length > 0) {
-                similarGrid.innerHTML = '';
-                similarProducts.forEach(item => {
-                    similarGrid.innerHTML += `
-                        <div class="sim-card">
-                            <img src="${item.image}" alt="${item.name}">
-                            <h3>${item.name}</h3>
-                            <p style="color:var(--accent-gold); margin-bottom:10px; font-family:'Oswald';">${item.price} ج.م</p>
-                            <a href="product.html?id=${item.id}" class="sim-link">عرض القطعة ←</a>
+            let gallery = (prod.gallery && prod.gallery.length > 0) ? prod.gallery : [prod.image];
+            let activeMainImg = gallery[0];
+
+            let thumbsHTML = gallery.map((img, i) => `
+                <div class="thumb ${i===0?'active':''}" onclick="changeMainImage(this, '${img}')">
+                    <img src="${img}" alt="صورة إضافية">
+                </div>
+            `).join('');
+
+            // التحقق من حالة القطعة (متاح / Sold Out)
+            const isSoldOut = prod.status === 'out';
+            
+            let sealColor = isSoldOut ? '#ff3333' : 'var(--accent-yellow)';
+            let sealText = isSoldOut ? 'SOLD OUT ✦ ARCHIVED PIECE ✦' : 'UNOVERSE ✦ 1 OF 1 EXCLUSIVE ✦';
+            let badgeText = isSoldOut ? '<span style="color:#ff3333;">نفذت الكمية // SOLD OUT</span>' : `رقم الإصدار: ${prod.id.slice(-6).toUpperCase()}`;
+            let badgeColor = isSoldOut ? '#ff3333' : 'var(--accent-yellow)';
+
+            let sizes = prod.sizes || ['S', 'M', 'L', 'XL'];
+            selectedSize = isSoldOut ? 'غير متاح' : sizes[0]; 
+            let sizesHTML = sizes.map((s, i) => {
+                let activeClass = (i===0 && !isSoldOut) ? 'active' : '';
+                let disabledAttr = isSoldOut ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : '';
+                return `<button type="button" class="size-btn ${activeClass}" ${disabledAttr} onclick="${isSoldOut ? '' : `selectSize(this, '${s}')`}">${s}</button>`;
+            }).join('');
+
+            let btnHTML = isSoldOut 
+                ? `<button class="add-to-cart-btn" style="background:#111; color:#555; cursor:not-allowed;" disabled>
+                       <span style="position:relative; z-index:2;">نفذت الكمية (SOLD OUT)</span>
+                   </button>`
+                : `<button class="add-to-cart-btn" onclick="addToCartDetailed()">
+                       <span style="position:relative; z-index:2;">إضافة للحقيبة</span>
+                       <span style="position:relative; z-index:2; font-family:'Oswald', sans-serif;">+</span>
+                   </button>`;
+
+            wrapper.innerHTML = `
+                <div class="product-container">
+                    
+                    <!-- اللوحة اليمين: تفاصيل القطعة -->
+                    <div class="product-details">
+                        <div class="product-id-badge" style="color:${badgeColor}; border-color:${badgeColor};">
+                            ${badgeText}
                         </div>
-                    `;
-                });
-            } else {
-                document.getElementById('similarSection').style.display = 'none';
+                        
+                        <h1 class="product-title">${prod.name}</h1>
+                        
+                        <div class="product-price">
+                            ${priceHTML}
+                        </div>
+
+                        <div class="desc-label" style="color:${badgeColor};">✦ تفاصيل القطعة:</div>
+                        <p class="product-desc" style="border-color:${badgeColor};">${prod.description || 'إصدار حصري مميز جداً. تعكس هذه القطعة فخامة الخامات وجودة التنفيذ العالية التي تتميز بها علامة UnoVerse. تصميم فريد بإنتاج فردي (1 of 1).'}</p>
+
+                        <div class="sizes-section">
+                            <div class="size-header">
+                                <span>المقاس المحدد: <strong id="selectedSizeLabel" style="color:${badgeColor}; margin-right:5px;">${selectedSize}</strong></span>
+                            </div>
+                            <div class="size-grid">${sizesHTML}</div>
+                        </div>
+
+                        ${btnHTML}
+                    </div>
+
+                    <!-- اللوحة الشمال: معرض الصور والختم الدوار -->
+                    <div class="product-gallery">
+                        
+                        <!-- الختم الدوار المميز -->
+                        <div class="seal-1of1" style="border-color:${sealColor};">
+                            <div class="seal-text">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" id="circlePath" fill="none"/>
+                                    <text><textPath href="#circlePath" startOffset="0%" fill="${sealColor}">${sealText}</textPath></text>
+                                </svg>
+                            </div>
+                            <div class="seal-center" style="text-shadow: 0 0 15px ${sealColor};">1/1</div>
+                        </div>
+
+                        <div class="spotlight-wrapper" id="zoomContainer">
+                            <img id="mainArtImg" class="main-image" src="${activeMainImg}" alt="${prod.name}">
+                            <div class="lens" id="artLens" style="background-image: url('${activeMainImg}');"></div>
+                        </div>
+                        <div class="thumbnails-strip">${thumbsHTML}</div>
+                    </div>
+
+                </div>
+
+                <!-- معلومات الشحن والخامات السفلية -->
+                <div class="info-tabs-container">
+                    <div class="tab-col">
+                        <h4 class="tab-title">تفاصيل الخامات ✦</h4>
+                        <p class="tab-text">يتم اختيار الأقمشة الثقيلة والمعالجة بدقة لضمان المتانة والشكل الانسيابي الفاخر، مع اهتمام بالغ بجودة الخياطة اليدوية والتفاصيل النهائية.</p>
+                    </div>
+                    <div class="tab-col">
+                        <h4 class="tab-title">معلومات الشحن ✦</h4>
+                        <p class="tab-text">تُغلف القطعة في صناديق UnoVerse المميزة التي تحافظ عليها أثناء النقل. يتم التوصيل السريع والمؤمن لضمان وصول القطعة إليك في أفضل حالة.</p>
+                    </div>
+                    <div class="tab-col">
+                        <h4 class="tab-title">سياسة الإصدار ✦</h4>
+                        <p class="tab-text">جميع قطعنا هي إصدارات فردية بتصميم (1 of 1). بمجرد إتمامك للطلب، يتم إزالة القطعة من الموقع نهائياً وتصبح حصرياً ملكاً لك وحدك.</p>
+                    </div>
+                </div>
+            `;
+
+            initImageZoom();
+            attachCursorEffects(); 
+        }
+
+        // تغيير الصورة
+        function changeMainImage(thumb, src) {
+            document.getElementById('mainArtImg').src = src;
+            document.getElementById('artLens').style.backgroundImage = `url('${src}')`;
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+        }
+
+        // عدسة التكبير
+        function initImageZoom() {
+            const container = document.getElementById('zoomContainer');
+            const lens = document.getElementById('artLens');
+
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const xPercent = (x / rect.width) * 100;
+                const yPercent = (y / rect.height) * 100;
+
+                lens.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
+                lens.style.backgroundSize = '220%'; 
+            });
+        }
+
+        // اختيار المقاس
+        function selectSize(btn, size) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedSize = size;
+            document.getElementById('selectedSizeLabel').innerText = size;
+        }
+
+        // الإضافة للسلة (محدثة لمنع التكرار)
+        function addToCartDetailed() {
+            if (!currentProductData || currentProductData.status === 'out') return;
+            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+
+            // 1. التحقق مما إذا كان المنتج موجوداً بالفعل في السلة باستخدام الـ id
+            const isAlreadyInCart = cart.some(item => item.id === currentProductData.id);
+
+            if (isAlreadyInCart) {
+                // إظهار تنبيه للمستخدم
+                alert('هذه القطعة الحصرية موجودة بالفعل في حقيبتك!');
+                
+                // فتح السلة ليرى المنتج
+                document.getElementById('cartDrawer').classList.add('active');
+                document.getElementById('cartOverlay').classList.add('active');
+                
+                // إيقاف الدالة هنا لمنع الإضافة المتكررة
+                return; 
             }
 
-            updateBadges();
+            // 2. إذا لم يكن موجوداً، يتم إضافته كالمعتاد
+            const item = {
+                id: currentProductData.id,
+                name: currentProductData.name,
+                price: currentProductData.discount || currentProductData.price,
+                image: currentProductData.image,
+                size: selectedSize
+            };
+
+            cart.push(item);
+            localStorage.setItem('unoCart', JSON.stringify(cart));
+            updateCartUI();
+
+            document.getElementById('cartDrawer').classList.add('active');
+            document.getElementById('cartOverlay').classList.add('active');
+        }
+
+        // تحديث شكل السلة
+        function updateCartUI() {
+            const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+            const container = document.getElementById('cartItemsContainer');
+            const badge = document.getElementById('cartBadge');
+            
+            if (badge) badge.innerText = cart.length;
+            if (!container) return;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#555;">[ الحقيبة فارغة ]</p>';
+            } else {
+                container.innerHTML = cart.map((item, idx) => `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>المقاس: ${item.size} // ${item.price} ج.م</p>
+                        </div>
+                        <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:#ff3333; font-size:18px; cursor:pointer; margin-right:auto; font-family:'Oswald', sans-serif;">✕</button>
+                    </div>
+                `).join('');
+            }
+
+            const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+            const totalEl = document.getElementById('cartTotalPrice');
+            if (totalEl) totalEl.innerText = total + ' ج.م';
+            
+            attachCursorEffects();
+        }
+
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('unoCart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        // تشغيل الدوال عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProductData();
+            updateCartUI();
+            attachCursorEffects();
+
+            // ضبط حركة الهيدر في الموبايل والكمبيوتر
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('mainHeader');
+                const ticker = document.getElementById('newsTickerBar');
+                // التحقق من حجم الشاشة
+                const isMobile = window.innerWidth <= 992;
+                
+                if(window.scrollY > 50) {
+                    header.style.top = '0';
+                    ticker.style.transform = 'translateY(-100%)';
+                } else {
+                    header.style.top = isMobile ? '32px' : '32px'; 
+                    ticker.style.transform = 'translateY(0)';
+                }
+            });
+
+            document.getElementById('openCart')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
+            document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+            document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
         });
     </script>
 </body>
