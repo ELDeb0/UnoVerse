@@ -225,7 +225,9 @@
             
             .eng-typography-bg .word-1 { font-size: 25vw; margin-top: 10vh; }
             .eng-typography-bg .word-2 { font-size: 22vw; margin-bottom: 10vh; }
-            .cart-drawer { width: 100%; right: -100%; padding: 30px 20px;}
+            
+            /* حل مشكلة اختفاء السلة في الموبايل */
+            .cart-drawer { width: 100%; padding: 30px 20px;}
         }
     </style>
 </head>
@@ -234,7 +236,7 @@
     <!-- نغمشة الشاشة السينمائية -->
     <div class="cinematic-grain"></div>
 
-    <!-- شريط الأخبار العلوي (مخفي افتراضياً، يظهر فقط للنص المخصص) -->
+    <!-- شريط الأخبار العلوي -->
     <div class="news-ticker-bar" id="newsTickerBar">
         <div class="ticker-track" id="tickerTrack"></div>
     </div>
@@ -266,7 +268,7 @@
                 <span>الإجمالي:</span>
                 <span id="cartTotalPrice">0 ج.م</span>
             </div>
-            <button class="checkout-btn" onclick="alert('سيتم تحويلك لصفحة الدفع الآمن!')">إتمام الطلب // CHECKOUT</button>
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">إتمام الطلب // CHECKOUT</button>        
         </div>
     </div>
 
