@@ -27,45 +27,54 @@
         .login-box button:hover { background: #fff; }
         #loginError { color: #ff3333; margin-top: 15px; display: none; font-size: 14px; }
 
-        /* ================= لوحة التحكم الأساسية ================= */
-        #adminPanel { display: none; padding: 40px 5%; max-width: 1000px; margin: auto; }
+        /* ================= لوحة التحكم ================= */
+        #adminPanel { display: none; padding: 40px 5%; max-width: 1200px; margin: auto; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
         .admin-header h1 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); }
         
+        /* ================= نظام التبويبات (Tabs) ================= */
+        .tabs-nav { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 15px; }
+        .tab-btn { background: transparent; color: #666; border: none; font-family: 'Oswald', sans-serif; font-size: 18px; cursor: pointer; transition: 0.3s; letter-spacing: 1px; }
+        .tab-btn:hover { color: #fff; }
+        .tab-btn.active { color: var(--accent-yellow); font-weight: bold; }
+        
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= الفورم والجداول ================= */
         .form-group { margin-bottom: 20px; background: #0a0a0a; padding: 20px; border: 1px solid #222; }
         .form-group label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--accent-yellow); }
-        .form-group input[type="text"], .form-group input[type="number"], .form-group select {
-            width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; font-family: 'Tajawal', sans-serif; box-sizing: border-box;
+        .form-group input[type="text"], .form-group input[type="number"], .form-group select, .form-group textarea {
+            width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; font-family: 'Tajawal', sans-serif; box-sizing: border-box; outline: none;
         }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-yellow); }
         
-        /* نظام المقاسات */
         .sizes-group { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; }
         .size-checkbox-label { display: inline-flex; align-items: center; gap: 8px; background: #111; padding: 10px 20px; border: 1px solid #333; cursor: pointer; font-family: 'Oswald', sans-serif; font-size: 16px; transition: 0.3s; }
         .size-checkbox-label:hover { border-color: var(--accent-yellow); }
-        .size-checkbox-label input[type="checkbox"] { accent-color: var(--accent-yellow); width: 18px; height: 18px; cursor: pointer; }
-
-        /* نظام إضافة الصور */
+        
         .image-inputs { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .image-inputs input[type="text"] { flex: 1; min-width: 200px; }
-        .image-inputs input[type="file"] { flex: 1; background: transparent; min-width: 200px; color: #888; }
-        .add-img-btn { padding: 12px 20px; background: #222; color: #fff; border: 1px solid #444; cursor: pointer; transition: 0.3s; }
+        .image-inputs input { flex: 1; min-width: 200px; }
+        .add-img-btn { padding: 12px 20px; background: #222; color: #fff; border: 1px solid #444; cursor: pointer; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-weight: bold; }
         .add-img-btn:hover { background: var(--accent-yellow); color: #000; }
         
-        /* معرض الصور المصغر */
         #imageGallery { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
-        .preview-img { width: 80px; height: 80px; object-fit: cover; border: 1px solid var(--accent-yellow); }
         .preview-container { position: relative; display: inline-block; }
+        .preview-img { width: 80px; height: 80px; object-fit: cover; border: 1px solid var(--accent-yellow); }
         .remove-img { position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; }
 
-        .submit-btn { width: 100%; padding: 15px; background: var(--accent-yellow); color: #000; font-weight: bold; font-size: 18px; border: none; cursor: pointer; margin-top: 20px; transition: 0.3s; }
-        
-        /* ================= جدول المنتجات المضافة ================= */
-        .inventory-section { margin-top: 60px; border-top: 1px solid #333; padding-top: 30px; }
+        .submit-btn { width: 100%; padding: 15px; background: var(--accent-yellow); color: #000; font-weight: bold; font-size: 18px; border: none; cursor: pointer; margin-top: 20px; transition: 0.3s; font-family: 'Tajawal', sans-serif;}
+        .submit-btn:hover { background: #fff; }
+
+        .inventory-section { margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; }
         .inventory-section h2 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); margin-bottom: 20px; }
+        
         .admin-table { width: 100%; border-collapse: collapse; background: #0a0a0a; border: 1px solid #222; }
         .admin-table th, .admin-table td { padding: 15px; text-align: right; border-bottom: 1px solid #222; }
         .admin-table th { color: #888; font-family: 'Oswald', sans-serif; font-size: 14px; text-transform: uppercase; }
         .admin-table img { width: 50px; height: 50px; object-fit: cover; border: 1px solid #444; }
+        
         .action-btn { padding: 8px 12px; border: none; cursor: pointer; font-family: 'Tajawal', sans-serif; font-weight: bold; font-size: 12px; transition: 0.3s; }
         .edit-btn { background: #333; color: #fff; margin-left: 5px; }
         .edit-btn:hover { background: var(--accent-yellow); color: #000; }
@@ -92,80 +101,110 @@
             <button onclick="logout()" style="background:transparent; color:#ff3333; border:1px solid #ff3333; padding:5px 15px; cursor:pointer; font-weight:bold;">تسجيل خروج ✕</button>
         </div>
 
-        <form id="addProductForm" onsubmit="saveProduct(event)">
-            <div class="form-group">
-                <label>اسم القطعة</label>
-                <input type="text" id="prodName" required placeholder="مثال: The Midnight Jacket">
-            </div>
-            
-            <div style="display:flex; gap:20px; flex-wrap: wrap;">
-                <div class="form-group" style="flex:1; min-width:200px;">
-                    <label>السعر الأصلي (ج.م)</label>
-                    <input type="number" id="prodPrice" required placeholder="1500">
+        <!-- أزرار التبويبات -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('productsTab', this)">إدارة المنتجات</button>
+            <button class="tab-btn" onclick="switchTab('aboutTab', this)">إعدادات (من نحن)</button>
+        </div>
+
+        <!-- ================= التبويب الأول: إدارة المنتجات ================= -->
+        <div id="productsTab" class="tab-content active">
+            <form id="addProductForm" onsubmit="saveProduct(event)">
+                <div class="form-group">
+                    <label>اسم القطعة</label>
+                    <input type="text" id="prodName" required placeholder="مثال: The Midnight Jacket">
                 </div>
-                <div class="form-group" style="flex:1; min-width:200px;">
-                    <label>السعر بعد الخصم (ج.م) - اتركه فارغاً إذا لم يوجد خصم</label>
-                    <input type="number" id="prodDiscount" placeholder="1200">
+                
+                <div style="display:flex; gap:20px; flex-wrap: wrap;">
+                    <div class="form-group" style="flex:1; min-width:200px;">
+                        <label>السعر الأصلي (ج.م)</label>
+                        <input type="number" id="prodPrice" required placeholder="1500">
+                    </div>
+                    <div class="form-group" style="flex:1; min-width:200px;">
+                        <label>السعر بعد الخصم (ج.م) - اتركه فارغاً إذا لم يوجد خصم</label>
+                        <input type="number" id="prodDiscount" placeholder="1200">
+                    </div>
                 </div>
-            </div>
 
-            <!-- المقاسات -->
-            <div class="form-group">
-                <label>المقاسات المتاحة لهذه القطعة</label>
-                <div class="sizes-group">
-                    <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="S"> S</label>
-                    <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="M"> M</label>
-                    <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="L"> L</label>
-                    <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="XL"> XL</label>
-                    <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="XXL"> XXL</label>
-                    <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="Free Size"> Free Size</label>
+                <div class="form-group">
+                    <label>المقاسات المتاحة لهذه القطعة</label>
+                    <div class="sizes-group">
+                        <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="S"> S</label>
+                        <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="M"> M</label>
+                        <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="L"> L</label>
+                        <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="XL"> XL</label>
+                        <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="XXL"> XXL</label>
+                        <label class="size-checkbox-label"><input type="checkbox" name="prodSizes" value="Free Size"> Free Size</label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label>حالة المنتج</label>
-                <select id="prodStatus">
-                    <option value="available">متاح</option>
-                    <option value="offer">عرض خاص</option>
-                    <option value="out">نفذت الكمية (Sold Out)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>معرض صور المنتج (الرئيسية والتفاصيل)</label>
-                <div class="image-inputs">
-                    <input type="file" id="fileInput" accept="image/*" onchange="addFromFile(event)">
-                    <input type="text" id="urlInput" placeholder="أو أدخل رابط صورة خارجية">
-                    <button type="button" class="add-img-btn" onclick="addFromUrl()">إضافة الرابط</button>
+                <div class="form-group">
+                    <label>حالة المنتج</label>
+                    <select id="prodStatus">
+                        <option value="available">متاح</option>
+                        <option value="offer">عرض خاص</option>
+                        <option value="out">نفذت الكمية (Sold Out)</option>
+                    </select>
                 </div>
-                <div id="imageGallery"></div>
-            </div>
 
-            <button type="submit" class="submit-btn" id="submitBtn">إضافة القطعة للنظام السحابي</button>
-            <button type="button" class="submit-btn" id="cancelEditBtn" style="display:none; background:#333; color:#fff; margin-top:10px;" onclick="cancelEdit()">إلغاء التعديل</button>
-        </form>
+                <!-- حقل شريط الأخبار المخصص للمنتج -->
+                <div class="form-group">
+                    <label>شريط الأخبار المخصص لهذه القطعة (اختياري)</label>
+                    <input type="text" id="prodTickerText" placeholder="مثال: متبقي قطعة واحدة فقط من هذا الإصدار الحصري...">
+                </div>
 
-        <div class="inventory-section">
-            <h2>الكوليكشن الحالي // INVENTORY</h2>
-            <div style="overflow-x:auto;">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>الصورة</th>
-                            <th>الاسم</th>
-                            <th>السعر</th>
-                            <th>الخصم</th>
-                            <th>المقاسات</th>
-                            <th>الحالة</th>
-                            <th>إجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryBody">
-                        <!-- حقن المنتجات الحية من Firebase -->
-                    </tbody>
-                </table>
+                <div class="form-group">
+                    <label>وصف القطعة (تفاصيل القماش، القصة، والعناية)</label>
+                    <textarea id="prodDescription" style="height:120px;" placeholder="اكتب تفاصيل القطعة هنا.."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>معرض صور المنتج</label>
+                    <div class="image-inputs">
+                        <input type="file" id="fileInput" accept="image/*" onchange="addFromFile(event)">
+                        <input type="text" id="urlInput" placeholder="أو أدخل رابط صورة خارجية">
+                        <button type="button" class="add-img-btn" onclick="addFromUrl()">إضافة الرابط</button>
+                    </div>
+                    <div id="imageGallery"></div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">إضافة القطعة للنظام السحابي</button>
+                <button type="button" class="submit-btn" id="cancelEditBtn" style="display:none; background:#333; color:#fff; margin-top:10px;" onclick="cancelEdit()">إلغاء التعديل</button>
+            </form>
+
+            <div class="inventory-section">
+                <h2>الكوليكشن الحالي // INVENTORY</h2>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>الاسم</th>
+                                <th>السعر</th>
+                                <th>الخصم</th>
+                                <th>المقاسات</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryBody">
+                            <!-- المنتجات -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
+        <!-- ================= التبويب الثاني: إعدادات من نحن ================= -->
+        <div id="aboutTab" class="tab-content">
+            <div class="form-group" style="margin-top: 0;">
+                <label>نص قسم (من نحن) في الصفحة الرئيسية</label>
+                <p style="color: #666; font-size: 13px; margin-bottom: 15px;">تقدر تكتب هنا القصة بتاعت البراند، رؤيتكم، وليه القطع بتاعتكم مميزة. (السطور الجديدة هتظهر في الموقع بشكل تلقائي).</p>
+                <textarea id="aboutInput" style="height: 250px;" placeholder="اكتب قصة البراند أو رسالتكم للعملاء هنا..."></textarea>
+                <button type="button" class="submit-btn" style="width: auto; padding: 12px 30px;" onclick="saveAboutUs()" id="aboutBtn">حفظ وتحديث النص</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -184,13 +223,26 @@
         }
         const db = firebase.firestore();
 
-        // ================= 2. تسجيل الدخول والشهادة =================
+        // ================= 2. نظام التبويبات =================
+        function switchTab(tabId, btnElement) {
+            // إخفاء كل التبويبات
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            // إزالة التفعيل من الأزرار
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // إظهار التبويب المطلوب
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // ================= 3. تسجيل الدخول =================
         const SECRET_PASSWORD = "uno";
 
         if(sessionStorage.getItem('isAdminLogged') === 'true') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             listenToInventory(); 
+            loadAboutData();
         }
 
         function checkPassword() {
@@ -200,6 +252,7 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 listenToInventory();
+                loadAboutData();
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
@@ -210,7 +263,37 @@
             location.reload();
         }
 
-        // ================= 3. إدارة معرض الصور =================
+        // ================= 4. إدارة إعدادات (من نحن) =================
+        async function loadAboutData() {
+            try {
+                const doc = await db.collection("settings").doc("about").get();
+                if (doc.exists && doc.data().text) {
+                    document.getElementById('aboutInput').value = doc.data().text;
+                }
+            } catch (error) {
+                console.error("خطأ في جلب بيانات من نحن:", error);
+            }
+        }
+
+        async function saveAboutUs() {
+            const text = document.getElementById('aboutInput').value;
+            const btn = document.getElementById('aboutBtn');
+            btn.innerText = "جاري الحفظ...";
+            btn.disabled = true;
+
+            try {
+                await db.collection("settings").doc("about").set({ text: text }, { merge: true });
+                alert("تم تحديث قسم (من نحن) بنجاح! سيظهر التحديث للزوار فوراً.");
+            } catch (error) {
+                console.error("خطأ:", error);
+                alert("حدث خطأ أثناء حفظ التحديث.");
+            } finally {
+                btn.innerText = "حفظ وتحديث النص";
+                btn.disabled = false;
+            }
+        }
+
+        // ================= 5. إدارة معرض الصور =================
         let currentImages = []; 
         let editingProductId = null; 
 
@@ -249,37 +332,29 @@
             });
         }
 
-        // ================= 4. الإضافة والتعديل السحابي (Firebase) =================
+        // ================= 6. الإضافة والتعديل السحابي للمنتجات =================
         async function saveProduct(e) {
             e.preventDefault();
 
-            if(currentImages.length === 0) {
-                alert("يجب إضافة صورة واحدة على الأقل!");
-                return;
-            }
+            if(currentImages.length === 0) { alert("يجب إضافة صورة واحدة على الأقل!"); return; }
 
             const sizeCheckboxes = document.querySelectorAll('input[name="prodSizes"]:checked');
             let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
 
-            if(selectedSizes.length === 0) {
-                alert("يجب اختيار مقاس واحد على الأقل!");
-                return;
-            }
+            if(selectedSizes.length === 0) { alert("يجب اختيار مقاس واحد على الأقل!"); return; }
 
             const name = document.getElementById('prodName').value;
             const price = parseFloat(document.getElementById('prodPrice').value);
             const discountInput = document.getElementById('prodDiscount').value;
             const discount = discountInput ? parseFloat(discountInput) : price;
             const status = document.getElementById('prodStatus').value;
+            const description = document.getElementById('prodDescription').value;
+            const tickerText = document.getElementById('prodTickerText').value; // جلب قيمة شريط الأخبار
 
             const productData = {
-                name: name,
-                price: price,
-                discount: discount,
-                status: status,
-                sizes: selectedSizes,
-                image: currentImages[0],
-                gallery: currentImages,
+                name: name, price: price, discount: discount, status: status,
+                sizes: selectedSizes, description: description, tickerText: tickerText,
+                image: currentImages[0], gallery: currentImages,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
@@ -289,31 +364,28 @@
 
             try {
                 if (editingProductId) {
-                    // تحديث مستند أونلاين
                     await db.collection("products").doc(editingProductId).update(productData);
                     alert("تم تحديث بيانات القطعة أونلاين بنجاح! 🚀");
                 } else {
-                    // إضافة مستند جديد أونلاين
                     productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection("products").add(productData);
                     alert("تم نشر القطعة أونلاين لجميع الزوار بنجاح! 🚀");
                 }
                 cancelEdit();
             } catch (error) {
-                console.error("خطأ في الاتصال بالفيسبوك/الفايربيس: ", error);
-                alert("حدث خطأ أثناء الحفظ! تأكد من القواعد والإعدادات.");
+                console.error("خطأ:", error);
+                alert("حدث خطأ أثناء الحفظ!");
             } finally {
                 submitBtn.disabled = false;
             }
         }
 
-        // ================= 5. المزامنة الحية والحذف من Firebase =================
+        // ================= 7. المزامنة الحية والحذف =================
         let loadedProducts = [];
 
         function listenToInventory() {
             const tbody = document.getElementById('inventoryBody');
 
-            // الاستماع اللحظي والحي لأي تغيير في قاعدة البيانات
             db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 tbody.innerHTML = '';
                 loadedProducts = [];
@@ -325,7 +397,7 @@
 
                 snapshot.forEach((doc) => {
                     const p = doc.data();
-                    p.id = doc.id; // حجز الـ ID السحابي
+                    p.id = doc.id;
                     loadedProducts.push(p);
 
                     let statusText = p.status === 'offer' ? 'عرض خاص' : (p.status === 'out' ? 'نفذت' : 'متاح');
@@ -356,10 +428,9 @@
             if(confirm("هل أنت متأكد من حذف هذه القطعة نهائياً من السيرفر لكل الزوار؟")) {
                 try {
                     await db.collection("products").doc(id).delete();
-                    alert("تم حذف القطعة من قاعدة البيانات السحابية.");
+                    alert("تم حذف القطعة.");
                 } catch (error) {
-                    console.error("خطأ في الحذف: ", error);
-                    alert("فشل الحذف، جرب مرة أخرى.");
+                    console.error("خطأ: ", error);
                 }
             }
         }
@@ -372,6 +443,8 @@
             document.getElementById('prodPrice').value = prod.price;
             document.getElementById('prodDiscount').value = (prod.discount && prod.discount !== prod.price) ? prod.discount : '';
             document.getElementById('prodStatus').value = prod.status;
+            document.getElementById('prodDescription').value = prod.description || ''; 
+            document.getElementById('prodTickerText').value = prod.tickerText || ''; // جلب نص شريط الأخبار المخصص للتعديل
             
             document.querySelectorAll('input[name="prodSizes"]').forEach(cb => cb.checked = false);
             if (prod.sizes) {
@@ -395,7 +468,6 @@
         function cancelEdit() {
             editingProductId = null;
             document.getElementById('addProductForm').reset();
-            document.querySelectorAll('input[name="prodSizes"]').forEach(cb => cb.checked = false);
             currentImages = [];
             renderGallery();
             
