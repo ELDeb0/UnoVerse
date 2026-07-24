@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UnoVerse | Admin Protocol</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-dark: #070707; --accent-yellow: #FFD700; --text-light: #F4F3EF; }
@@ -370,5 +372,74 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
     </script>
 
     <script> src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+  // مفاتيح مشروعك اللي نسختها من Firebase
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "unoverse.firebaseapp.com",
+    projectId: "unoverse",
+    storageBucket: "unoverse.appspot.com",
+    messagingSenderId: "xxxxxx",
+    appId: "xxxxxx"
+  };
+
+  // تشغيل Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // دالة إضافة المنتج الجديدة بدلاً من LocalStorage
+  function saveProductToCloud(productData) {
+      db.collection("products").add({
+          name: productData.name,
+          price: productData.price,
+          image: productData.image,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+          alert("تم نشر المنتج أونلاين لجميع الزوار بنجاح! 🚀");
+      })
+      .catch((error) => {
+          console.error("خطأ في النشر: ", error);
+      });
+  }
+</script>
+
+
+
+
+    <script>
+  // مفاتيح مشروعك اللي نسختها من Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
+    authDomain: "unoverse-5babd.firebaseapp.com",
+    projectId: "unoverse-5babd",
+    storageBucket: "unoverse-5babd.firebasestorage.app",
+    messagingSenderId: "543082257571",
+    appId: "1:543082257571:web:28b1d5931cbc75e6793316"
+  };
+
+  // تشغيل Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // دالة إضافة المنتج الجديدة بدلاً من LocalStorage
+  function saveProductToCloud(productData) {
+      db.collection("products").add({
+          name: productData.name,
+          price: productData.price,
+          image: productData.image,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+          alert("تم نشر المنتج أونلاين لجميع الزوار بنجاح! 🚀");
+      })
+      .catch((error) => {
+          console.error("خطأ في النشر: ", error);
+      });
+  }
+</script>
+    
 </body>
 </html>
