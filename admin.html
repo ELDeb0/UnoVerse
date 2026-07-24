@@ -355,6 +355,17 @@
             document.getElementById('submitBtn').style.background = "var(--accent-yellow)";
             document.getElementById('cancelEditBtn').style.display = "none";
         }
+
+// استدعاء مكتبة Supabase من الرابط المباشر
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+// بيانات الربط بتاعت مشروعك
+const supabaseUrl = 'https://obidvtiqgllahaysolie.supabase.co'
+const supabaseKey = 'sb_publishable_bRKNYH9rpjL55O-3WMkhmA_T_ZrtDAN' // استبدل دي بالمفتاح اللي نسخته
+
+// إنشاء اتصال جاهز للاستخدام
+export const supabase = createClient(supabaseUrl, supabaseKey)
+        
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
