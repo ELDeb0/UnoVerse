@@ -12,11 +12,8 @@
     
     <style>
         :root {
-            --bg-dark: #050505; 
-            --accent-yellow: #FFD700; 
-            --text-light: #F4F3EF;
-            --text-dim: #777777;
-            --border-fine: rgba(255, 215, 0, 0.15);
+            --bg-dark: #050505; --accent-yellow: #FFD700; 
+            --text-light: #F4F3EF; --text-dim: #777777;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         
@@ -29,87 +26,34 @@
         }
         img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
         .slide-arrow, .checkout-btn, .close-cart, .login-btn, button, a { pointer-events: auto; }
-        
         *, *::before, *::after { cursor: none !important; }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
 
-        /* الماوس المخصص */
-        .cursor-wrapper {
-            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999;
-            will-change: transform; mix-blend-mode: exclusion;
-        }
-        .cursor-dot {
-            width: 14px; height: 14px; background-color: var(--accent-yellow); border-radius: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
-            box-shadow: 0 0 15px var(--accent-yellow); will-change: transform;
-        }
-        .cursor-wrapper.hovered .cursor-dot {
-            transform: translate(-50%, -50%) scale(4.5); 
-            background-color: #fff; box-shadow: none; 
-        }
+        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; will-change: transform; mix-blend-mode: exclusion; }
+        .cursor-dot { width: 14px; height: 14px; background-color: var(--accent-yellow); border-radius: 50%; transform: translate(-50%, -50%) scale(1); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease; box-shadow: 0 0 15px var(--accent-yellow); will-change: transform; }
+        .cursor-wrapper.hovered .cursor-dot { transform: translate(-50%, -50%) scale(4.5); background-color: #fff; box-shadow: none; }
 
-        /* نغمشة سينمائية */
-        .cinematic-grain { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; 
-            z-index: 99998; opacity: 0.04; 
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
-        }
+        .cinematic-grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 99998; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
 
-        /* خلفية التايبوجرافي */
-        .eng-typography-bg { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; 
-            display: flex; flex-direction: column; justify-content: space-evenly;
-        }
-        .eng-typography-bg .word-1 { 
-            font-family: var(--font-en); font-size: 14vw; font-weight: 700; 
-            background: linear-gradient(135deg, rgba(200, 160, 90, 0.035), rgba(100, 100, 100, 0.01));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanRight 60s linear infinite; 
-        }
-        .eng-typography-bg .word-2 { 
-            font-family: 'Playfair Display', serif; font-size: 11vw; font-weight: 900; font-style: italic; 
-            background: linear-gradient(135deg, rgba(150, 150, 150, 0.02), rgba(180, 140, 70, 0.02));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanLeft 70s linear infinite; 
-        }
+        .eng-typography-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: space-evenly; }
+        .eng-typography-bg .word-1 { font-family: var(--font-en); font-size: 14vw; font-weight: 700; background: linear-gradient(135deg, rgba(200, 160, 90, 0.035), rgba(100, 100, 100, 0.01)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanRight 60s linear infinite; }
+        .eng-typography-bg .word-2 { font-family: 'Playfair Display', serif; font-size: 11vw; font-weight: 900; font-style: italic; background: linear-gradient(135deg, rgba(150, 150, 150, 0.02), rgba(180, 140, 70, 0.02)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanLeft 70s linear infinite; }
         @keyframes smoothPanRight { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(25%, 0, 0); } }
         @keyframes smoothPanLeft { 0% { transform: translate3d(25%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
 
-        /* الهيدر الزجاجي (ثابت بالأعلى) */
-        .main-header {
-            display: flex; justify-content: space-between; align-items: center; width: 100%;
-            padding: 25px 5%; position: fixed; top: 0; right: 0; z-index: 9999;
-            background: linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0) 100%);
-            transition: all 0.4s ease; backdrop-filter: blur(0px);
-        }
-        .main-header.scrolled {
-            background: rgba(5, 5, 5, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 15px 5%;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .main-header .logo {
-            font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700;
-            letter-spacing: 3px; text-decoration: none; color: var(--text-light); flex-shrink: 0;
-            text-shadow: 0 0 15px rgba(0,0,0,0.8); transition: 0.3s;
-        }
+        .main-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 25px 5%; position: fixed; top: 0; right: 0; z-index: 9999; background: linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0) 100%); transition: all 0.4s ease; backdrop-filter: blur(0px); }
+        .main-header.scrolled { background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(10px); padding: 15px 5%; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .main-header .logo { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 3px; text-decoration: none; color: var(--text-light); flex-shrink: 0; text-shadow: 0 0 15px rgba(0,0,0,0.8); transition: 0.3s; }
         .main-header .logo span { color: var(--accent-yellow); }
         .main-header .main-nav { flex-grow: 1; display: flex; justify-content: center; }
         .main-header .main-nav ul { display: flex; gap: 40px; list-style: none; }
-        .main-header .main-nav ul li a { 
-            text-decoration: none; color: var(--text-light); font-size: 14px; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
+        .main-header .main-nav ul li a { text-decoration: none; color: var(--text-light); font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .main-header .main-nav ul li a:hover { color: var(--accent-yellow); }
         .main-header .header-actions { display: flex; align-items: center; gap: 30px; }
-        .main-header .login-btn { 
-            color: var(--accent-yellow); text-decoration: none; font-size: 14px; 
-            font-weight: bold; letter-spacing: 1px; transition: 0.3s; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
+        .main-header .login-btn { color: var(--accent-yellow); text-decoration: none; font-size: 14px; font-weight: bold; letter-spacing: 1px; transition: 0.3s; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .main-header .login-btn:hover { color: var(--text-light); }
 
         @media (max-width: 950px) {
@@ -122,7 +66,6 @@
             .cursor-wrapper { display: none !important; }
         }
 
-        /* السلة الجانبية */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 90000; opacity: 0; visibility: hidden; transition: 0.4s; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: -420px; width: 400px; max-width: 100%; height: 100vh; background: #050505; border-left: 1px solid #1a1a1a; z-index: 99999; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); padding: 30px 20px; display: flex; flex-direction: column; }
@@ -139,27 +82,15 @@
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--accent-yellow); color: #000; border: none; font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 2px; transition: 0.3s; cursor: pointer !important;}
         .checkout-btn:hover { background-color: #fff; }
 
-        /* الواجهة الرئيسية (الهيرو) */
         .cinematic-hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: transparent; z-index: 10;}
         .hero-center-piece { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;}
         .main-portrait { width: 35vw; max-width: 550px; min-width: 320px; height: 75vh; border: 1px solid #222; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.9); position: relative; overflow: hidden; }
         .hero-image { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) saturate(0.9) brightness(0.85); transition: transform 1s ease, filter 0.5s ease; pointer-events: none;}
         .main-portrait::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%); pointer-events: none; z-index: 1; }
         
-        .hero-typography { 
-            position: absolute; bottom: 8%; right: 50%; z-index: 3; text-align: right; 
-            text-shadow: 0 15px 40px rgba(0,0,0,1); transform: rotate(-5deg) skewX(-3deg); 
-        }
-        .hero-typography h2 { 
-            font-family: 'Playfair Display', serif; font-size: 110px; line-height: 0.95; 
-            background: linear-gradient(180deg, #FFFFFF 0%, #FFD700 45%, #B8860B 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 5px; font-weight: 900; letter-spacing: -2px; 
-        }
-        .hero-typography p { 
-            font-family: 'Oswald', sans-serif; font-size: 16px; color: #C0A062; 
-            letter-spacing: 6px; text-transform: uppercase; margin-right: 5px; text-shadow: 0 5px 15px rgba(0,0,0,0.9);
-        }
+        .hero-typography { position: absolute; bottom: 8%; right: 50%; z-index: 3; text-align: right; text-shadow: 0 15px 40px rgba(0,0,0,1); transform: rotate(-5deg) skewX(-3deg); }
+        .hero-typography h2 { font-family: 'Playfair Display', serif; font-size: 110px; line-height: 0.95; background: linear-gradient(180deg, #FFFFFF 0%, #FFD700 45%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; font-weight: 900; letter-spacing: -2px; }
+        .hero-typography p { font-family: 'Oswald', sans-serif; font-size: 16px; color: #C0A062; letter-spacing: 6px; text-transform: uppercase; margin-right: 5px; text-shadow: 0 5px 15px rgba(0,0,0,0.9); }
 
         @media (max-width: 950px) {
             .main-portrait { width: 85vw; height: 60vh; }
@@ -168,50 +99,62 @@
             .hero-typography p { font-size: 12px; letter-spacing: 3px;}
         }
 
-        /* من نحن */
-        .about-section { 
-            padding: 120px 10%; text-align: center; border-bottom: 1px solid #111; 
-            position: relative; z-index: 10; background: rgba(5,5,5,0.8); backdrop-filter: blur(5px);
-            min-height: auto; 
+        /* ================= قسم الإطلاق الغامض (Drop Countdown) ================= */
+        .drop-section { 
+            padding: 80px 5%; display: none; /* مخفي لحين التأكد من التفعيل */
+            align-items: center; justify-content: center; position: relative; 
+            z-index: 10; background: #030303; border-bottom: 1px solid #111;
         }
-        .section-title { font-family: 'Oswald', sans-serif; font-size: 40px; color: var(--accent-yellow); margin-bottom: 40px; letter-spacing: 2px; text-align: center; text-transform: uppercase; }
-        .about-content p { 
-            font-size: 18px; line-height: 2.2; color: #aaa; max-width: 800px; 
-            margin: 0 auto; font-weight: 400; 
-            white-space: pre-wrap; word-wrap: break-word; text-align: right; 
+        .drop-container {
+            display: flex; gap: 50px; align-items: center; max-width: 1000px; margin: 0 auto;
         }
+        .drop-image-wrapper {
+            width: 300px; height: 400px; border: 1px solid #333; position: relative; overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9); background: #000;
+        }
+        .drop-image {
+            width: 100%; height: 100%; object-fit: cover; 
+            filter: brightness(0.2) contrast(1.5); /* تعتيم الصورة لجعلها ظل غامض */
+            transition: filter 1s ease;
+        }
+        .drop-image-wrapper::after {
+            content: '?'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Playfair Display', serif; font-size: 80px; color: rgba(255, 215, 0, 0.3);
+            pointer-events: none;
+        }
+        .drop-info { text-align: left; }
+        .drop-title { font-family: 'Oswald', sans-serif; font-size: 36px; color: #fff; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase;}
+        
+        .countdown { display: flex; gap: 20px; }
+        .time-box { display: flex; flex-direction: column; align-items: center; background: #0a0a0a; border: 1px solid var(--accent-yellow); padding: 15px 20px; min-width: 90px;}
+        .time-box span { font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: bold; color: var(--accent-yellow); }
+        .time-box p { font-family: 'Tajawal', sans-serif; font-size: 12px; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;}
+
         @media (max-width: 950px) {
-            .about-section { padding: 80px 5%; }
-            .about-content p { font-size: 15px; }
-            .section-title { font-size: 28px; margin-bottom: 25px; }
+            .drop-container { flex-direction: column; text-align: center; gap: 30px;}
+            .drop-info { text-align: center; }
+            .countdown { justify-content: center; gap: 10px;}
+            .time-box { padding: 10px 15px; min-width: 70px;}
+            .time-box span { font-size: 24px; }
+            .drop-title { font-size: 28px; }
+            .drop-image-wrapper { width: 250px; height: 350px; }
         }
 
-        /* الكوليكشن */
+        .about-section { padding: 120px 10%; text-align: center; border-bottom: 1px solid #111; position: relative; z-index: 10; background: rgba(5,5,5,0.8); backdrop-filter: blur(5px); min-height: auto; }
+        .section-title { font-family: 'Oswald', sans-serif; font-size: 40px; color: var(--accent-yellow); margin-bottom: 40px; letter-spacing: 2px; text-align: center; text-transform: uppercase; }
+        .about-content p { font-size: 18px; line-height: 2.2; color: #aaa; max-width: 800px; margin: 0 auto; font-weight: 400; white-space: pre-wrap; word-wrap: break-word; text-align: right; }
+        @media (max-width: 950px) { .about-section { padding: 80px 5%; } .about-content p { font-size: 15px; } .section-title { font-size: 28px; margin-bottom: 25px; } }
+
         .album-covers-section { padding: 120px 5%; position: relative; z-index: 10; background: rgba(3,3,3,0.7); backdrop-filter: blur(5px);}
         .products-grid { display: grid; gap: 40px; max-width: 1250px; margin: 0 auto; }
         .album-card { background: transparent; transition: 0.4s ease; display: flex; flex-direction: column; position: relative; }
         .album-card:hover { transform: translateY(-5px); }
-        .album-portrait { 
-            width: 100%; height: 55vh; min-height: 420px; max-height: 500px;
-            background-color: #050505; position: relative; overflow: hidden; 
-            display: block; border: 1px solid #222; transition: border-color 0.4s ease;
-        }
-        .album-portrait img { 
-            width: 100%; height: 100%; object-fit: cover; pointer-events: none;
-            filter: contrast(1.05) brightness(0.9); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s;
-        }
+        .album-portrait { width: 100%; height: 55vh; min-height: 420px; max-height: 500px; background-color: #050505; position: relative; overflow: hidden; display: block; border: 1px solid #222; transition: border-color 0.4s ease; }
+        .album-portrait img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; filter: contrast(1.05) brightness(0.9); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s; }
         .album-card:hover .album-portrait { border-color: var(--accent-yellow); }
         .album-card:hover .album-portrait img { transform: scale(1.04); filter: contrast(1.1) brightness(1); }
         
-        .overlay-badge { 
-            position: absolute; top: 15px; left: 0; 
-            font-family: 'Oswald', sans-serif; font-size: 11px; 
-            color: var(--accent-yellow); background: rgba(0,0,0,0.9);
-            border: 1px solid #333; border-left: 3px solid var(--accent-yellow);
-            padding: 8px 15px; font-weight: 700; z-index: 4; 
-            text-transform: uppercase; letter-spacing: 3px; box-shadow: 5px 10px 20px rgba(0,0,0,0.7);
-            display: flex; align-items: center; gap: 8px;
-        }
+        .overlay-badge { position: absolute; top: 15px; left: 0; font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--accent-yellow); background: rgba(0,0,0,0.9); border: 1px solid #333; border-left: 3px solid var(--accent-yellow); padding: 8px 15px; font-weight: 700; z-index: 4; text-transform: uppercase; letter-spacing: 3px; box-shadow: 5px 10px 20px rgba(0,0,0,0.7); display: flex; align-items: center; gap: 8px; }
         .overlay-badge::before { content: '✦'; font-size: 10px; }
         .overlay-badge.sold-out { color: #ff3333; border-left-color: #ff3333; }
         .overlay-badge.sold-out::before { content: '✕'; font-size: 10px; }
@@ -230,12 +173,7 @@
 
         .slide-img { opacity: 0; transition: opacity 0.5s ease; z-index: 1; position: absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; pointer-events: none;}
         .slide-img.active-slide { opacity: 1; z-index: 2; }
-        .slide-arrow { 
-            position: absolute; top: 50%; transform: translateY(-50%); 
-            background: rgba(0, 0, 0, 0.7); color: #fff; border: 1px solid #333; 
-            width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; 
-            z-index: 4; font-size: 12px; transition: 0.3s; opacity: 0; cursor: pointer !important;
-        }
+        .slide-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0, 0, 0, 0.7); color: #fff; border: 1px solid #333; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; z-index: 4; font-size: 12px; transition: 0.3s; opacity: 0; cursor: pointer !important; }
         .album-portrait:hover .slide-arrow { opacity: 1; }
         .slide-arrow:hover { background: var(--accent-yellow); color: #000; border-color: var(--accent-yellow); }
         .product-link { text-decoration: none; color: inherit; display: block; cursor: none; }
@@ -268,7 +206,6 @@
             .explore-btn { font-size: 11px; margin-top: 0;}
         }
 
-        /* الدعم والفوتر */
         .support-section { padding: 100px 10%; text-align: center; border-top: 1px solid #111; position: relative; z-index: 10; background: #050505; }
         .support-subtitle { color: #888; margin-bottom: 60px; font-size: 16px; }
         .support-form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; text-align: right; }
@@ -290,7 +227,6 @@
         .social-links a:hover { color: var(--accent-yellow); padding-right: 5px;}
         .footer-bottom { text-align: center; color: #444; border-top: 1px solid #111; padding-top: 30px; font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 1px;}
 
-        /* لوحة الدخول */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999; display: flex; justify-content: center; align-items: center; visibility: hidden; }
         .login-overlay.active { visibility: visible; }
         .close-login { position: absolute; top: -40px; right: 20px; font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: bold; color: #fff; background: transparent; border: none; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px; z-index: 999999; cursor: pointer !important; }
@@ -316,7 +252,6 @@
 </head>
 <body>
 
-    <!-- خلفية الحروف الإنجليزية بكامل الموقع (5 صفوف متحركة) -->
     <div class="eng-typography-bg">
         <div class="word-1">UNOVERSE ✦ UNOVERSE ✦ UNOVERSE ✦ UNOVERSE ✦</div>
         <div class="word-2">EXCLUSIVE COLLECTION ✦ EXCLUSIVE COLLECTION ✦ EXCLUSIVE COLLECTION ✦</div>
@@ -335,12 +270,8 @@
         </div>
     </div>
 
-    <!-- مؤشر الماوس -->
-    <div class="cursor-wrapper" id="cursorWrapper">
-        <div class="cursor-dot"></div>
-    </div>
+    <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
-    <!-- السلة الجانبية -->
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -359,10 +290,8 @@
         </div>
     </div>
 
-    <!-- الشريط العلوي الزجاجي -->
     <header class="main-header" id="mainHeader">
         <a href="#" class="logo">UNO<span>VERSE</span></a>
-        
         <nav class="main-nav">
             <ul>
                 <li><a href="#about">من نحن</a></li>
@@ -370,14 +299,12 @@
                 <li><a href="#support">الدعم</a></li>
             </ul>
         </nav>
-        
         <div class="header-actions">
             <a href="#" id="openLogin" class="login-btn">دخول</a>
             <a href="#" id="openCart" class="login-btn">الحقيبة [<span id="cartBadge">0</span>]</a>
         </div>
     </header>
 
-    <!-- الواجهة الرئيسية (الهيرو) -->
     <section id="hero" class="cinematic-hero">
         <div class="hero-center-piece">
             <div class="main-portrait">
@@ -390,7 +317,24 @@
         </div>
     </section>
 
-    <!-- قسم من نحن -->
+    <!-- قسم الإطلاق الغامض (يُدار من لوحة التحكم) -->
+    <section id="dropSection" class="drop-section">
+        <div class="drop-container">
+            <div class="drop-image-wrapper">
+                <img id="dropImage" src="" alt="Upcoming Drop" class="drop-image">
+            </div>
+            <div class="drop-info">
+                <h2 class="drop-title" id="dropTitle">COMING SOON</h2>
+                <div class="countdown" id="countdownTimer">
+                    <div class="time-box"><span id="cd-days">00</span><p>أيام</p></div>
+                    <div class="time-box"><span id="cd-hours">00</span><p>ساعات</p></div>
+                    <div class="time-box"><span id="cd-minutes">00</span><p>دقائق</p></div>
+                    <div class="time-box"><span id="cd-seconds">00</span><p>ثواني</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="about" class="about-section">
         <h2 class="section-title">من نحن // ABOUT US</h2>
         <div class="about-content" id="aboutContent">
@@ -398,19 +342,14 @@
         </div>
     </section>
 
-    <!-- قسم الكوليكشن -->
     <section id="collection" class="album-covers-section">
         <h2 class="section-title">الأرشيف الحصري // ARCHIVE</h2>
-        <div id="productsGrid" class="products-grid">
-            <!-- المنتجات ستظهر هنا أوتوماتيكياً من السيرفر -->
-        </div>
+        <div id="productsGrid" class="products-grid"></div>
     </section>
 
-    <!-- قسم الدعم -->
     <section id="support" class="support-section">
         <h2 class="section-title">الدعم // SUPPORT</h2>
         <p class="support-subtitle">نحن هنا لكسر القواعد، وحل أي مشكلة تعيق تجربتك.</p>
-        
         <form class="support-form" onsubmit="event.preventDefault(); alert('تم إرسال رسالتك. سنتواصل معك قريباً.'); this.reset();">
             <div class="input-group">
                 <input type="text" required placeholder="الاسم بالكامل // FULL NAME">
@@ -425,27 +364,23 @@
         </form>
     </section>
 
-    <!-- الفوتر التفصيلي -->
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-brand">
                 <h2>UNO<span>VERSE</span></h2>
                 <p>علامة تجارية متخصصة في الإصدارات الفردية الحصرية للرجال. نحن لا نصنع ملابس، نحن نصنع قطعاً أرشيفية لا تتكرر.</p>
             </div>
-            
             <div class="footer-section">
                 <h4>سياسة الشحن والتوصيل</h4>
                 <p>✦ يتم تجهيز القطع وتغليفها داخل صناديق أرشيفية مخصصة لحمايتها.</p>
                 <p>✦ التوصيل يتم خلال 2 إلى 4 أيام عمل لجميع المحافظات.</p>
                 <p>✦ جميع الشحنات مؤمنة بالكامل حتى باب المنزل.</p>
             </div>
-
             <div class="footer-section">
                 <h4>سياسة الاسترجاع والأصالة</h4>
                 <p>✦ نظراً لكون القطع إصدارات 1/1، لا يُسمح بالاسترجاع أو الاستبدال إلا في حالة وجود عيب مصنعي ملحوظ خلال 48 ساعة من الاستلام.</p>
                 <p>✦ كل قطعة تأتي مصحوبة برمز أصالة يؤكد تفردها وتسجيلها باسم المقتني.</p>
             </div>
-
             <div class="footer-social">
                 <h4>وسائل التواصل</h4>
                 <div class="social-links">
@@ -461,19 +396,15 @@
         </div>
     </footer>
 
-    <!-- لوحة تسجيل الدخول -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-bg login-bg-top"></div>
         <div class="login-bg login-bg-bottom"></div>
-        
         <div class="login-panel" id="loginPanel">
             <button class="close-login" id="closeLogin">✕ إغلاق</button>
-            
             <div class="login-header">
                 <h2>بروتوكول<br>الوصول.</h2>
                 <p>أدخل هويتك لفتح الكوليكشن السري.</p>
             </div>
-            
             <form class="login-form" id="loginForm">
                 <div class="input-group">
                     <input type="email" required placeholder="البريد الإلكتروني // IDENTIFIER">
@@ -481,9 +412,7 @@
                 <div class="input-group">
                     <input type="password" required placeholder="كود الوصول السري // ACCESS KEY">
                 </div>
-                
                 <button type="submit" class="submit-btn login-submit">تأكيد // ENTER PROTOCOL</button>
-                
                 <div class="register-prompt">
                     لا تملك تصريحاً؟ <a href="#">قدم طلب انضمام</a>
                 </div>
@@ -491,9 +420,7 @@
         </div>
     </div>
 
-    <!-- ================= الجافاسكريبت الموحد بـ Firebase ================= -->
     <script>
-        // --- الحماية المطلقة للمحتوى ---
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             if(e.keyCode == 123) { e.preventDefault(); return false; }
@@ -502,17 +429,12 @@
             if(e.ctrlKey && e.keyCode == 67) { e.preventDefault(); return false; }
         });
 
-        // تأثير الهيدر الزجاجي عند السكرول
         window.addEventListener('scroll', () => {
             const header = document.getElementById('mainHeader');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
         });
 
-        // 1. مفاتيح Firebase 
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -521,23 +443,15 @@
             messagingSenderId: "543082257571",
             appId: "1:543082257571:web:28b1d5931cbc75e6793316"
         };
-
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // 2. الماوس المخصص (GPU Accelerated)
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100;
         let cursorX = -100, cursorY = -100;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
         function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.25;
-            cursorY += (mouseY - cursorY) * 0.25;
+            cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
             cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
             requestAnimationFrame(animateCursor);
         }
@@ -554,129 +468,130 @@
         function addHover() { cursorWrapper.classList.add('hovered'); }
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
 
-        // 3. شاشة التحميل وجلب (من نحن)
         window.addEventListener('load', () => {
             const bar = document.getElementById('progress-bar');
             const overlay = document.getElementById('loader-overlay');
             if (bar) bar.style.width = '100%';
-            setTimeout(() => {
-                if (overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.style.display = 'none', 500);
-                }
-            }, 800);
+            setTimeout(() => { if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 500); } }, 800);
             
             loadAboutUs();
+            loadDropCountdown(); // تشغيل العداد الغامض
         });
 
         async function loadAboutUs() {
             try {
                 const doc = await db.collection("settings").doc("about").get();
                 const contentDiv = document.getElementById('aboutContent');
-                if (doc.exists && doc.data().text) {
-                    contentDiv.innerHTML = `<p>${doc.data().text}</p>`;
-                } else {
-                    contentDiv.innerHTML = '<p>علامة تجارية حصرية للإصدارات الفردية للرجال.</p>';
-                }
-            } catch (e) {
-                console.log("خطأ في جلب معلومات من نحن:", e);
-            }
+                if (doc.exists && doc.data().text) { contentDiv.innerHTML = `<p>${doc.data().text}</p>`; } 
+                else { contentDiv.innerHTML = '<p>علامة تجارية حصرية للإصدارات الفردية للرجال.</p>'; }
+            } catch (e) { console.log(e); }
         }
 
-        // 4. تسجيل الدخول
-        const loginOverlay = document.getElementById('loginOverlay');
-        const loginPanel = document.getElementById('loginPanel');
-        const openLoginBtn = document.getElementById('openLogin');
-        const closeLoginBtn = document.getElementById('closeLogin');
+        // ================= نظام العداد الغامض =================
+        let countdownInterval;
+        async function loadDropCountdown() {
+            try {
+                const doc = await db.collection("settings").doc("drop").get();
+                const dropSection = document.getElementById('dropSection');
+                
+                if (doc.exists && doc.data().active) {
+                    const data = doc.data();
+                    document.getElementById('dropTitle').innerText = data.title || "COMING SOON";
+                    if(data.image) document.getElementById('dropImage').src = data.image;
+                    
+                    if(data.time) {
+                        dropSection.style.display = 'flex';
+                        startCountdown(data.time);
+                    } else {
+                        dropSection.style.display = 'none';
+                    }
+                } else {
+                    dropSection.style.display = 'none';
+                }
+            } catch (e) { console.log("خطأ في جلب العداد", e); }
+        }
 
-        openLoginBtn?.addEventListener('click', (e) => { e.preventDefault(); loginOverlay.classList.add('active'); });
-        closeLoginBtn?.addEventListener('click', (e) => { e.preventDefault(); loginOverlay.classList.remove('active'); });
-        loginOverlay?.addEventListener('click', (e) => { if (!loginPanel.contains(e.target)) loginOverlay.classList.remove('active'); });
+        function startCountdown(targetDateStr) {
+            const targetDate = new Date(targetDateStr).getTime();
+            clearInterval(countdownInterval);
+            
+            countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
 
-        // 5. جلب المنتجات المباشر ورسم الكروت المطورة
-        function loadProductsFromCloud() {
-            const grid = document.getElementById('productsGrid');
-            if (!grid) return;
-
-            db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-                grid.innerHTML = '';
-
-                if (snapshot.empty) {
-                    grid.innerHTML = '<p style="color:#555; text-align:center; width:100%; font-family:monospace;">[ الأرشيف فارغ حالياً ]</p>';
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdownTimer').innerHTML = "<div style='color:var(--accent-yellow); font-family:Oswald; font-size:30px; letter-spacing:2px;'>AVAILABLE NOW</div>";
+                    document.getElementById('dropImage').style.filter = "brightness(1) contrast(1.1)"; // كشف الصورة
                     return;
                 }
 
-                snapshot.forEach((doc, index) => {
-                    const prod = doc.data();
-                    const prodId = doc.id;
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                    const price = parseFloat(prod.price) || 0;
-                    const discount = parseFloat(prod.discount) || price;
+                document.getElementById('cd-days').innerText = days < 10 ? '0' + days : days;
+                document.getElementById('cd-hours').innerText = hours < 10 ? '0' + hours : hours;
+                document.getElementById('cd-minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+                document.getElementById('cd-seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+            }, 1000);
+        }
+
+        const loginOverlay = document.getElementById('loginOverlay');
+        const loginPanel = document.getElementById('loginPanel');
+        document.getElementById('openLogin')?.addEventListener('click', (e) => { e.preventDefault(); loginOverlay.classList.add('active'); });
+        document.getElementById('closeLogin')?.addEventListener('click', (e) => { e.preventDefault(); loginOverlay.classList.remove('active'); });
+        loginOverlay?.addEventListener('click', (e) => { if (!loginPanel.contains(e.target)) loginOverlay.classList.remove('active'); });
+
+        function loadProductsFromCloud() {
+            const grid = document.getElementById('productsGrid');
+            if (!grid) return;
+            db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                grid.innerHTML = '';
+                if (snapshot.empty) { grid.innerHTML = '<p style="color:#555; text-align:center; width:100%; font-family:monospace;">[ الأرشيف فارغ حالياً ]</p>'; return; }
+
+                snapshot.forEach((doc, index) => {
+                    const prod = doc.data(); const prodId = doc.id;
+                    const price = parseFloat(prod.price) || 0; const discount = parseFloat(prod.discount) || price;
                     
                     let priceDisplay = (discount < price) 
                         ? `<span class="old">${price} ج.م</span> <span class="current">${discount} ج.م</span>` 
                         : `<span class="current">${price} ج.م</span>`;
 
-                    let badgeHTML = '';
-                    let offsetClass = (index % 2 !== 0) ? 'offset-card' : ''; 
-
+                    let badgeHTML = ''; let offsetClass = (index % 2 !== 0) ? 'offset-card' : ''; 
                     if (prod.status === 'offer') badgeHTML = `<div class="overlay-badge">عرض خاص</div>`;
                     else if (prod.status === 'out') badgeHTML = `<div class="overlay-badge sold-out">نفذت الكمية</div>`;
 
                     let galleryHTML = '';
                     if (prod.gallery && prod.gallery.length > 1) {
-                        prod.gallery.forEach((img, i) => {
-                            let activeClass = i === 0 ? 'active-slide' : '';
-                            galleryHTML += `<img src="${img}" class="slide-img ${activeClass}">`;
-                        });
-                        galleryHTML += `
-                            <button type="button" class="slide-arrow" style="left: 10px; right: auto;" dir="ltr" onclick="changeSlide(event, 1)">&#10094;</button>
-                            <button type="button" class="slide-arrow" style="right: 10px; left: auto;" dir="ltr" onclick="changeSlide(event, -1)">&#10095;</button>
-                        `;
+                        prod.gallery.forEach((img, i) => { galleryHTML += `<img src="${img}" class="slide-img ${i===0?'active-slide':''}">`; });
+                        galleryHTML += `<button type="button" class="slide-arrow" style="left: 10px; right: auto;" dir="ltr" onclick="changeSlide(event, 1)">&#10094;</button><button type="button" class="slide-arrow" style="right: 10px; left: auto;" dir="ltr" onclick="changeSlide(event, -1)">&#10095;</button>`;
                     } else {
                         let singleImg = prod.image || (prod.gallery ? prod.gallery[0] : '');
                         galleryHTML = `<img src="${singleImg}" class="slide-img active-slide">`;
                     }
 
-                    let sizesHTML = '';
-                    if (prod.sizes && prod.sizes.length > 0) {
-                        sizesHTML = `<p class="sizes-display">القياسات: <span>${prod.sizes.join(' | ')}</span></p>`;
-                    } else {
-                        sizesHTML = `<p class="sizes-display">القياسات: <span>Free Size</span></p>`;
-                    }
+                    let sizesHTML = prod.sizes && prod.sizes.length > 0 ? `<p class="sizes-display">القياسات: <span>${prod.sizes.join(' | ')}</span></p>` : `<p class="sizes-display">القياسات: <span>Free Size</span></p>`;
 
-                    const productHTML = `
+                    grid.innerHTML += `
                         <div class="album-card ${offsetClass}">
                             <a href="product.html?id=${prodId}" class="product-link">
-                                <div class="album-portrait">
-                                    ${galleryHTML}
-                                    ${badgeHTML}
-                                </div>
+                                <div class="album-portrait">${galleryHTML}${badgeHTML}</div>
                                 <div class="album-info">
-                                    <div class="info-top">
-                                        <h3>${prod.name}</h3>
-                                        <p class="price">${priceDisplay}</p>
-                                    </div>
-                                    <div class="info-bottom">
-                                        ${sizesHTML}
-                                        <span class="explore-btn">استكشف القطعة ✦</span>
-                                    </div>
+                                    <div class="info-top"><h3>${prod.name}</h3><p class="price">${priceDisplay}</p></div>
+                                    <div class="info-bottom">${sizesHTML}<span class="explore-btn">استكشف القطعة ✦</span></div>
                                 </div>
                             </a>
-                        </div>
-                    `;
-                    grid.innerHTML += productHTML;
+                        </div>`;
                 });
-                
                 attachCursorEffects(); 
             });
         }
 
-        // 6. السلة
         window.deleteItem = function(id) {
             let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-            let newCart = cart.filter(item => String(item.id) !== String(id));
-            localStorage.setItem('unoCart', JSON.stringify(newCart));
+            localStorage.setItem('unoCart', JSON.stringify(cart.filter(item => String(item.id) !== String(id))));
             updateCartUI();
         };
 
@@ -699,43 +614,24 @@
                     </div>
                 `).join('');
             }
-            
             const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
             const totalEl = document.getElementById('cartTotalPrice');
             if (totalEl) totalEl.innerText = total + ' ج.م';
         }
 
-        // 7. تحريك الصور
         function changeSlide(event, direction) {
-            event.preventDefault();
-            event.stopPropagation();
-            let container = event.target.closest('.album-portrait');
-            let slides = container.querySelectorAll('.slide-img');
+            event.preventDefault(); event.stopPropagation();
+            let slides = event.target.closest('.album-portrait').querySelectorAll('.slide-img');
             let currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active-slide'));
             slides[currentIndex].classList.remove('active-slide');
-            let nextIndex = (currentIndex + direction + slides.length) % slides.length;
-            slides[nextIndex].classList.add('active-slide');
+            slides[(currentIndex + direction + slides.length) % slides.length].classList.add('active-slide');
         }
 
-        // تشغيل الأحداث
         document.addEventListener('DOMContentLoaded', () => {
-            loadProductsFromCloud();
-            updateCartUI();
-            attachCursorEffects();
-            
-            document.getElementById('openCart')?.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('cartDrawer').classList.add('active');
-                document.getElementById('cartOverlay').classList.add('active');
-            });
-            document.getElementById('closeCart')?.addEventListener('click', () => {
-                document.getElementById('cartDrawer').classList.remove('active');
-                document.getElementById('cartOverlay').classList.remove('active');
-            });
-            document.getElementById('cartOverlay')?.addEventListener('click', () => {
-                document.getElementById('cartDrawer').classList.remove('active');
-                document.getElementById('cartOverlay').classList.remove('active');
-            });
+            loadProductsFromCloud(); updateCartUI(); attachCursorEffects();
+            document.getElementById('openCart')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
+            document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+            document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
         });
     </script>
 </body>
