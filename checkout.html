@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnoVerse | SECURE CHECKOUT</title>
+    
+    <!-- مكتبات Firebase السحابية -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- خطوط UnoVerse الأصلية -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,600;0,900;1,600&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= ثوابت التصميم ================= */
+        :root {
+            --bg-void: #030303; --bg-dark: #070707; --accent-yellow: #FFD700;
+            --text-main: #F4F3EF; --text-dim: #888888; --border-fine: #1a1a1a; 
+            --font-ar: 'Tajawal', sans-serif; --font-en: 'Oswald', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background-color: var(--bg-void); color: var(--text-main); font-family: var(--font-ar); 
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; cursor: none; 
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+        button, input, textarea, a, label { pointer-events: auto; }
+        *, *::before, *::after { cursor: none !important; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-void); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        /* ================= الماوس المخصص ================= */
+        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; will-change: transform; mix-blend-mode: exclusion; }
+        .cursor-dot { width: 14px; height: 14px; background-color: var(--accent-yellow); border-radius: 50%; transform: translate(-50%, -50%) scale(1); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease; box-shadow: 0 0 15px var(--accent-yellow); will-change: transform; }
+        .cursor-wrapper.hovered .cursor-dot { transform: translate(-50%, -50%) scale(4.5); background-color: #fff; box-shadow: none; }
+
+        /* ================= HEADER ================= */
+        .main-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            width: 100%; padding: 25px 5%; position: absolute; top: 0; right: 0; 
+            z-index: 9999; border-bottom: 1px solid var(--border-fine); background: var(--bg-dark);
+        }
+        .main-header .logo { font-family: var(--font-en); font-size: 24px; font-weight: 700; letter-spacing: 5px; text-decoration: none; color: var(--text-main); }
+        .main-header .logo span { color: var(--accent-yellow); }
+        .header-actions .action-link { color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; letter-spacing: 1px; cursor: pointer !important; }
+        .header-actions .action-link:hover { color: var(--text-main); }
+
+        /* ================= CHECKOUT LAYOUT ================= */
+        .checkout-wrapper {
+            display: flex; gap: 5%; padding: 130px 5% 80px; max-width: 1400px; margin: 0 auto; min-height: 100vh;
+        }
+
+        /* ----- اللوحة اليمين (بيانات الشحن) ----- */
+        .checkout-form-section { flex: 1.2; }
+        .section-title { font-family: var(--font-ar); font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+        .section-subtitle { font-family: var(--font-ar); font-size: 14px; color: var(--text-dim); margin-bottom: 40px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        
+        .form-group label { font-size: 13px; color: var(--accent-yellow); margin-bottom: 8px; font-weight: 700; letter-spacing: 1px;}
+        .form-group input, .form-group textarea { 
+            width: 100%; padding: 15px; background: transparent; border: 1px solid #333; 
+            color: var(--text-main); font-family: var(--font-ar); font-size: 15px; transition: 0.3s; outline: none;
+            cursor: text !important;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--text-main); background: #0a0a0a;}
+        .form-group input:invalid:focus { border-color: #ff3333; }
+        .form-group textarea { height: 100px; resize: none; }
+
+        /* ----- طرق الدفع ----- */
+        .payment-methods { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap;}
+        .payment-option { flex: 1; min-width: 120px; background: #111; border: 1px solid #333; text-align: center; cursor: pointer !important; transition: 0.3s; position: relative;}
+        .payment-option input { position: absolute; opacity: 0; cursor: pointer; }
+        .payment-option span { display: block; padding: 15px; font-family: var(--font-ar); font-weight: bold; color: var(--text-dim); transition: 0.3s; font-size: 14px;}
+        .payment-option:hover { border-color: var(--accent-yellow); }
+        .payment-option input:checked + span { background: var(--accent-yellow); color: #000; }
+        
+        .payment-instructions { background: #0a0a0a; border: 1px dashed var(--accent-yellow); padding: 20px; margin-top: 15px; display: none; font-size: 14px; line-height: 1.8;}
+
+        .submit-order-btn {
+            width: 100%; padding: 22px; background: var(--accent-yellow); color: #000; border: none; 
+            font-family: var(--font-en); font-size: 18px; font-weight: 800; letter-spacing: 2px; 
+            transition: 0.3s; cursor: pointer !important; margin-top: 30px;
+        }
+        .submit-order-btn:hover { background: #fff; }
+        .submit-order-btn:disabled { background: #333; color: #666; cursor: not-allowed !important; }
+
+        /* ----- اللوحة الشمال (ملخص الطلب) ----- */
+        .order-summary-section { flex: 1; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 40px; height: fit-content; position: sticky; top: 130px;}
+        .summary-title { font-family: var(--font-en); font-size: 20px; color: var(--accent-yellow); letter-spacing: 2px; margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 15px;}
+        
+        .summary-items { display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px; max-height: 350px; overflow-y: auto;}
+        .summary-item { display: flex; gap: 15px; align-items: center; }
+        .summary-item img { width: 65px; height: 85px; object-fit: cover; border: 1px solid #333; pointer-events: none;}
+        .summary-item-info { flex: 1; }
+        .summary-item-info h4 { font-size: 15px; margin-bottom: 5px; color: #fff; font-family: var(--font-ar);}
+        .summary-item-info p { font-size: 12px; color: var(--text-dim); }
+        .summary-item-price { font-family: var(--font-en); font-size: 16px; color: var(--accent-yellow); font-weight: bold;}
+
+        .summary-totals { border-top: 1px solid #222; padding-top: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .total-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-dim); }
+        .total-row.final { font-size: 22px; color: #fff; font-family: var(--font-en); font-weight: bold; border-top: 1px solid #333; padding-top: 15px;}
+        
+        .empty-cart-msg { text-align: center; color: #555; padding: 50px 0; font-family: var(--font-ar); }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 992px) {
+            body, *, *::before, *::after { cursor: auto !important; }
+            .cursor-wrapper { display: none !important; }
+            .checkout-wrapper { flex-direction: column-reverse; gap: 50px; padding: 100px 5% 50px; }
+            .order-summary-section { position: relative; top: 0; padding: 25px; }
+            .form-grid { grid-template-columns: 1fr; gap: 15px; }
+            .payment-methods { flex-direction: column; }
+        }
+
+        /* ================= شاشة التحميل ================= */
+        #loader-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition: opacity 0.5s ease; }
+        #loader-overlay .logo-load { font-family: 'Oswald', sans-serif; font-size: 32px; color: #fff; letter-spacing: 5px; margin-bottom: 20px; }
+        #loader-overlay .logo-load span { color: var(--accent-yellow); }
+    </style>
+</head>
+<body>
+
+    <div id="loader-overlay">
+        <div class="logo-load">UNO<span>VERSE</span></div>
+        <div style="width: 200px; height: 2px; background: #222; position: relative; overflow: hidden;">
+            <div id="progress-bar" style="width: 0%; height: 100%; background: #D4AF37; transition: width 1.5s ease;"></div>
+        </div>
+    </div>
+
+    <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
+
+    <header class="main-header">
+        <a href="index.html" class="logo">UNO<span>VERSE</span></a>
+        <div class="header-actions">
+            <a href="index.html" class="action-link">العودة للأرشيف ✕</a>
+        </div>
+    </header>
+
+    <div class="checkout-wrapper">
+        <div class="checkout-form-section">
+            <h2 class="section-title">بروتوكول الشحن // SHIPPING PROTOCOL</h2>
+            <p class="section-subtitle">يرجى إدخال بياناتك بدقة لضمان وصول القطعة الحصرية في أسرع وقت.</p>
+            
+            <form id="checkoutForm" onsubmit="submitOrder(event)">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>الاسم بالكامل // FULL NAME</label>
+                        <input type="text" id="custName" required placeholder="مثال: عمر أحمد">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>رقم الهاتف // PHONE NUMBER</label>
+                        <input type="tel" id="custPhone" required pattern="^01[0125][0-9]{8}$" maxlength="11" placeholder="01xxxxxxxxx" title="برجاء إدخال رقم مصري صحيح">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>رقم هاتف بديل // ALT PHONE (اختياري)</label>
+                        <input type="tel" id="custAltPhone" pattern="^01[0125][0-9]{8}$" maxlength="11" placeholder="01xxxxxxxxx" title="برجاء إدخال رقم مصري صحيح">
+                    </div>
+
+                    <div class="form-group">
+                        <label>المحافظة // GOVERNORATE</label>
+                        <input type="text" id="custGov" required placeholder="مثال: القاهرة، الجيزة، طنطا...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>المدينة أو المنطقة // CITY / REGION</label>
+                        <input type="text" id="custCity" required placeholder="مثال: مدينة نصر، الشيخ زايد...">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>العنوان بالتفصيل // DETAILED ADDRESS</label>
+                        <textarea id="custAddress" required placeholder="اسم الشارع، رقم العمارة، رقم الشقة، وأي علامة مميزة..."></textarea>
+                    </div>
+
+                    <!-- ================= قسم طرق الدفع ================= -->
+                    <div class="form-group full-width" style="margin-top: 10px;">
+                        <label style="font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px;">طريقة الدفع // PAYMENT METHOD</label>
+                        
+                        <div class="payment-methods">
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="Cash on Delivery" checked onchange="togglePaymentInfo()">
+                                <span>الدفع عند الاستلام</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="Vodafone Cash" onchange="togglePaymentInfo()">
+                                <span>فودافون كاش</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="Fawry" onchange="togglePaymentInfo()">
+                                <span>فوري (Fawry)</span>
+                            </label>
+                        </div>
+
+                        <!-- تعليمات فودافون كاش -->
+                        <div id="vfCashInfo" class="payment-instructions">
+                            <p>✦ يرجى تحويل مبلغ الطلب إلى محفظة فودافون كاش على الرقم: <strong style="color:var(--accent-yellow); letter-spacing:2px; font-size:16px;">01031348479</strong></p>
+                            <p style="color:#aaa; font-size:12px; margin-top:5px;">بعد التحويل، يرجى كتابة الرقم الذي قمت بالتحويل منه لتأكيد الدفع.</p>
+                            <input type="tel" id="vfCashTxID" placeholder="رقم الموبايل المحول منه" style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; margin-top:10px; font-family:'Tajawal', sans-serif;">
+                        </div>
+
+                        <!-- تعليمات فوري وإنستاباي -->
+                        <div id="fawryInfo" class="payment-instructions">
+                            <p style="margin-bottom: 10px;">✦ <strong>للدفع عبر ماكينات فوري:</strong> قم بعمل إيداع في محفظة فوري على رقم الموبايل: <strong style="color:var(--accent-yellow); letter-spacing:2px;">01553960609</strong></p>
+                            <p>✦ <strong>للدفع عبر InstaPay:</strong> قم بالتحويل إلى بطاقة ميزة (رقم الكارت): <strong style="color:var(--accent-yellow); letter-spacing:2px;">5078 0867 1945 3958</strong></p>
+                            
+                            <p style="color:#aaa; font-size:12px; margin-top:15px; border-top: 1px dashed #333; padding-top: 10px;">بعد إتمام الدفع بأي من الطريقتين، يرجى كتابة رقم الإيصال أو الرقم المحول منه لتأكيد طلبك.</p>
+                            <input type="text" id="fawryTxID" placeholder="رقم الإيصال أو الرقم المحول منه" style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; margin-top:10px; font-family:'Tajawal', sans-serif;">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-order-btn" id="submitOrderBtn">CONFIRM ORDER // تأكيد الطلب</button>
+            </form>
+        </div>
+
+        <div class="order-summary-section">
+            <h3 class="summary-title">ملخص الطلب // ORDER SUMMARY</h3>
+            <div class="summary-items" id="summaryItemsContainer"></div>
+            <div class="summary-totals">
+                <div class="total-row">
+                    <span>المجموع الفرعي:</span>
+                    <span id="subtotalPrice">0 ج.م</span>
+                </div>
+                <div class="total-row">
+                    <span>تكلفة الشحن:</span>
+                    <span style="color: var(--accent-yellow);">يتم تحديدها عند التواصل</span>
+                </div>
+                <div class="total-row final">
+                    <span>الإجمالي (بدون الشحن):</span>
+                    <span id="finalTotalPrice">0 ج.م</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if(e.keyCode == 123) return false;
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) return false;
+            if(e.ctrlKey && e.keyCode == 85) return false;
+            if(e.ctrlKey && e.keyCode == 67) return false;
+        });
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
+            authDomain: "unoverse-5babd.firebaseapp.com",
+            projectId: "unoverse-5babd",
+            storageBucket: "unoverse-5babd.firebasestorage.app",
+            messagingSenderId: "543082257571",
+            appId: "1:543082257571:web:28b1d5931cbc75e6793316"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const cursorWrapper = document.getElementById('cursorWrapper');
+        let mouseX = -100, mouseY = -100;
+        let cursorX = -100, cursorY = -100;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
+            cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        function attachCursorEffects() {
+            document.querySelectorAll('a, button, input, textarea, label').forEach(el => {
+                el.removeEventListener('mouseenter', addHover);
+                el.removeEventListener('mouseleave', removeHover);
+                el.addEventListener('mouseenter', addHover);
+                el.addEventListener('mouseleave', removeHover);
+            });
+        }
+        function addHover() { cursorWrapper.classList.add('hovered'); }
+        function removeHover() { cursorWrapper.classList.remove('hovered'); }
+
+        let currentCart = [];
+        let orderTotal = 0;
+
+        window.addEventListener('load', () => {
+            const bar = document.getElementById('progress-bar');
+            const overlay = document.getElementById('loader-overlay');
+            if (bar) bar.style.width = '100%';
+            setTimeout(() => { if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 500); } }, 800);
+            
+            loadCartData();
+            attachCursorEffects();
+        });
+
+        function loadCartData() {
+            currentCart = JSON.parse(localStorage.getItem('unoCart')) || [];
+            const container = document.getElementById('summaryItemsContainer');
+            const btn = document.getElementById('submitOrderBtn');
+
+            if (currentCart.length === 0) {
+                container.innerHTML = '<div class="empty-cart-msg">حقيبة التسوق فارغة. <br><br> <a href="index.html" style="color:var(--accent-yellow); text-decoration:none;">العودة للأرشيف ✦</a></div>';
+                btn.disabled = true;
+                document.getElementById('subtotalPrice').innerText = '0 ج.م';
+                document.getElementById('finalTotalPrice').innerText = '0 ج.م';
+                return;
+            }
+
+            container.innerHTML = currentCart.map(item => `
+                <div class="summary-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="summary-item-info">
+                        <h4>${item.name}</h4>
+                        <p>القياس: ${item.size}</p>
+                    </div>
+                    <div class="summary-item-price">${item.price} ج.م</div>
+                </div>
+            `).join('');
+
+            orderTotal = currentCart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+            document.getElementById('subtotalPrice').innerText = orderTotal + ' ج.م';
+            document.getElementById('finalTotalPrice').innerText = orderTotal + ' ج.م';
+        }
+
+        // إظهار وإخفاء تعليمات الدفع بناءً على الاختيار
+        function togglePaymentInfo() {
+            const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const vfCashInfo = document.getElementById('vfCashInfo');
+            const fawryInfo = document.getElementById('fawryInfo');
+            const vfCashTxID = document.getElementById('vfCashTxID');
+            const fawryTxID = document.getElementById('fawryTxID');
+
+            vfCashInfo.style.display = 'none';
+            fawryInfo.style.display = 'none';
+            vfCashTxID.removeAttribute('required');
+            fawryTxID.removeAttribute('required');
+
+            if (method === 'Vodafone Cash') {
+                vfCashInfo.style.display = 'block';
+                vfCashTxID.setAttribute('required', 'true');
+            } else if (method === 'Fawry') {
+                fawryInfo.style.display = 'block';
+                fawryTxID.setAttribute('required', 'true');
+            }
+        }
+
+        async function submitOrder(e) {
+            e.preventDefault();
+            if (currentCart.length === 0) return;
+
+            const phoneRegex = /^01[0125][0-9]{8}$/;
+            const phone = document.getElementById('custPhone').value.trim();
+            const altPhone = document.getElementById('custAltPhone').value.trim();
+
+            if (!phoneRegex.test(phone)) {
+                alert('برجاء إدخال رقم هاتف أساسي صحيح (11 رقم يبدأ بـ 01).');
+                return;
+            }
+            if (altPhone && !phoneRegex.test(altPhone)) {
+                alert('برجاء إدخال رقم هاتف بديل صحيح، أو اتركه فارغاً.');
+                return;
+            }
+
+            // تجميع بيانات الدفع
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            let transactionID = "";
+            
+            if (paymentMethod === 'Vodafone Cash') {
+                transactionID = document.getElementById('vfCashTxID').value.trim();
+                if (!transactionID) { alert('برجاء إدخال الرقم المحول منه.'); return; }
+            } else if (paymentMethod === 'Fawry') {
+                transactionID = document.getElementById('fawryTxID').value.trim();
+                if (!transactionID) { alert('برجاء إدخال رقم إيصال فوري.'); return; }
+            }
+
+            const btn = document.getElementById('submitOrderBtn');
+            btn.innerText = "PROCESSING... // جاري معالجة الطلب";
+            btn.disabled = true;
+
+            const orderData = {
+                customerInfo: {
+                    name: document.getElementById('custName').value.trim(),
+                    phone: phone,
+                    altPhone: altPhone,
+                    governorate: document.getElementById('custGov').value.trim(),
+                    city: document.getElementById('custCity').value.trim(),
+                    address: document.getElementById('custAddress').value.trim()
+                },
+                paymentInfo: {
+                    method: paymentMethod,
+                    transactionID: transactionID
+                },
+                items: currentCart,
+                totalAmount: orderTotal,
+                status: "قيد المراجعة", 
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                // حفظ الطلب في الداتابيز
+                const docRef = await db.collection("orders").add(orderData);
+                
+                // تحويل المنتجات المباعة إلى Sold Out
+                const batch = db.batch();
+                currentCart.forEach(item => {
+                    const productRef = db.collection("products").doc(item.id);
+                    batch.update(productRef, { status: "out" });
+                });
+                await batch.commit();
+
+                localStorage.removeItem('unoCart');
+                window.location.href = "track.html?id=" + docRef.id; 
+                
+            } catch (error) {
+                console.error("خطأ في تسجيل الطلب:", error);
+                alert("حدث خطأ أثناء معالجة الطلب، يرجى المحاولة مرة أخرى.");
+                btn.innerText = "CONFIRM ORDER // تأكيد الطلب";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
