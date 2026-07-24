@@ -210,6 +210,14 @@
 
         /* ================= التوافق مع الموبايل (RESPONSIVE) ================= */
         @media (max-width: 992px) {
+            /* إخفاء الماوس المخصص واسترجاع الماوس العادي للموبايل */
+            body, *, *::before, *::after {
+                cursor: auto !important; 
+            }
+            .custom-cursor { 
+                display: none !important; 
+            }
+
             /* تظبيط الهيدر عشان ميكونش داخل في بعضه */
             .main-header { padding: 15px 5%; top: 32px; }
             .main-header .logo { font-size: 20px; letter-spacing: 2px; }
