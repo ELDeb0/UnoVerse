@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UnoVerse</title>
     
-    <!-- مكتبات Firebase (في الهيدر) -->
+    <!-- مكتبات Firebase السحابية -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
@@ -212,7 +212,7 @@
         
         <nav class="main-nav">
             <ul>
-                <li><a href="#hero"> الأول</a></li>
+                <li><a href="#hero">الفصل الأول</a></li>
                 <li><a href="#collection">الكوليكشن</a></li>
                 <li><a href="#support">الدعم</a></li>
             </ul>
@@ -243,7 +243,7 @@
     <!-- قسم الكوليكشن -->
     <section id="collection" class="album-covers-section">
         <div id="productsGrid" style="display: flex; justify-content: space-between; gap: 50px; width: 100%; flex-wrap: wrap;">
-            <!-- المنتجات ستظهر هنا من قواعد البيانات -->
+            <!-- المنتجات ستظهر هنا أوتوماتيكياً من السيرفر -->
         </div>
     </section>
 
@@ -296,9 +296,24 @@
         </div>
     </div>
 
-    <!-- ================= الجافاسكريبت الموحد ================= -->
+    <!-- ================= الجافاسكريبت الموحد بـ Firebase ================= -->
     <script>
-        // 1. الماوس المخصص
+        // 1. مفاتيح Firebase (حط بياناتك الحقيقية هنا)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
+            authDomain: "unoverse-5babd.firebaseapp.com",
+            projectId: "unoverse-5babd",
+            storageBucket: "unoverse-5babd.firebasestorage.app",
+            messagingSenderId: "543082257571",
+            appId: "1:543082257571:web:28b1d5931cbc75e6793316"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // 2. الماوس المخصص
         const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
@@ -310,7 +325,7 @@
             el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-grow'));
         });
 
-        // 2. التحميل والانتقالات
+        // 3. شاشة التحميل
         window.addEventListener('load', () => {
             const bar = document.getElementById('progress-bar');
             const overlay = document.getElementById('loader-overlay');
@@ -323,7 +338,7 @@
             }, 800);
         });
 
-        // 3. لوحة تسجيل الدخول
+        // 4. تسجيل الدخول
         const loginOverlay = document.getElementById('loginOverlay');
         const loginPanel = document.getElementById('loginPanel');
         const openLoginBtn = document.getElementById('openLogin');
@@ -333,7 +348,106 @@
         closeLoginBtn?.addEventListener('click', (e) => { e.preventDefault(); loginOverlay.classList.remove('active'); });
         loginOverlay?.addEventListener('click', (e) => { if (!loginPanel.contains(e.target)) loginOverlay.classList.remove('active'); });
 
-        // 4. السلة والتفاعل
+        // 5. جلب المنتجات المباشر من قاعدة البيانات السحابية (Firebase)
+        function loadProductsFromCloud() {
+            const grid = document.getElementById('productsGrid');
+            if (!grid) return;
+
+            let favorites = JSON.parse(localStorage.getItem('unoFavorites')) || [];
+
+            db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                grid.innerHTML = '';
+
+                if (snapshot.empty) {
+                    grid.innerHTML = '<p style="color:#555; text-align:center; width:100%; font-family:monospace;">[ المنظومة قيد التحديث.. لا توجد إصدارات متاحة حالياً ]</p>';
+                    return;
+                }
+
+                snapshot.forEach((doc, index) => {
+                    const prod = doc.data();
+                    const prodId = doc.id;
+
+                    const price = parseFloat(prod.price) || 0;
+                    const discount = parseFloat(prod.discount) || price;
+                    
+                    let priceDisplay = (discount < price) 
+                        ? `<span style="text-decoration: line-through; color: #666; font-size: 14px;">${price} ج.م</span> <span style="color: var(--accent-yellow); font-weight: bold;">${discount} ج.م</span>` 
+                        : `<span style="color: var(--text-light);">${price} ج.م</span>`;
+
+                    let badgeHTML = '';
+                    let offsetClass = (index % 2 !== 0) ? 'offset-card' : ''; 
+
+                    if (prod.status === 'offer') badgeHTML = `<div class="overlay-text" style="color:var(--accent-yellow); font-size:20px; z-index:4;">عرض خاص</div>`;
+                    else if (prod.status === 'out') badgeHTML = `<div class="overlay-text" style="color:#ff3333; font-size:20px; z-index:4;">نفذت الكمية</div>`;
+
+                    // معرض الصور
+                    let galleryHTML = '';
+                    if (prod.gallery && prod.gallery.length > 1) {
+                        prod.gallery.forEach((img, i) => {
+                            let activeClass = i === 0 ? 'active-slide' : '';
+                            galleryHTML += `<img src="${img}" class="slide-img ${activeClass}" style="position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover;">`;
+                        });
+                        galleryHTML += `
+                            <button type="button" class="slide-arrow" style="left: 10px; right: auto;" dir="ltr" onclick="changeSlide(event, 1)">&#10094;</button>
+                            <button type="button" class="slide-arrow" style="right: 10px; left: auto;" dir="ltr" onclick="changeSlide(event, -1)">&#10095;</button>
+                        `;
+                    } else {
+                        let singleImg = prod.image || (prod.gallery ? prod.gallery[0] : '');
+                        galleryHTML = `<img src="${singleImg}" class="slide-img active-slide" style="position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover;">`;
+                    }
+
+                    let isFav = favorites.includes(prodId) ? 'active' : '';
+
+                    // المقاسات
+                    let sizesHTML = '';
+                    if (prod.sizes && prod.sizes.length > 0) {
+                        prod.sizes.forEach((size, i) => {
+                            let activeClass = i === 0 ? 'active' : '';
+                            sizesHTML += `<span class="size-option ${activeClass}" data-size="${size}">${size}</span>`;
+                        });
+                    } else {
+                        sizesHTML = `<span class="size-option active" data-size="OS">Free Size</span>`;
+                    }
+
+                    const productHTML = `
+                        <div class="album-card ${offsetClass} product-container" data-name="${prod.name}" data-price="${discount}">
+                            <button class="fav-btn ${isFav}" onclick="toggleFavorite(event, '${prodId}')">♥</button>
+                            
+                            <a href="product.html?id=${prodId}" class="product-link">
+                                <div class="image-placeholder album-portrait">
+                                    ${galleryHTML}
+                                    ${badgeHTML}
+                                </div>
+                                <div class="album-info">
+                                    <h3>${prod.name}</h3>
+                                    <p class="price">${priceDisplay}</p>
+                                </div>
+                            </a>
+                            
+                            <div class="album-info" style="padding-top:0;">
+                                <div class="size-selector">
+                                    ${sizesHTML}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    grid.innerHTML += productHTML;
+                });
+
+                // تفعيل اختيار المقاسات
+                document.querySelectorAll('.product-container').forEach(container => {
+                    const sizeOptions = container.querySelectorAll('.size-option');
+                    sizeOptions.forEach(opt => {
+                        opt.addEventListener('click', () => {
+                            sizeOptions.forEach(o => o.classList.remove('active'));
+                            opt.classList.add('active');
+                        });
+                    });
+                });
+            });
+        }
+
+        // 6. السلة
         window.deleteItem = function(id) {
             let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
             let newCart = cart.filter(item => String(item.id) !== String(id));
@@ -366,7 +480,7 @@
             if (totalEl) totalEl.innerText = total + ' ج.م';
         }
 
-        // 5. تقليب صور السلايدر والمفضلة
+        // 7. صور السلايدر والمفضلة
         function changeSlide(event, direction) {
             event.preventDefault();
             event.stopPropagation();
@@ -393,9 +507,11 @@
             localStorage.setItem('unoFavorites', JSON.stringify(favorites));
         }
 
-        // تشغيل أحداث السلة
+        // تشغيل الأحداث
         document.addEventListener('DOMContentLoaded', () => {
+            loadProductsFromCloud();
             updateCartUI();
+            
             document.getElementById('openCart')?.addEventListener('click', (e) => {
                 e.preventDefault();
                 document.getElementById('cartDrawer').classList.add('active');
