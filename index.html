@@ -32,20 +32,60 @@
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
 
-        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; will-change: transform; mix-blend-mode: exclusion; }
+        /* ================= شاشة التحميل السينمائية ================= */
+        #loader-overlay { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: #030303; z-index: 9999999; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease; 
+        }
+        .loader-logo { 
+            font-family: 'Oswald', sans-serif; font-size: 38px; color: #fff; 
+            letter-spacing: 8px; margin-bottom: 5px; font-weight: 700;
+            animation: pulseGlow 2s infinite alternate;
+        }
+        .loader-logo span { color: var(--accent-yellow); }
+        .loader-subtitle {
+            font-family: 'Oswald', sans-serif; font-size: 11px; color: #555;
+            letter-spacing: 5px; text-transform: uppercase; margin-bottom: 40px;
+        }
+        .loader-line-container { width: 200px; height: 1px; background: #1a1a1a; overflow: hidden; position: relative;}
+        #loader-line { 
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%); 
+            width: 0%; height: 100%; background: var(--accent-yellow); 
+            transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1); 
+        }
+        @keyframes pulseGlow { 
+            0% { text-shadow: 0 0 10px rgba(255,215,0,0); } 
+            100% { text-shadow: 0 0 25px rgba(255,215,0,0.3); } 
+        }
+        body.loaded #loader-overlay { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+
+        /* الماوس المخصص */
+        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 999999; will-change: transform; mix-blend-mode: exclusion; }
         .cursor-dot { width: 14px; height: 14px; background-color: var(--accent-yellow); border-radius: 50%; transform: translate(-50%, -50%) scale(1); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease; box-shadow: 0 0 15px var(--accent-yellow); will-change: transform; }
         .cursor-wrapper.hovered .cursor-dot { transform: translate(-50%, -50%) scale(4.5); background-color: #fff; box-shadow: none; }
 
-        .cinematic-grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 99998; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .cinematic-grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 99998; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
 
+        /* ================= خلفية الحروف الإنجليزية ================= */
         .eng-typography-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: space-evenly; }
-        .eng-typography-bg .word-1 { font-family: var(--font-en); font-size: 14vw; font-weight: 700; background: linear-gradient(135deg, rgba(200, 160, 90, 0.035), rgba(100, 100, 100, 0.01)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanRight 60s linear infinite; }
-        .eng-typography-bg .word-2 { font-family: 'Playfair Display', serif; font-size: 11vw; font-weight: 900; font-style: italic; background: linear-gradient(135deg, rgba(150, 150, 150, 0.02), rgba(180, 140, 70, 0.02)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanLeft 70s linear infinite; }
+        .eng-typography-bg .word-1 { 
+            font-family: var(--font-en); font-size: 14vw; font-weight: 700; 
+            color: rgba(200, 160, 90, 0.04); 
+            line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanRight 60s linear infinite; 
+        }
+        .eng-typography-bg .word-2 { 
+            font-family: 'Playfair Display', serif; font-size: 11vw; font-weight: 900; font-style: italic; 
+            color: rgba(180, 180, 180, 0.03); 
+            line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanLeft 70s linear infinite; 
+        }
         @keyframes smoothPanRight { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(25%, 0, 0); } }
         @keyframes smoothPanLeft { 0% { transform: translate3d(25%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
 
-        .main-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 25px 5%; position: fixed; top: 0; right: 0; z-index: 9999; background: linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0) 100%); transition: all 0.4s ease; backdrop-filter: blur(0px); }
-        .main-header.scrolled { background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(10px); padding: 15px 5%; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        /* الهيدر */
+        .main-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 25px 5%; position: fixed; top: 0; right: 0; z-index: 9999; background: linear-gradient(to bottom, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0) 100%); transition: all 0.4s ease; }
+        .main-header.scrolled { background: rgba(5, 5, 5, 0.95); padding: 15px 5%; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .main-header .logo { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 3px; text-decoration: none; color: var(--text-light); flex-shrink: 0; text-shadow: 0 0 15px rgba(0,0,0,0.8); transition: 0.3s; }
         .main-header .logo span { color: var(--accent-yellow); }
         .main-header .main-nav { flex-grow: 1; display: flex; justify-content: center; }
@@ -57,15 +97,20 @@
         .main-header .login-btn:hover { color: var(--text-light); }
 
         @media (max-width: 950px) {
-            .main-header { flex-direction: row; padding: 15px 5%; background: rgba(5,5,5,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #111;}
+            .main-header { flex-direction: row; padding: 15px 5%; background: rgba(5,5,5,0.95); border-bottom: 1px solid #111;}
             .main-header .logo { font-size: 20px; }
             .main-header .main-nav { display: none; } 
             .main-header .header-actions { gap: 15px; }
             .main-header .login-btn { font-size: 12px; letter-spacing: 0;}
             body, *, *::before, *::after { cursor: auto !important; }
             .cursor-wrapper { display: none !important; }
+            
+            /* تعديل مقاسات الحروف في الموبايل */
+            .eng-typography-bg .word-1 { font-size: 24vw; }
+            .eng-typography-bg .word-2 { font-size: 20vw; }
         }
 
+        /* السلة الجانبية */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 90000; opacity: 0; visibility: hidden; transition: 0.4s; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: -420px; width: 400px; max-width: 100%; height: 100vh; background: #050505; border-left: 1px solid #1a1a1a; z-index: 99999; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); padding: 30px 20px; display: flex; flex-direction: column; }
@@ -82,10 +127,11 @@
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--accent-yellow); color: #000; border: none; font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 2px; transition: 0.3s; cursor: pointer !important;}
         .checkout-btn:hover { background-color: #fff; }
 
+        /* الهيرو */
         .cinematic-hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: transparent; z-index: 10;}
         .hero-center-piece { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;}
         .main-portrait { width: 35vw; max-width: 550px; min-width: 320px; height: 75vh; border: 1px solid #222; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.9); position: relative; overflow: hidden; }
-        .hero-image { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) saturate(0.9) brightness(0.85); transition: transform 1s ease, filter 0.5s ease; pointer-events: none;}
+        .hero-image { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) saturate(0.9) brightness(0.85); pointer-events: none;}
         .main-portrait::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%); pointer-events: none; z-index: 1; }
         
         .hero-typography { position: absolute; bottom: 8%; right: 50%; z-index: 3; text-align: right; text-shadow: 0 15px 40px rgba(0,0,0,1); transform: rotate(-5deg) skewX(-3deg); }
@@ -99,29 +145,12 @@
             .hero-typography p { font-size: 12px; letter-spacing: 3px;}
         }
 
-        /* ================= قسم الإطلاق الغامض (Drop Countdown) ================= */
-        .drop-section { 
-            padding: 80px 5%; display: none; /* مخفي لحين التأكد من التفعيل */
-            align-items: center; justify-content: center; position: relative; 
-            z-index: 10; background: #030303; border-bottom: 1px solid #111;
-        }
-        .drop-container {
-            display: flex; gap: 50px; align-items: center; max-width: 1000px; margin: 0 auto;
-        }
-        .drop-image-wrapper {
-            width: 300px; height: 400px; border: 1px solid #333; position: relative; overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.9); background: #000;
-        }
-        .drop-image {
-            width: 100%; height: 100%; object-fit: cover; 
-            filter: brightness(0.2) contrast(1.5); /* تعتيم الصورة لجعلها ظل غامض */
-            transition: filter 1s ease;
-        }
-        .drop-image-wrapper::after {
-            content: '?'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-family: 'Playfair Display', serif; font-size: 80px; color: rgba(255, 215, 0, 0.3);
-            pointer-events: none;
-        }
+        /* الإطلاق الغامض */
+        .drop-section { padding: 80px 5%; display: none; align-items: center; justify-content: center; position: relative; z-index: 10; background: #030303; border-bottom: 1px solid #111; }
+        .drop-container { display: flex; gap: 50px; align-items: center; max-width: 1000px; margin: 0 auto; }
+        .drop-image-wrapper { width: 300px; height: 400px; border: 1px solid #333; position: relative; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.9); background: #000; }
+        .drop-image { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.2) contrast(1.5); transition: filter 1s ease; }
+        .drop-image-wrapper::after { content: '?'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Playfair Display', serif; font-size: 80px; color: rgba(255, 215, 0, 0.3); pointer-events: none; }
         .drop-info { text-align: left; }
         .drop-title { font-family: 'Oswald', sans-serif; font-size: 36px; color: #fff; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase;}
         
@@ -140,19 +169,29 @@
             .drop-image-wrapper { width: 250px; height: 350px; }
         }
 
-        .about-section { padding: 120px 10%; text-align: center; border-bottom: 1px solid #111; position: relative; z-index: 10; background: rgba(5,5,5,0.8); backdrop-filter: blur(5px); min-height: auto; }
+        /* من نحن */
+        .about-section { padding: 120px 10%; text-align: center; border-bottom: 1px solid #111; position: relative; z-index: 10; background: #050505; min-height: auto; }
         .section-title { font-family: 'Oswald', sans-serif; font-size: 40px; color: var(--accent-yellow); margin-bottom: 40px; letter-spacing: 2px; text-align: center; text-transform: uppercase; }
         .about-content p { font-size: 18px; line-height: 2.2; color: #aaa; max-width: 800px; margin: 0 auto; font-weight: 400; white-space: pre-wrap; word-wrap: break-word; text-align: right; }
         @media (max-width: 950px) { .about-section { padding: 80px 5%; } .about-content p { font-size: 15px; } .section-title { font-size: 28px; margin-bottom: 25px; } }
 
-        .album-covers-section { padding: 120px 5%; position: relative; z-index: 10; background: rgba(3,3,3,0.7); backdrop-filter: blur(5px);}
+        /* الكوليكشن */
+        .album-covers-section { padding: 120px 5%; position: relative; z-index: 10; background: #030303;}
         .products-grid { display: grid; gap: 40px; max-width: 1250px; margin: 0 auto; }
         .album-card { background: transparent; transition: 0.4s ease; display: flex; flex-direction: column; position: relative; }
         .album-card:hover { transform: translateY(-5px); }
-        .album-portrait { width: 100%; height: 55vh; min-height: 420px; max-height: 500px; background-color: #050505; position: relative; overflow: hidden; display: block; border: 1px solid #222; transition: border-color 0.4s ease; }
-        .album-portrait img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; filter: contrast(1.05) brightness(0.9); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s; }
+        .album-portrait { 
+            width: 100%; height: 55vh; min-height: 420px; max-height: 500px; 
+            background-color: #050505; position: relative; overflow: hidden; 
+            display: block; border: 1px solid #222; transition: border-color 0.4s ease; 
+        }
+        .album-portrait img { 
+            width: 100%; height: 100%; object-fit: cover; pointer-events: none; 
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+            will-change: transform; 
+        }
         .album-card:hover .album-portrait { border-color: var(--accent-yellow); }
-        .album-card:hover .album-portrait img { transform: scale(1.04); filter: contrast(1.1) brightness(1); }
+        .album-card:hover .album-portrait img { transform: scale(1.04); }
         
         .overlay-badge { position: absolute; top: 15px; left: 0; font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--accent-yellow); background: rgba(0,0,0,0.9); border: 1px solid #333; border-left: 3px solid var(--accent-yellow); padding: 8px 15px; font-weight: 700; z-index: 4; text-transform: uppercase; letter-spacing: 3px; box-shadow: 5px 10px 20px rgba(0,0,0,0.7); display: flex; align-items: center; gap: 8px; }
         .overlay-badge::before { content: '✦'; font-size: 10px; }
@@ -252,22 +291,21 @@
 </head>
 <body>
 
+    <div id="loader-overlay">
+        <div class="loader-logo">UNO<span>VERSE</span></div>
+        <div class="loader-subtitle">ONE OF ONE ARCHIVE</div>
+        <div class="loader-line-container">
+            <div id="loader-line"></div>
+        </div>
+    </div>
+
+    <!-- الحروف الإنجليزية المعدلة لتظهر وتمنع اللاج -->
     <div class="eng-typography-bg">
         <div class="word-1">UNOVERSE ✦ UNOVERSE ✦ UNOVERSE ✦ UNOVERSE ✦</div>
         <div class="word-2">EXCLUSIVE COLLECTION ✦ EXCLUSIVE COLLECTION ✦ EXCLUSIVE COLLECTION ✦</div>
         <div class="word-1" style="opacity: 0.7;">ONE OF ONE ARCHIVE ✦ ONE OF ONE ARCHIVE ✦ ONE OF ONE ARCHIVE ✦</div>
         <div class="word-2" style="opacity: 0.5;">THE NEW AESTHETIC ✦ THE NEW AESTHETIC ✦ THE NEW AESTHETIC ✦</div>
         <div class="word-1" style="opacity: 0.3;">UNOVERSE ✦ UNOVERSE ✦ UNOVERSE ✦ UNOVERSE ✦</div>
-    </div>
-
-    <!-- Loader -->
-    <div id="loader-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition: opacity 0.5s ease;">
-        <div style="font-family: 'Oswald', sans-serif; font-size: 32px; color: #fff; letter-spacing: 5px; margin-bottom: 20px;">
-            UNO<span style="color:#D4AF37">VERSE</span>
-        </div>
-        <div style="width: 200px; height: 2px; background: #222; position: relative; overflow: hidden;">
-            <div id="progress-bar" style="width: 0%; height: 100%; background: #D4AF37; transition: width 1.5s ease;"></div>
-        </div>
     </div>
 
     <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
@@ -286,7 +324,7 @@
                 <span>الإجمالي:</span>
                 <span id="cartTotalPrice">0 ج.م</span>
             </div>
-            <button class="checkout-btn" onclick="alert('سيتم توجيهك لصفحة الدفع قريباً!')">إتمام الطلب // CHECKOUT</button>
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">إتمام الطلب // CHECKOUT</button>
         </div>
     </div>
 
@@ -317,7 +355,6 @@
         </div>
     </section>
 
-    <!-- قسم الإطلاق الغامض (يُدار من لوحة التحكم) -->
     <section id="dropSection" class="drop-section">
         <div class="drop-container">
             <div class="drop-image-wrapper">
@@ -350,17 +387,18 @@
     <section id="support" class="support-section">
         <h2 class="section-title">الدعم // SUPPORT</h2>
         <p class="support-subtitle">نحن هنا لكسر القواعد، وحل أي مشكلة تعيق تجربتك.</p>
-        <form class="support-form" onsubmit="event.preventDefault(); alert('تم إرسال رسالتك. سنتواصل معك قريباً.'); this.reset();">
+        <!-- تحديث نموذج الدعم ليرسل عبر الإيميل مباشرة -->
+        <form class="support-form" action="mailto:unoverse.eg@gmail.com?subject=رسالة دعم من موقع UnoVerse" method="POST" enctype="text/plain">
             <div class="input-group">
-                <input type="text" required placeholder="الاسم بالكامل // FULL NAME">
+                <input type="text" name="Name" required placeholder="الاسم بالكامل // FULL NAME">
             </div>
             <div class="input-group">
-                <input type="email" required placeholder="البريد الإلكتروني // EMAIL">
+                <input type="email" name="Email" required placeholder="البريد الإلكتروني // EMAIL">
             </div>
             <div class="input-group">
-                <textarea required placeholder="اكتب رسالتك هنا // YOUR MESSAGE"></textarea>
+                <textarea name="Message" required placeholder="اكتب رسالتك هنا // YOUR MESSAGE"></textarea>
             </div>
-            <button type="submit" class="submit-btn">إرسال النظام // SUBMIT</button>
+            <button type="submit" class="submit-btn">إرسال عبر الإيميل // SEND EMAIL</button>
         </form>
     </section>
 
@@ -384,10 +422,11 @@
             <div class="footer-social">
                 <h4>وسائل التواصل</h4>
                 <div class="social-links">
-                    <a href="#">Instagram // @unoverse</a>
+                    <a href="https://www.instagram.com/unoverse.eg">Instagram // @unoverse</a>
                     <a href="#">TikTok // @unoverse.eg</a>
                     <a href="#">WhatsApp // Client Support</a>
-                    <a href="#">Email // info@unoverse.com</a>
+                    <!-- تحديث رابط الإيميل في الفوتر -->
+                    <a href="mailto:unoverse.eg@gmail.com">Email // unoverse.eg@gmail.com</a>
                 </div>
             </div>
         </div>
@@ -469,13 +508,12 @@
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
 
         window.addEventListener('load', () => {
-            const bar = document.getElementById('progress-bar');
-            const overlay = document.getElementById('loader-overlay');
-            if (bar) bar.style.width = '100%';
-            setTimeout(() => { if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 500); } }, 800);
+            const line = document.getElementById('loader-line');
+            if (line) line.style.width = '100%';
+            setTimeout(() => { document.body.classList.add('loaded'); }, 1200); 
             
             loadAboutUs();
-            loadDropCountdown(); // تشغيل العداد الغامض
+            loadDropCountdown();
         });
 
         async function loadAboutUs() {
@@ -487,7 +525,6 @@
             } catch (e) { console.log(e); }
         }
 
-        // ================= نظام العداد الغامض =================
         let countdownInterval;
         async function loadDropCountdown() {
             try {
@@ -522,7 +559,7 @@
                 if (distance < 0) {
                     clearInterval(countdownInterval);
                     document.getElementById('countdownTimer').innerHTML = "<div style='color:var(--accent-yellow); font-family:Oswald; font-size:30px; letter-spacing:2px;'>AVAILABLE NOW</div>";
-                    document.getElementById('dropImage').style.filter = "brightness(1) contrast(1.1)"; // كشف الصورة
+                    document.getElementById('dropImage').style.filter = "brightness(1) contrast(1.1)"; 
                     return;
                 }
 
