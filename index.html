@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UnoVerse</title>
+    
+    <!-- مكتبات Firebase (في الهيدر) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
         /* ================= المتغيرات والأساسيات ================= */
         :root {
@@ -16,175 +20,79 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { background-color: var(--bg-dark); color: var(--text-light); font-family: 'Tajawal', sans-serif; overflow-x: hidden; cursor: none; }
+        *, *::before, *::after { cursor: none !important; }
 
-        *, *::before, *::after {
-    cursor: none !important;
-}
-        /* ================= إعطاء الماوس أعلى طبقة في الموقع ================= */
-.custom-cursor { 
-    position: fixed !important; 
-    width: 15px !important; 
-    height: 15px !important; 
-    background-color: var(--accent-yellow) !important; 
-    border-radius: 50% !important; 
-    transform: translate(-50%, -50%) !important; 
-    pointer-events: none !important; 
-    z-index: 9999999 !important; /* الرقم ده هيخليه فوق الهيدر ولوحة الدخول وأي حاجة تانية */
-    transition: width 0.3s, height 0.3s, background-color 0.3s !important; 
-    mix-blend-mode: exclusion !important; 
-}
+        /* ================= الماوس المخصص ================= */
+        .custom-cursor { 
+            position: fixed !important; 
+            width: 15px !important; 
+            height: 15px !important; 
+            background-color: var(--accent-yellow) !important; 
+            border-radius: 50% !important; 
+            transform: translate(-50%, -50%) !important; 
+            pointer-events: none !important; 
+            z-index: 9999999 !important; 
+            transition: width 0.3s, height 0.3s, background-color 0.3s !important; 
+            mix-blend-mode: exclusion !important; 
+        }
+        .cursor-grow { 
+            width: 80px !important; 
+            height: 80px !important; 
+            background-color: var(--text-light) !important; 
+        }
 
-.cursor-grow { 
-    width: 80px !important; 
-    height: 80px !important; 
-    background-color: var(--text-light) !important; 
-}
-/* ================= الشريط العلوي (حل نهائي لمنع التداخل) ================= */
-.main-header {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-    padding: 30px 5% !important;
-    position: absolute !important;
-    top: 0 !important;
-    right: 0 !important; /* إجبار التوافق مع العربي */
-    left: auto !important;
-    z-index: 9999 !important; /* أعلى طبقة بلا منازع */
-    box-sizing: border-box !important;
-    direction: rtl !important;
-}
+        /* ================= الشريط العلوي ================= */
+        .main-header {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+            padding: 30px 5% !important;
+            position: absolute !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: auto !important;
+            z-index: 9999 !important;
+            box-sizing: border-box !important;
+            direction: rtl !important;
+        }
+        .main-header .logo {
+            font-family: 'Oswald', sans-serif !important;
+            font-size: 28px !important;
+            font-weight: 700 !important;
+            letter-spacing: 3px !important;
+            text-decoration: none !important;
+            color: var(--text-light) !important;
+            flex-shrink: 0 !important;
+            margin: 0 !important;
+        }
+        .main-header .logo span { color: var(--accent-yellow) !important; }
+        .main-header .main-nav { flex-grow: 1 !important; display: flex !important; justify-content: center !important; }
+        .main-header .main-nav ul { display: flex !important; flex-direction: row !important; gap: 40px !important; list-style: none !important; padding: 0 !important; margin: 0 !important; }
+        .main-header .main-nav ul li a { text-decoration: none !important; color: var(--text-light) !important; font-size: 15px !important; text-transform: uppercase !important; letter-spacing: 2px !important; white-space: nowrap !important; transition: 0.3s !important; }
+        .main-header .main-nav ul li a:hover { color: var(--accent-yellow) !important; }
+        .main-header .header-actions { display: flex !important; align-items: center !important; gap: 30px !important; flex-shrink: 0 !important; }
+        .main-header .login-btn { color: var(--accent-yellow) !important; text-decoration: none !important; font-size: 14px !important; font-weight: bold !important; letter-spacing: 1px !important; white-space: nowrap !important; transition: 0.3s !important; }
+        .main-header .login-btn:hover { color: var(--text-light) !important; }
 
-/* اللوجو على اليمين */
-.main-header .logo {
-    font-family: 'Oswald', sans-serif !important;
-    font-size: 28px !important;
-    font-weight: 700 !important;
-    letter-spacing: 3px !important;
-    text-decoration: none !important;
-    color: var(--text-light) !important;
-    flex-shrink: 0 !important;
-    margin: 0 !important;
-}
+        @media (max-width: 950px) {
+            .main-header { flex-direction: column !important; gap: 25px !important; background: linear-gradient(to bottom, rgba(7, 7, 7, 0.95) 0%, rgba(7, 7, 7, 0.5) 100%) !important; padding-bottom: 25px !important; }
+            .main-header .main-nav ul { gap: 20px !important; flex-wrap: wrap !important; justify-content: center !important; }
+        }
 
-.main-header .logo span {
-    color: var(--accent-yellow) !important;
-}
-
-/* القائمة في المنتصف */
-.main-header .main-nav {
-    flex-grow: 1 !important;
-    display: flex !important;
-    justify-content: center !important;
-}
-
-.main-header .main-nav ul {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 40px !important; /* مسافة واسعة وآمنة بين الأزرار */
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-.main-header .main-nav ul li a {
-    text-decoration: none !important;
-    color: var(--text-light) !important;
-    font-size: 15px !important;
-    text-transform: uppercase !important;
-    letter-spacing: 2px !important;
-    white-space: nowrap !important; /* يمنع الكلمة تتقسم أو تتضغط نهائياً */
-    transition: 0.3s !important;
-}
-
-.main-header .main-nav ul li a:hover {
-    color: var(--accent-yellow) !important;
-}
-
-/* قسم الأزرار (الدخول والسلة) على اليسار */
-.main-header .header-actions {
-    display: flex !important;
-    align-items: center !important;
-    gap: 30px !important; /* مسافة بين الدخول والسلة */
-    flex-shrink: 0 !important;
-}
-
-.main-header .login-btn {
-    color: var(--accent-yellow) !important;
-    text-decoration: none !important;
-    font-size: 14px !important;
-    font-weight: bold !important;
-    letter-spacing: 1px !important;
-    white-space: nowrap !important;
-    transition: 0.3s !important;
-}
-
-.main-header .login-btn:hover {
-    color: var(--text-light) !important;
-}
-
-.main-header .cart-btn {
-    font-size: 14px !important;
-    letter-spacing: 2px !important;
-    cursor: none !important; /* لأننا عاملين ماوس مخصص */
-    font-family: 'Oswald', sans-serif !important;
-    white-space: nowrap !important;
-    transition: 0.3s !important;
-}
-
-.main-header .cart-btn:hover {
-    color: var(--accent-yellow) !important;
-}
-
-/* ================= تظبيط مقاس الموبايل ================= */
-@media (max-width: 950px) {
-    .main-header {
-        flex-direction: column !important;
-        gap: 25px !important;
-        background: linear-gradient(to bottom, rgba(7, 7, 7, 0.95) 0%, rgba(7, 7, 7, 0.5) 100%) !important;
-        padding-bottom: 25px !important;
-    }
-    
-    .main-header .main-nav ul {
-        gap: 20px !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-    }
-}
-
-        /* ================= السلة الجانبية (Cart Drawer) ================= */
+        /* ================= السلة الجانبية ================= */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 900; opacity: 0; visibility: hidden; transition: 0.4s; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
-        .cart-drawer { position: fixed;
-    top: 0;
-    right: -400px; /* مخفية بره الشاشة */
-    width: 380px;
-    max-width: 100%;
-    height: 100vh;
-    background: #070707;
-    border-left: 1px solid #1a1a1a;
-    z-index: 99999;
-    transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;}
+        .cart-drawer { position: fixed; top: 0; right: -400px; width: 380px; max-width: 100%; height: 100vh; background: #070707; border-left: 1px solid #1a1a1a; z-index: 99999; transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1); padding: 30px 20px; display: flex; flex-direction: column; }
         .cart-drawer.active { right: 0; }
         .cart-header { padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
         .cart-header h3 { font-family: 'Oswald', sans-serif; font-size: 20px; letter-spacing: 2px; }
         .close-cart { font-size: 24px; cursor: none; transition: 0.3s; color: #888; }
         .close-cart:hover { color: var(--accent-yellow); transform: rotate(90deg); }
-        
-        /* عناصر السلة من الداخل */
         .cart-items { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
         .empty-msg { font-family: monospace; color: #555; letter-spacing: 2px; text-align: center; margin-top: 50px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; }
-        .cart-item-info h4 { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 5px; color: #fff; }
-        .cart-item-info p { font-family: 'Oswald', sans-serif; font-size: 14px; color: #888; }
-        .cart-item-price { color: var(--accent-yellow); font-family: 'Oswald', sans-serif; font-weight: bold; }
-        .remove-item { color: #555; cursor: none; font-size: 12px; margin-top: 10px; display: inline-block; transition: 0.3s; }
-        .remove-item:hover { color: red; }
-
         .cart-footer { padding: 30px; border-top: 1px solid #222; }
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 18px; }
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--accent-yellow); color: #000; border: none; font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 2px; cursor: none; transition: 0.3s; }
@@ -193,16 +101,18 @@
         /* ================= الواجهة الرئيسية ================= */
         .cinematic-hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .marquee-title { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Oswald', sans-serif; font-size: 12vw; white-space: nowrap; color: rgba(255, 255, 255, 0.03); z-index: 1; pointer-events: none; }
-        .hero-center-piece { position: relative; z-index: 2; display: flex; align-items: center; gap: -50px; }
-        .main-portrait { width: 450px; height: 650px; background-color: #111; border: 1px solid #333; display: flex; align-items: center; justify-content: center; color: #555; font-family: monospace; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: 0.5s ease; }
-        .main-portrait:hover { transform: scale(0.98); border-color: var(--accent-yellow); }
+        .hero-center-piece { position: relative; z-index: 2; display: flex; align-items: center; }
+        .main-portrait { width: 450px; height: 650px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s; position: relative; overflow: hidden; }
+        .hero-image { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.25) saturate(0.85) brightness(0.9); transition: transform 0.8s ease, filter 0.5s ease; }
+        .main-portrait::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(255, 215, 0, 0.05) 0%, rgba(7, 7, 7, 0.8) 100%); pointer-events: none; z-index: 1; }
+        .main-portrait:hover { border-color: var(--accent-yellow); }
+        .main-portrait:hover .hero-image { transform: scale(1.08); filter: contrast(1.3) saturate(1) brightness(1.05); }
         .hero-typography { position: absolute; left: -100px; bottom: 50px; mix-blend-mode: difference; }
         .hero-typography h2 { font-family: 'Playfair Display', serif; font-size: 100px; line-height: 0.9; color: var(--accent-yellow); margin-bottom: 20px; }
 
-        /* ================= قسم الكوليكشن ================= */
+        /* ================= الكوليكشن ================= */
         .album-covers-section { padding: 150px 10%; display: flex; justify-content: space-between; gap: 50px; }
-        .album-card { width: 45%; position: relative;}
-
+        .album-card { width: 45%; position: relative; }
         .offset-card { margin-top: 150px; }
         .album-portrait { width: 100%; height: 600px; background-color: #111; position: relative; border: 1px solid #222; margin-bottom: 25px; transition: 0.4s; }
         .album-portrait:hover { border-color: var(--accent-yellow); }
@@ -210,324 +120,74 @@
         .album-info h3 { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 5px; }
         .price { font-family: 'Oswald', sans-serif; font-size: 20px; color: #888; margin-bottom: 20px; }
 
-        /* المقاسات والأزرار */
         .size-selector { display: flex; gap: 15px; margin-bottom: 30px; }
         .size-option { font-family: 'Oswald', sans-serif; font-size: 14px; color: #666; cursor: none; padding-bottom: 2px; border-bottom: 2px solid transparent; transition: 0.3s; }
         .size-option:hover { color: var(--text-light); }
         .size-option.active { color: var(--accent-yellow); border-bottom-color: var(--accent-yellow); }
-        
-        .add-to-cart-btn { width: 100%; background: transparent; border: 1px solid #333; color: var(--text-light); padding: 15px; font-family: 'Tajawal', sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 1px; cursor: none; display: flex; justify-content: space-between; align-items: center; transition: 0.4s; text-transform: uppercase; }
-        .add-to-cart-btn span { color: var(--accent-yellow); font-size: 20px; transition: 0.4s; }
-        .add-to-cart-btn:hover { background: var(--text-light); color: var(--bg-dark); border-color: var(--text-light); }
-        .add-to-cart-btn:hover span { transform: rotate(90deg); color: var(--bg-dark); }
 
-        /* ================= قسم الدعم (Support Section) ================= */
+        /* السلايدر والمفضلة */
+        .image-placeholder.album-portrait { position: relative; overflow: hidden; width: 100%; height: 450px; }
+        .slide-img { opacity: 0; transition: opacity 0.5s ease-in-out; z-index: 1; }
+        .slide-img.active-slide { opacity: 1; z-index: 2; }
+        .slide-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0, 0, 0, 0.7); color: var(--text-light); border: 1px solid #333; width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; cursor: none; z-index: 4; font-size: 16px; transition: 0.3s; opacity: 0; border-radius: 4px; }
+        .image-placeholder:hover .slide-arrow { opacity: 1; }
+        .slide-arrow:hover { background: var(--accent-yellow); color: #000; border-color: var(--accent-yellow); }
+        .fav-btn { position: absolute; top: 15px; right: 15px; background: rgba(0, 0, 0, 0.7); color: #fff; border: 1px solid #333; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; z-index: 5; transition: 0.3s; display: flex; justify-content: center; align-items: center; cursor: none; }
+        .fav-btn:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); transform: scale(1.1); }
+        .fav-btn.active { color: #ff3333; border-color: #ff3333; }
+        .product-link { text-decoration: none; color: inherit; display: block; cursor: none; }
+
+        /* ================= الدعم ================= */
         .support-section { padding: 150px 10%; background-color: #050505; text-align: center; border-top: 1px solid #111; }
         .support-title { font-family: 'Oswald', sans-serif; font-size: 50px; color: var(--accent-yellow); margin-bottom: 10px; letter-spacing: 2px; }
         .support-subtitle { color: #888; margin-bottom: 60px; font-size: 16px; }
-        
         .support-form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; text-align: right; }
         .input-group input, .input-group textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; color: var(--text-light); padding: 10px 0; font-family: 'Tajawal', sans-serif; font-size: 16px; outline: none; cursor: none; transition: 0.4s; }
         .input-group input:focus, .input-group textarea:focus { border-bottom-color: var(--accent-yellow); }
         .input-group textarea { height: 100px; resize: none; }
-        
         .submit-btn { background: transparent; border: 1px solid #333; color: var(--text-light); padding: 15px 30px; font-family: 'Tajawal', sans-serif; font-size: 16px; font-weight: bold; cursor: none; transition: 0.4s; align-self: flex-start; text-transform: uppercase; letter-spacing: 2px; }
         .submit-btn:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); }
-        /* ================= تعديل حاوية البورتريه الرئيسي ================= */
-.main-portrait { 
-    width: 450px; 
-    height: 650px; 
-    background-color: transparent; /* إزالة الخلفية القديمة */
-    border: 1px solid #333; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 0; /* إزالة المساحات عشان الصورة تملأ المكان */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s;
-    position: relative;
-    overflow: hidden; /* منع الصورة من الخروج بره الإطار */
-}
 
-/* ================= تأثيرات الصورة والـ Color Grading ================= */
-.hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* فلتر سينمائي: زيادة التباين، تقليل التشبع قليلاً، وتغميق بسيط */
-    filter: contrast(1.25) saturate(0.85) brightness(0.9);
-    transition: transform 0.8s ease, filter 0.5s ease;
-}
-
-/* طبقة لونية فوق الصورة (Overlay) لدمجها مع الهوية البصرية */
-.main-portrait::after {
-    content: '';
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-    /* تدرج لوني من الأصفر الشفاف جداً للأسود في الأسفل */
-    background: linear-gradient(to bottom, rgba(255, 215, 0, 0.05) 0%, rgba(7, 7, 7, 0.8) 100%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* ================= حركة الصورة عند مرور الماوس ================= */
-.main-portrait:hover { 
-    border-color: var(--accent-yellow); 
-}
-
-.main-portrait:hover .hero-image {
-    transform: scale(1.08); /* زووم بطيء وناعم */
-    filter: contrast(1.3) saturate(1) brightness(1.05); /* الصورة تنطق وتزيد إضاءتها */
-}
-
-
-/* ================= إعطاء لوحة الدخول أعلى قوة في الموقع ================= */
-.login-overlay {
-    position: fixed !important; 
-    top: 0 !important; 
-    left: 0 !important; 
-    width: 100% !important; 
-    height: 100% !important;
-    z-index: 99999 !important; /* الرقم ده أعلى من الهيدر عشان يغطي عليه تماماً */
-    display: flex !important; 
-    justify-content: center !important; 
-    align-items: center !important;
-    visibility: hidden; 
-}
-
-.login-overlay.active {
-    visibility: visible !important;
-}
-
-/* تأمين زر الإغلاق لضمان استجابته للضغط */
-.close-login {
-    position: absolute !important; 
-    top: -40px !important; 
-    right: 20px !important; 
-    font-family: 'Oswald', sans-serif !important;
-    font-size: 16px !important; 
-    font-weight: bold !important; 
-    color: #fff !important; 
-    background: transparent !important; 
-    border: none !important;
-    cursor: none !important; 
-    transition: 0.3s !important; 
-    text-transform: uppercase !important; 
-    letter-spacing: 2px !important;
-    z-index: 999999 !important; /* أعلى عنصر في الشاشة كلها */
-}
-
-.close-login:hover { 
-    color: var(--accent-yellow) !important; 
-    transform: scale(1.1) !important; 
-}
-
-/* حركة الخلفية الصفراء (مقسومة لنصفين لضمان عدم التقطيع) */
-.login-bg {
-    position: absolute; left: 0; width: 100%; height: 50vh;
-    background-color: var(--accent-yellow);
-    transition: transform 0.5s cubic-bezier(0.8, 0, 0.2, 1);
-    will-change: transform; /* أمر للمتصفح بتسريع الحركة */
-    z-index: 1;
-}
-
-.login-bg-top { top: 0; transform: translateY(-100%); }
-.login-bg-bottom { bottom: 0; transform: translateY(100%); }
-
-.login-overlay.active .login-bg-top { transform: translateY(0); }
-.login-overlay.active .login-bg-bottom { transform: translateY(0); }
-
-/* محتوى اللوحة */
-.login-panel {
-    position: relative; z-index: 2; width: 100%; max-width: 450px; padding: 40px;
-    opacity: 0; transform: translateY(20px);
-    transition: opacity 0.4s 0.3s, transform 0.4s 0.3s;
-}
-
-.login-overlay.active .login-panel {
-    opacity: 1; transform: translateY(0);
-}
-
-/* زر الإغلاق */
-.close-login {
-    position: absolute; top: -30px; right: 40px; font-family: 'Oswald', sans-serif;
-    font-size: 14px; font-weight: bold; color: #000; background: transparent; border: none;
-    cursor: none; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;
-}
-.close-login:hover { color: #fff; transform: scale(1.1); }
-
-/* العناوين والمدخلات */
-.login-header h2 { font-family: 'Playfair Display', serif; font-size: 50px; line-height: 0.9; color: #000; margin-bottom: 15px; font-weight: 900; letter-spacing: -2px; }
-.login-header p { color: #222; font-size: 15px; font-family: 'Oswald', sans-serif; margin-bottom: 40px; }
-
-.login-form .input-group { margin-bottom: 25px; }
-.login-form .input-group input {
-    width: 100%; background: transparent; border: none; border-bottom: 2px solid #000;
-    color: #000; font-size: 16px; font-weight: bold; padding: 12px 0; outline: none; transition: 0.3s;
-}
-.login-form .input-group input::placeholder { color: rgba(0,0,0,0.5); font-family: 'Oswald', sans-serif; font-weight: normal; }
-.login-form .input-group input:focus { border-bottom-color: #fff; }
-
-.login-submit {
-    width: 100%; background: #000; color: var(--accent-yellow); font-size: 16px;
-    padding: 18px; margin-top: 15px; font-family: 'Oswald', sans-serif; font-weight: bold;
-    border: none; cursor: none; transition: 0.3s; letter-spacing: 1px;
-}
-.login-submit:hover { background: #fff; color: #000; }
-
-.register-prompt { text-align: center; color: #000; font-family: 'Oswald', sans-serif; font-weight: bold; margin-top: 25px; }
-.register-prompt a { color: #000; text-decoration: none; border-bottom: 2px solid #000; transition: 0.3s; }
-.register-prompt a:hover { color: #fff; border-color: #fff; }
-
-/* الفلتر السينمائي الموحد لكل صور المنتجات */
-.product-img-filter {
-    filter: contrast(1.1) saturate(0.8) brightness(0.9); /* تشبع أقل، تباين أعلى، إضاءة خافتة */
-    transition: 0.5s ease;
-    mix-blend-mode: multiply; /* بيخلي الصورة تندمج مع الخلفية السوداء بشكل سينمائي */
-}
-
-/* لما الماوس ييجي على الصورة، تنور وتظهر بألوانها الحقيقية */
-.product-container:hover .product-img-filter {
-    filter: contrast(1.2) saturate(1) brightness(1.1);
-    mix-blend-mode: normal; 
-}
-
-
-/* تنسيق الجاليري عشان يطلع شيك ومش زحمة */
-.media-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* بيوزع الصور أوتوماتيك */
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.product-img-filter {
-    width: 100%;
-    height: 200px; /* طول ثابت يخلي الشكل متناسق */
-    object-fit: cover;
-    filter: contrast(1.1) saturate(0.8) brightness(0.9);
-    transition: 0.5s ease;
-    border: 1px solid #222;
-}
-
-.product-container:hover .product-img-filter {
-    filter: contrast(1.2) saturate(1) brightness(1.1);
-}
-
-.old-price {
-    text-decoration: line-through;
-    color: #666;
-    font-size: 14px;
-    margin-left: 5px;
-}
-
-.album-card img { 
-    width: 100%; 
-    height: 300px; 
-    object-fit: cover; 
-    border: 1px solid #222; 
-    margin-bottom: 15px; 
-}
-
-
-/* ================= تنسيقات سلايدر الصور داخل الكارت ================= */
-.image-placeholder.album-portrait {
-    position: relative;
-    overflow: hidden;
-    /* تأكد إن الكارت واخد الطول اللي إنت عايزه، مثلاً: */
-    width: 100%;
-    height: 450px; 
-}
-
-.slide-img {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    z-index: 1;
-}
-
-.slide-img.active-slide {
-    opacity: 1;
-    z-index: 2;
-}
-
-/* الأسهم */
-.slide-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.7);
-    color: var(--text-light);
-    border: 1px solid #333;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: none; 
-    z-index: 4; /* أعلى طبقة عشان تظهر فوق أي حاجة */
-    font-size: 16px;
-    transition: 0.3s;
-    opacity: 0; /* مخفية لحد ما تمرر الماوس */
-    border-radius: 4px;
-}
-
-.image-placeholder:hover .slide-arrow {
-    opacity: 1;
-}
-
-.slide-arrow:hover {
-    background: var(--accent-yellow);
-    color: #000;
-    border-color: var(--accent-yellow);
-}
-
-
-
-/* ================= المفضلة ورابط المنتج ================= */
-.fav-btn {
-    position: absolute; top: 15px; right: 15px; /* يمين الكارت */
-    background: rgba(0, 0, 0, 0.7); color: #fff;
-    border: 1px solid #333; border-radius: 50%;
-    width: 40px; height: 40px; font-size: 20px;
-    z-index: 5; transition: 0.3s;
-    display: flex; justify-content: center; align-items: center; cursor: none;
-}
-.fav-btn:hover { border-color: var(--accent-yellow); color: var(--accent-yellow); transform: scale(1.1); }
-.fav-btn.active { color: #ff3333; border-color: #ff3333; }
-
-.product-link { text-decoration: none; color: inherit; display: block; cursor: none;}
-.product-link:hover h3 { color: var(--accent-yellow); }
-
-#cartItemsContainer:not(:empty) .empty-msg {
-    display: none;
-}
-
+        /* ================= لوحة تسجيل الدخول ================= */
+        .login-overlay { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; z-index: 99999 !important; display: flex !important; justify-content: center !important; align-items: center !important; visibility: hidden; }
+        .login-overlay.active { visibility: visible !important; }
+        .close-login { position: absolute !important; top: -40px !important; right: 20px !important; font-family: 'Oswald', sans-serif !important; font-size: 16px !important; font-weight: bold !important; color: #fff !important; background: transparent !important; border: none !important; cursor: none !important; transition: 0.3s !important; text-transform: uppercase !important; letter-spacing: 2px !important; z-index: 999999 !important; }
+        .close-login:hover { color: var(--accent-yellow) !important; transform: scale(1.1) !important; }
+        .login-bg { position: absolute; left: 0; width: 100%; height: 50vh; background-color: var(--accent-yellow); transition: transform 0.5s cubic-bezier(0.8, 0, 0.2, 1); will-change: transform; z-index: 1; }
+        .login-bg-top { top: 0; transform: translateY(-100%); }
+        .login-bg-bottom { bottom: 0; transform: translateY(100%); }
+        .login-overlay.active .login-bg-top { transform: translateY(0); }
+        .login-overlay.active .login-bg-bottom { transform: translateY(0); }
+        .login-panel { position: relative; z-index: 2; width: 100%; max-width: 450px; padding: 40px; opacity: 0; transform: translateY(20px); transition: opacity 0.4s 0.3s, transform 0.4s 0.3s; }
+        .login-overlay.active .login-panel { opacity: 1; transform: translateY(0); }
+        .login-header h2 { font-family: 'Playfair Display', serif; font-size: 50px; line-height: 0.9; color: #000; margin-bottom: 15px; font-weight: 900; letter-spacing: -2px; }
+        .login-header p { color: #222; font-size: 15px; font-family: 'Oswald', sans-serif; margin-bottom: 40px; }
+        .login-form .input-group input { width: 100%; background: transparent; border: none; border-bottom: 2px solid #000; color: #000; font-size: 16px; font-weight: bold; padding: 12px 0; outline: none; transition: 0.3s; }
+        .login-form .input-group input::placeholder { color: rgba(0,0,0,0.5); font-family: 'Oswald', sans-serif; font-weight: normal; }
+        .login-form .input-group input:focus { border-bottom-color: #fff; }
+        .login-submit { width: 100%; background: #000; color: var(--accent-yellow); font-size: 16px; padding: 18px; margin-top: 15px; font-family: 'Oswald', sans-serif; font-weight: bold; border: none; cursor: none; transition: 0.3s; letter-spacing: 1px; }
+        .login-submit:hover { background: #fff; color: #000; }
+        .register-prompt { text-align: center; color: #000; font-family: 'Oswald', sans-serif; font-weight: bold; margin-top: 25px; }
+        .register-prompt a { color: #000; text-decoration: none; border-bottom: 2px solid #000; transition: 0.3s; }
+        .register-prompt a:hover { color: #fff; border-color: #fff; }
     </style>
 </head>
 <body>
 
-
-<div id="loader-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#070707; z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition: opacity 0.5s ease;">
-    <div style="font-family: 'Oswald', sans-serif; font-size: 32px; color: #fff; letter-spacing: 5px; margin-bottom: 20px;">
-        UNO<span style="color:#D4AF37">VERSE</span>
+    <!-- Loader -->
+    <div id="loader-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#070707; z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition: opacity 0.5s ease;">
+        <div style="font-family: 'Oswald', sans-serif; font-size: 32px; color: #fff; letter-spacing: 5px; margin-bottom: 20px;">
+            UNO<span style="color:#D4AF37">VERSE</span>
+        </div>
+        <div style="width: 200px; height: 2px; background: #333; position: relative; overflow: hidden;">
+            <div id="progress-bar" style="width: 0%; height: 100%; background: #D4AF37; transition: width 1.5s ease;"></div>
+        </div>
     </div>
-    <div style="width: 200px; height: 2px; background: #333; position: relative; overflow: hidden;">
-        <div id="progress-bar" style="width: 0%; height: 100%; background: #D4AF37; transition: width 1.5s ease;"></div>
-    </div>
-</div>
 
-    <div id="grid"></div>
     <!-- مؤشر الماوس والتأثير -->
     <div class="custom-cursor" id="cursor"></div>
-    <div class="noise-overlay"></div>
 
     <!-- السلة الجانبية -->
-
-     <!-- ده المكان اللي هتظهر فيه المنتجات -->
-
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -546,7 +206,7 @@
         </div>
     </div>
 
-    <!-- ================= الشريط العلوي (النسخة النهائية المعزولة) ================= -->
+    <!-- الشريط العلوي -->
     <header class="main-header">
         <a href="#" class="logo">UNO<span>VERSE</span></a>
         
@@ -558,43 +218,36 @@
             </ul>
         </nav>
         
-<div class="header-actions">
-            <!-- زرار المفضلة الجديد -->
+        <div class="header-actions">
             <a href="favorites.html" class="login-btn" style="font-size: 18px; margin-left: 10px;" title="المفضلة">♥</a>
-            
             <a href="#" id="openLogin" class="login-btn">تسجيل الدخول</a>
-            <!-- في الهيدر بتاعك -->
-            <a href="#" id="openCart">
-             الحقيبة <span id="cartBadge">0</span>
+            <a href="#" id="openCart" class="login-btn">
+             الحقيبة [<span id="cartBadge">0</span>]
             </a>
         </div>
     </header>
 
-<!-- الواجهة الرئيسية -->
-<section id="hero" class="cinematic-hero">
-    <h1 class="marquee-title">THE NEW AESTHETIC. BREAK THE RULES.</h1>
-    <div class="hero-center-piece">
-        
-        <!-- التعديل هنا: دمج الصورة الحقيقية -->
-        <div class="main-portrait">
-            <img src="image_28480a.jpg" alt="UnoVerse Exclusive Piece" class="hero-image">
-        </div>
-        
-        <div class="hero-typography">
-            <h2>حِدّة.<br>تفاصيل.</h2>
-        </div>
-    </div>
-</section>
-
-    <!-- قسم الكوليكشن -->
-    <!-- قسم الكوليكشن (سيتم تغذيته من لوحة التحكم) -->
-    <section id="collection" class="album-covers-section">
-        <div id="productsGrid" style="display: flex; justify-content: space-between; gap: 50px; width: 100%; flex-wrap: wrap;">
-            <!-- المنتجات ستظهر هنا أوتوماتيكياً من السيستم -->
+    <!-- الواجهة الرئيسية -->
+    <section id="hero" class="cinematic-hero">
+        <h1 class="marquee-title">THE NEW AESTHETIC. BREAK THE RULES.</h1>
+        <div class="hero-center-piece">
+            <div class="main-portrait">
+                <img src="image_28480a.jpg" alt="UnoVerse Exclusive Piece" class="hero-image">
+            </div>
+            <div class="hero-typography">
+                <h2>حِدّة.<br>تفاصيل.</h2>
+            </div>
         </div>
     </section>
 
-    <!-- قسم الدعم الجديد -->
+    <!-- قسم الكوليكشن -->
+    <section id="collection" class="album-covers-section">
+        <div id="productsGrid" style="display: flex; justify-content: space-between; gap: 50px; width: 100%; flex-wrap: wrap;">
+            <!-- المنتجات ستظهر هنا من قواعد البيانات -->
+        </div>
+    </section>
+
+    <!-- قسم الدعم -->
     <section id="support" class="support-section">
         <h2 class="support-title">الدعم // SUPPORT</h2>
         <p class="support-subtitle">نحن هنا لكسر القواعد، وحل أي مشكلة تعيق تجربتك.</p>
@@ -613,11 +266,8 @@
         </form>
     </section>
 
-    <!-- ================= جافاسكريبت التشغيل الشامل ================= -->
-    
-    <!-- ================= لوحة تسجيل الدخول (نسخة محسنة وسريعة جداً) ================= -->
+    <!-- لوحة تسجيل الدخول -->
     <div class="login-overlay" id="loginOverlay">
-        <!-- خلفيات مقسومة للحركة السريعة -->
         <div class="login-bg login-bg-top"></div>
         <div class="login-bg login-bg-bottom"></div>
         
@@ -645,509 +295,45 @@
             </form>
         </div>
     </div>
-    
 
-
-    
+    <!-- ================= الجافاسكريبت الموحد ================= -->
     <script>
-
-        // 1. تشغيل الماوس المخصص
+        // 1. الماوس المخصص
         const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
 
-
-        
-        const hoverElements = document.querySelectorAll('a, .image-placeholder, .cart-btn, .close-cart, .size-option, button, input, textarea');
-        hoverElements.forEach(el => {
+        document.querySelectorAll('a, .image-placeholder, .cart-btn, .close-cart, .size-option, button, input, textarea').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('cursor-grow'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-grow'));
         });
 
-        // 2. تشغيل السلة وفتحها/قفلها
-        const cartDrawer = document.getElementById('cartDrawer');
-        const cartOverlay = document.getElementById('cartOverlay');
-        const openCartBtn = document.getElementById('openCart');
-        const closeCartBtn = document.getElementById('closeCart');
-
-        function toggleCart() {
-            cartDrawer.classList.toggle('active');
-            cartOverlay.classList.toggle('active');
-        }
-
-        openCartBtn.addEventListener('click', toggleCart);
-        closeCartBtn.addEventListener('click', toggleCart);
-        cartOverlay.addEventListener('click', toggleCart);
-
-        // 3. نظام المقاسات
-        const productContainers = document.querySelectorAll('.product-container');
-        productContainers.forEach(container => {
-            const sizeOptions = container.querySelectorAll('.size-option');
-            sizeOptions.forEach(opt => {
-                opt.addEventListener('click', () => {
-                    sizeOptions.forEach(o => o.classList.remove('active'));
-                    opt.classList.add('active');
-                });
-            });
-        });
-
-        // 4. نظام إضافة المنتجات للسلة
-        let cart = [];
-        const cartItemsContainer = document.getElementById('cartItemsContainer');
-        const cartTotalPrice = document.getElementById('cartTotalPrice');
-
-        function updateCartUI() {
-            // تحديث العداد في الهيدر
-            openCartBtn.innerHTML = `الحقيبة [${cart.length}]`;
-            
-            // تحديث محتوى السلة
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="empty-msg">[ الحقيبة فارغة حالياً ]</p>';
-                cartTotalPrice.innerText = '0 ج.م';
-                return;
-            }
-
-            cartItemsContainer.innerHTML = '';
-            let total = 0;
-
-            cart.forEach((item, index) => {
-                total += item.price;
-                const cartItemHTML = `
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <p>المقاس: ${item.size}</p>
-                            <span class="remove-item" onclick="removeFromCart(${index})">إزالة ✕</span>
-                        </div>
-                        <div class="cart-item-price">${item.price} ج.م</div>
-                    </div>
-                `;
-                cartItemsContainer.innerHTML += cartItemHTML;
-            });
-
-            cartTotalPrice.innerText = `${total} ج.م`;
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
-
-        // ربط زراير الإضافة بالسلة
-        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const container = this.closest('.product-container');
-                const name = container.getAttribute('data-name');
-                const price = parseInt(container.getAttribute('data-price'));
-                const size = container.querySelector('.size-option.active').getAttribute('data-size');
-
-                // إضافة للمصفوفة
-                cart.push({ name, price, size });
-                
-                // تحديث الواجهة وفتح السلة تلقائياً
-                updateCartUI();
-                if (!cartDrawer.classList.contains('active')) {
-                    toggleCart();
+        // 2. التحميل والانتقالات
+        window.addEventListener('load', () => {
+            const bar = document.getElementById('progress-bar');
+            const overlay = document.getElementById('loader-overlay');
+            if (bar) bar.style.width = '100%';
+            setTimeout(() => {
+                if (overlay) {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.style.display = 'none', 500);
                 }
-                
-            });
+            }, 800);
         });
-        
 
-// ================= تشغيل لوحة تسجيل الدخول (بدون أخطاء) =================
+        // 3. لوحة تسجيل الدخول
         const loginOverlay = document.getElementById('loginOverlay');
         const loginPanel = document.getElementById('loginPanel');
         const openLoginBtn = document.getElementById('openLogin');
         const closeLoginBtn = document.getElementById('closeLogin');
-        const loginForm = document.getElementById('loginForm');
 
-        // دالة الفتح
-        function openLogin(e) {
-            e.preventDefault(); 
-            loginOverlay.classList.add('active');
-        }
+        openLoginBtn?.addEventListener('click', (e) => { e.preventDefault(); loginOverlay.classList.add('active'); });
+        closeLoginBtn?.addEventListener('click', (e) => { e.preventDefault(); loginOverlay.classList.remove('active'); });
+        loginOverlay?.addEventListener('click', (e) => { if (!loginPanel.contains(e.target)) loginOverlay.classList.remove('active'); });
 
-        // دالة الإغلاق
-        function closeLogin(e) {
-            if(e) e.preventDefault();
-            loginOverlay.classList.remove('active');
-        }
-
-        // ربط الأزرار بالدوال
-        openLoginBtn.addEventListener('click', openLogin);
-        closeLoginBtn.addEventListener('click', closeLogin);
-
-        // الإغلاق عند الضغط على الخلفية الصفراء (خارج اللوحة)
-        loginOverlay.addEventListener('click', (e) => {
-            if (!loginPanel.contains(e.target)) {
-                closeLogin();
-            }
-        });
-
-
-// ================= نظام الربط المركزي (قراءة البيانات من لوحة التحكم) =================
-function loadStorefrontProducts() { 
-    console.log("البيانات اللي جاية من الذاكرة:", localStorage.getItem('unoProducts'));
-    const grid = document.getElementById('productsGrid');
-    let products = JSON.parse(localStorage.getItem('unoProducts')) || [];
-    let favorites = JSON.parse(localStorage.getItem('unoFavorites')) || [];
-
-    if (products.length === 0) {
-        
-        grid.innerHTML = '<p style="color:#555; text-align:center; width:100%; font-family:monospace;">[ المنظومة قيد التحديث.. لا توجد إصدارات متاحة حالياً ]</p>';
-        return;
-    }
-
-    grid.innerHTML = ''; 
-
-    products.forEach((prod, index) => {
-        const price = parseFloat(prod.price) || 0;
-        const discount = parseFloat(prod.discount) || price;
-        
-        let priceDisplay = (discount < price) 
-            ? `<span style="text-decoration: line-through; color: #666; font-size: 14px;">${price} ج.م</span> <span style="color: var(--accent-yellow); font-weight: bold;">${discount} ج.م</span>` 
-            : `<span style="color: var(--text-light);">${price} ج.م</span>`;
-
-        let badgeHTML = '';
-        let btnState = '';
-        let btnText = 'أضف للحقيبة <span>+</span>';
-        let offsetClass = (index % 2 !== 0) ? 'offset-card' : ''; 
-
-        if (prod.status === 'offer') badgeHTML = `<div class="overlay-text" style="color:var(--accent-yellow); font-size:20px; z-index:4;">عرض خاص</div>`;
-        else if (prod.status === 'out') {
-            badgeHTML = `<div class="overlay-text" style="color:#ff3333; font-size:20px; z-index:4;">نفذت الكمية</div>`;
-            btnState = 'disabled style="opacity:0.3; cursor:not-allowed;"';
-            btnText = 'غير متاح حالياً';
-        }
-
-        // ================= نظام المقاسات =================
-        let sizesHTML = '';
-        if (prod.sizes && prod.sizes.length > 0) {
-            prod.sizes.forEach((size, i) => {
-                let activeClass = i === 0 ? 'active' : ''; 
-                sizesHTML += `<span class="size-option ${activeClass}" data-size="${size}">${size}</span>`;
-            });
-        } else {
-            sizesHTML = `<span class="size-option active" data-size="OS">One Size</span>`;
-        }
-
-// ================= نظام معرض الصور (السلايدر) =================
-        let galleryHTML = '';
-        if (prod.gallery && prod.gallery.length > 1) {
-            prod.gallery.forEach((img, i) => {
-                let activeClass = i === 0 ? 'active-slide' : '';
-                // وضعنا التنسيق إجباري هنا (width:100% و height:100%) عشان نلغي الفراغ الأسود تماماً
-                galleryHTML += `<img src="${img}" class="slide-img ${activeClass}" style="position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover;" data-index="${i}">`;
-            });
-            // ثبتنا اتجاه الأسهم يمين وشمال مع تثبيت الـ ltr عشان المتصفح ميشقلبهمش
-            galleryHTML += `
-                <button type="button" class="slide-arrow" style="left: 10px; right: auto;" dir="ltr" onclick="changeSlide(event, 1)">&#10094;</button>
-                <button type="button" class="slide-arrow" style="right: 10px; left: auto;" dir="ltr" onclick="changeSlide(event, -1)">&#10095;</button>
-            `;
-        } else {
-            let singleImg = prod.image || (prod.gallery ? prod.gallery[0] : '');
-            // نفس التنسيق الإجباري للصورة الفردية
-            galleryHTML = `<img src="${singleImg}" class="slide-img active-slide" style="position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover;">`;
-        }
-
-        // ================= رسم الكارت النهائي =================
-// تأمين الـ ID ومعرفة إذا كان في المفضلة
-        if(!prod.id) prod.id = Date.now() + index; 
-        let isFav = favorites.includes(prod.id) ? 'active' : '';
-
-        // رسم كارت المنتج
-        const productHTML = `
-            <div class="album-card ${offsetClass} product-container" data-name="${prod.name}" data-price="${discount}">
-                
-                <!-- زرار المفضلة -->
-                <button class="fav-btn ${isFav}" onclick="toggleFavorite(event, ${prod.id})">♥</button>
-                
-                <!-- الرابط لصفحة المنتج -->
-                <a href="product.html?id=${prod.id}" class="product-link">
-                    <div class="image-placeholder album-portrait">
-                        ${galleryHTML}
-                        ${badgeHTML}
-                    </div>
-                    <div class="album-info">
-                        <h3>${prod.name}</h3>
-                        <p class="price">${priceDisplay}</p>
-                    </div>
-                </a>
-                
-                <!-- المقاسات وزرار الإضافة تحت الرابط عشان ميفتحوش الصفحة -->
-                <div class="album-info" style="padding-top:0;">
-                    <div class="size-selector">
-                        <span class="size-option active" data-size="S">S</span>
-                        <span class="size-option" data-size="M">M</span>
-                        <span class="size-option" data-size="L">L</span>
-                        <span class="size-option" data-size="XL">XL</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        grid.innerHTML += productHTML;
-    });
-
-    // تفعيل أزرار المقاسات
-    document.querySelectorAll('.product-container').forEach(container => {
-        const sizeOptions = container.querySelectorAll('.size-option');
-        sizeOptions.forEach(opt => {
-            opt.addEventListener('click', () => {
-                sizeOptions.forEach(o => o.classList.remove('active'));
-                opt.classList.add('active');
-            });
-        });
-    });
-
-}
-
-
-// دالة رسم محتويات الحقيبة
-function renderCart() {
-    const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-    const container = document.getElementById('cartItemsContainer');
-    
-    // تنظيف الشنطة قبل الرسم عشان ميكررش
-    container.innerHTML = '';
-
-    if (cart.length === 0) {
-        container.innerHTML = '<p style="text-align:center; padding:20px;">الحقيبة فارغة</p>';
-        return;
-    }
-
-    // رسم المنتجات
-    cart.forEach((item, index) => {
-        container.innerHTML += `
-            <div class="cart-item" style="display:flex; align-items:center; gap:15px; padding:10px 0; border-bottom:1px solid #222;">
-                <img src="${item.image}" style="width:60px; height:60px; object-fit:cover;">
-                <div style="flex:1;">
-                    <h4 style="font-size:14px;">${item.name}</h4>
-                    <p style="color:var(--accent-yellow); font-size:13px;">${item.price} ج.م</p>
-                </div>
-                <button onclick="removeProduct(${index})" style="background:none; border:none; color:red; cursor:pointer;">✕</button>
-            </div>
-        `;
-    });
-}
-
-// دالة الحذف (عشان تقدر تمسح المنتج)
-function removeProduct(index) {
-    let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-    cart.splice(index, 1);
-    localStorage.setItem('unoCart', JSON.stringify(cart));
-    renderCart(); // أعِد الرسم بعد الحذف
-    updateCartUI(); // حدث الرقم فوق
-}
-
-// ================= دالة تقليب الصور (برة دالة الرسم) =================
-function changeSlide(event, direction) {
-    // منع الضغطة من التأثير على أي حاجة تانية في الصفحة
-    event.preventDefault();
-    event.stopPropagation();
-
-    // الوصول للحاوية الخاصة بصور الكارت الحالي
-    let container = event.target.closest('.image-placeholder');
-    let slides = container.querySelectorAll('.slide-img');
-    
-    // معرفة رقم الصورة المعروضة حالياً
-    let currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active-slide'));
-    
-    // إخفاء الصورة الحالية
-    slides[currentIndex].classList.remove('active-slide');
-    
-    // حساب رقم الصورة الجاية
-    let nextIndex = currentIndex + direction;
-    if (nextIndex >= slides.length) nextIndex = 0; // لو وصلنا للآخر، نرجع للأول
-    if (nextIndex < 0) nextIndex = slides.length - 1; // لو رجعنا قبل الأول، نروح للآخر
-    
-    // إظهار الصورة الجاية
-    slides[nextIndex].classList.add('active-slide');
-}
-        // تشغيل دالة الرسم فور تحميل الصفحة
-        window.addEventListener('DOMContentLoaded', loadStorefrontProducts);
-    
-    
-    
-    // دالة تفعيل وإلغاء المفضلة
-function toggleFavorite(event, productId) {
-    event.preventDefault(); // بيمنع الرابط يفتح صفحة المنتج وانت بتدوس على القلب
-    event.stopPropagation();
-    
-    let favorites = JSON.parse(localStorage.getItem('unoFavorites')) || [];
-    const index = favorites.indexOf(productId);
-    
-    if (index > -1) {
-        favorites.splice(index, 1); // شيل من المفضلة
-        event.target.classList.remove('active');
-    } else {
-        favorites.push(productId); // ضيف للمفضلة
-        event.target.classList.add('active');
-    }
-    
-    localStorage.setItem('unoFavorites', JSON.stringify(favorites));
-}
-    
-    
-    </script>
-
-<script>
-
-    
-    // 1. تشغيل التحميل عند فتح الصفحة
-    window.addEventListener('load', () => {
-        const bar = document.getElementById('progress-bar');
-        const overlay = document.getElementById('loader-overlay');
-        bar.style.width = '100%';
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.style.display = 'none', 500);
-        }, 800);
-    });
-
-    // 2. جعل الانتقال بين الصفحات أسرع وأشيك (Fade out)
-    document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
-                e.preventDefault();
-                document.body.style.opacity = '0';
-                document.body.style.transition = 'opacity 0.3s ease';
-                setTimeout(() => window.location.href = href, 300);
-            }
-        });
-    });
-</script>
-
-<script>
-    // ==========================================
-    // UNOVERSE - نظام الحقيبة الكامل للموقع الرئيسي
-    // ==========================================
-
-    // 1. دالة رسم المنتجات وحساب الإجمالي
-    function renderCart() {
-        const container = document.getElementById('cartItemsContainer');
-        const totalPriceEl = document.getElementById('cartTotalPrice');
-        if (!container) return;
-
-        let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-
-        // تحديث العداد في الهيدر
-        updateCartBadge(cart.length);
-
-        // لو الشنطة فاضية
-        if (cart.length === 0) {
-            container.innerHTML = '<p class="empty-msg" style="text-align:center; padding:40px 0; color:#666;">[ الحقيبة فارغة حالياً ]</p>';
-            if (totalPriceEl) totalPriceEl.innerText = '0 ج.م';
-            return;
-        }
-
-        // لو فيها منتجات
-        let html = '';
-        let total = 0;
-
-        cart.forEach((item, index) => {
-            const price = parseFloat(item.price) || 0;
-            total += price;
-
-            html += `
-                <div class="cart-item" style="display:flex; align-items:center; gap:15px; padding:15px 0; border-bottom:1px solid #1f1f1f;">
-                    <img src="${item.image}" alt="${item.name}" style="width:65px; height:65px; object-fit:cover; border:1px solid #222;">
-                    <div style="flex:1;">
-                        <h4 style="font-size:14px; margin-bottom:5px; color:#fff;">${item.name}</h4>
-                        <p style="color:#D4AF37; font-weight:bold; font-size:13px;">${price} ج.م</p>
-                    </div>
-                    <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ff4d4d; font-size:18px; cursor:pointer; padding:5px 10px;" title="حذف">✕</button>
-                </div>
-            `;
-        });
-
-        container.innerHTML = html;
-        if (totalPriceEl) totalPriceEl.innerText = total + ' ج.م';
-    }
-
-    // 2. تحديث رقم الشنطة في الهيدر
-    function updateCartBadge(count) {
-        const openBtn = document.getElementById('openCart');
-        if (openBtn) {
-            openBtn.innerText = `الحقيبة [${count}]`;
-        }
-    }
-
-// استبدل الدالة القديمة بدي:
-window.removeFromCart = function(index) {
-    console.log("الزرار اللي اتدوس عليه بيمسح ترتيب رقم: " + index);
-    
-    let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-    
-    // التأكد إن الـ index موجود
-    if (index > -1 && index < cart.length) {
-        // حذف العنصر
-        cart.splice(index, 1);
-        
-        // حفظ السلة
-        localStorage.setItem('unoCart', JSON.stringify(cart));
-        
-        // تحديث الواجهة
-        updateCartUI();
-        console.log("تم الحذف بنجاح");
-    } else {
-        console.error("خطأ: الترتيب ده مش موجود في السلة!");
-    }
-};
-
-    // 4. إضافة قطعة من أزرار الصفحة الرئيسية
-    function addToCartMain(btn) {
-        const product = {
-            id: btn.getAttribute('data-id') || Date.now(),
-            name: btn.getAttribute('data-name'),
-            price: btn.getAttribute('data-price'),
-            image: btn.getAttribute('data-image')
-        };
-
-        let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-        cart.push(product);
-        localStorage.setItem('unoCart', JSON.stringify(cart));
-
-        // رسم التعديلات وفتح الشنطة فوراً
-        renderCart();
-        openCartDrawer();
-    }
-
-    // 5. فتح وإغلاق الشنطة
-    function openCartDrawer() {
-        document.getElementById('cartDrawer')?.classList.add('active');
-        document.getElementById('cartOverlay')?.classList.add('active');
-        renderCart();
-    }
-
-    function closeCartDrawer() {
-        document.getElementById('cartDrawer')?.classList.remove('active');
-        document.getElementById('cartOverlay')?.classList.remove('active');
-    }
-
-    // 6. تشغيل الأحداث بمجرد تحميل الصفحة
-    document.addEventListener('DOMContentLoaded', () => {
-        renderCart();
-
-        // ربط أزرار الفتح والغلق
-        document.getElementById('openCart')?.addEventListener('click', openCartDrawer);
-        document.getElementById('closeCart')?.addEventListener('click', closeCartDrawer);
-        document.getElementById('cartOverlay')?.addEventListener('click', closeCartDrawer);
-    });
-</script>
-  
-
-
-
-
-
-    
-</script>
-
-<script>
-        // دالة حذف منتج (تعتمد على الـ ID عشان تمسح اللي انت اخترته بس)
+        // 4. السلة والتفاعل
         window.deleteItem = function(id) {
             let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
             let newCart = cart.filter(item => String(item.id) !== String(id));
@@ -1155,7 +341,6 @@ window.removeFromCart = function(index) {
             updateCartUI();
         };
 
-        // دالة رسم الشنطة
         function updateCartUI() {
             const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
             const container = document.getElementById('cartItemsContainer');
@@ -1165,158 +350,66 @@ window.removeFromCart = function(index) {
             if (!container) return;
 
             if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align:center;">الحقيبة فارغة</p>';
+                container.innerHTML = '<p class="empty-msg">[ الحقيبة فارغة حالياً ]</p>';
             } else {
                 container.innerHTML = cart.map(item => `
                     <div class="cart-item">
-                        <img src="${item.image}" width="50">
+                        <img src="${item.image}" width="50" height="50" style="object-fit:cover;">
                         <span>${item.name} - ${item.price} ج.م</span>
-                        <button type="button" onclick="deleteItem('${item.id}')">✕</button>
+                        <button type="button" onclick="deleteItem('${item.id}')" style="background:none; border:none; color:red; cursor:pointer;">✕</button>
                     </div>
                 `).join('');
             }
             
             const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
-            if (document.getElementById('cartTotalPrice')) {
-                document.getElementById('cartTotalPrice').innerText = total + ' ج.م';
-            }
+            const totalEl = document.getElementById('cartTotalPrice');
+            if (totalEl) totalEl.innerText = total + ' ج.م';
         }
 
-        // دالة الإضافة
-        window.addToCart = function(btn) {
-            const product = {
-                id: btn.getAttribute('data-id'),
-                name: btn.getAttribute('data-name'),
-                price: btn.getAttribute('data-price'),
-                image: btn.getAttribute('data-image')
-            };
+        // 5. تقليب صور السلايدر والمفضلة
+        function changeSlide(event, direction) {
+            event.preventDefault();
+            event.stopPropagation();
+            let container = event.target.closest('.image-placeholder');
+            let slides = container.querySelectorAll('.slide-img');
+            let currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active-slide'));
+            slides[currentIndex].classList.remove('active-slide');
+            let nextIndex = (currentIndex + direction + slides.length) % slides.length;
+            slides[nextIndex].classList.add('active-slide');
+        }
 
-            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-            cart.push(product);
-            localStorage.setItem('unoCart', JSON.stringify(cart));
-            updateCartUI();
-            document.getElementById('cartDrawer').classList.add('active');
-        };
+        function toggleFavorite(event, productId) {
+            event.preventDefault();
+            event.stopPropagation();
+            let favorites = JSON.parse(localStorage.getItem('unoFavorites')) || [];
+            const index = favorites.indexOf(productId);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                event.target.classList.remove('active');
+            } else {
+                favorites.push(productId);
+                event.target.classList.add('active');
+            }
+            localStorage.setItem('unoFavorites', JSON.stringify(favorites));
+        }
 
-        // ربط الأحداث
+        // تشغيل أحداث السلة
         document.addEventListener('DOMContentLoaded', () => {
             updateCartUI();
-            document.getElementById('openCart')?.addEventListener('click', () => document.getElementById('cartDrawer').classList.add('active'));
-            document.getElementById('closeCart')?.addEventListener('click', () => document.getElementById('cartDrawer').classList.remove('active'));
+            document.getElementById('openCart')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('cartDrawer').classList.add('active');
+                document.getElementById('cartOverlay').classList.add('active');
+            });
+            document.getElementById('closeCart')?.addEventListener('click', () => {
+                document.getElementById('cartDrawer').classList.remove('active');
+                document.getElementById('cartOverlay').classList.remove('active');
+            });
+            document.getElementById('cartOverlay')?.addEventListener('click', () => {
+                document.getElementById('cartDrawer').classList.remove('active');
+                document.getElementById('cartOverlay').classList.remove('active');
+            });
         });
     </script>
-
-
-<script>
-  // 1. تهيئة الفايربيس (تأكد إن البيانات دي مطابقة لمشروعك)
-  const firebaseConfig = {
-    apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
-    authDomain: "unoverse-5babd.firebaseapp.com",
-    projectId: "unoverse-5babd",
-    storageBucket: "unoverse-5babd.firebasestorage.app",
-    messagingSenderId: "543082257571",
-    appId: "1:543082257571:web:28b1d5931cbc75e6793316"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  // 2. دالة جلب المنتجات المعدلة بالكامل لتناسب هوية UnoVerse
-  function loadStorefrontProducts() {
-      const grid = document.getElementById('productsGrid');
-      let favorites = JSON.parse(localStorage.getItem('unoFavorites')) || [];
-
-      // القراءة الحية من قاعدة البيانات على الاستضافة
-      db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-          if (!grid) return;
-          grid.innerHTML = ''; 
-
-          if (snapshot.empty) {
-              grid.innerHTML = '<p style="color:#555; text-align:center; width:100%; font-family:monospace;">[ المنظومة قيد التحديث.. لا توجد إصدارات متاحة حالياً ]</p>';
-              return;
-          }
-
-          snapshot.forEach((doc, index) => {
-              const prod = doc.data();
-              const prodId = doc.id; // استخدام ID المستند من السيرفر
-
-              const price = parseFloat(prod.price) || 0;
-              const discount = parseFloat(prod.discount) || price;
-              
-              let priceDisplay = (discount < price) 
-                  ? `<span style="text-decoration: line-through; color: #666; font-size: 14px;">${price} ج.م</span> <span style="color: var(--accent-yellow); font-weight: bold;">${discount} ج.م</span>` 
-                  : `<span style="color: var(--text-light);">${price} ج.م</span>`;
-
-              let badgeHTML = '';
-              let offsetClass = (index % 2 !== 0) ? 'offset-card' : ''; 
-
-              if (prod.status === 'offer') badgeHTML = `<div class="overlay-text" style="color:var(--accent-yellow); font-size:20px; z-index:4;">عرض خاص</div>`;
-              else if (prod.status === 'out') badgeHTML = `<div class="overlay-text" style="color:#ff3333; font-size:20px; z-index:4;">نفذت الكمية</div>`;
-
-              // معرض الصور (السلايدر)
-              let galleryHTML = '';
-              if (prod.gallery && prod.gallery.length > 1) {
-                  prod.gallery.forEach((img, i) => {
-                      let activeClass = i === 0 ? 'active-slide' : '';
-                      galleryHTML += `<img src="${img}" class="slide-img ${activeClass}" style="position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover;">`;
-                  });
-                  galleryHTML += `
-                      <button type="button" class="slide-arrow" style="left: 10px; right: auto;" dir="ltr" onclick="changeSlide(event, 1)">&#10094;</button>
-                      <button type="button" class="slide-arrow" style="right: 10px; left: auto;" dir="ltr" onclick="changeSlide(event, -1)">&#10095;</button>
-                  `;
-              } else {
-                  let singleImg = prod.image || (prod.gallery ? prod.gallery[0] : '');
-                  galleryHTML = `<img src="${singleImg}" class="slide-img active-slide" style="position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover;">`;
-              }
-
-              let isFav = favorites.includes(prodId) ? 'active' : '';
-
-              // رسم الكارت بنفس التنسيق القديم للموقع
-              const productHTML = `
-                  <div class="album-card ${offsetClass} product-container" data-name="${prod.name}" data-price="${discount}">
-                      <button class="fav-btn ${isFav}" onclick="toggleFavorite(event, '${prodId}')">♥</button>
-                      
-                      <a href="product.html?id=${prodId}" class="product-link">
-                          <div class="image-placeholder album-portrait">
-                              ${galleryHTML}
-                              ${badgeHTML}
-                          </div>
-                          <div class="album-info">
-                              <h3>${prod.name}</h3>
-                              <p class="price">${priceDisplay}</p>
-                          </div>
-                      </a>
-                      
-                      <div class="album-info" style="padding-top:0;">
-                          <div class="size-selector">
-                              <span class="size-option active" data-size="S">S</span>
-                              <span class="size-option" data-size="M">M</span>
-                              <span class="size-option" data-size="L">L</span>
-                              <span class="size-option" data-size="XL">XL</span>
-                          </div>
-                      </div>
-                  </div>
-              `;
-              grid.innerHTML += productHTML;
-          });
-
-          // إعادة تفعيل اختيارات المقاسات
-          document.querySelectorAll('.product-container').forEach(container => {
-              const sizeOptions = container.querySelectorAll('.size-option');
-              sizeOptions.forEach(opt => {
-                  opt.addEventListener('click', () => {
-                      sizeOptions.forEach(o => o.classList.remove('active'));
-                      opt.classList.add('active');
-                  });
-              });
-          });
-      });
-  }
-
-  // تشغيل الدالة فور تحميل الصفحة
-  document.addEventListener('DOMContentLoaded', loadStorefrontProducts);
-</script>
-
-    
-</body> <!-- قفلة الـ body -->
+</body>
 </html>
