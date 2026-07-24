@@ -16,12 +16,13 @@
         #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; }
         .login-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; text-align: center; width: 100%; max-width: 400px; }
         .login-box h2 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); letter-spacing: 2px; margin-bottom: 20px; }
-        .login-box input { width: 100%; padding: 15px; margin-bottom: 20px; background: #000; border: 1px solid #222; color: #fff; font-family: 'Tajawal', sans-serif; text-align: center; }
+        .login-box input { width: 100%; padding: 15px; margin-bottom: 20px; background: #000; border: 1px solid #222; color: #fff; font-family: 'Tajawal', sans-serif; text-align: center; outline: none;}
+        .login-box input:focus { border-color: var(--accent-yellow); }
         .login-box button { width: 100%; padding: 15px; background: var(--accent-yellow); color: #000; border: none; font-family: 'Oswald', sans-serif; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .login-box button:hover { background: #fff; }
         #loginError { color: #ff3333; margin-top: 15px; display: none; font-size: 14px; }
 
-        #adminPanel { display: none; padding: 40px 5%; max-width: 1200px; margin: auto; }
+        #adminPanel { display: none; padding: 40px 5%; max-width: 1400px; margin: auto; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
         .admin-header h1 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); }
         
@@ -61,24 +62,26 @@
         .inventory-section { margin-top: 40px; border-top: 1px solid #333; padding-top: 30px; }
         .inventory-section h2 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); margin-bottom: 20px; }
         
-        .admin-table { width: 100%; border-collapse: collapse; background: #0a0a0a; border: 1px solid #222; }
-        .admin-table th, .admin-table td { padding: 15px; text-align: right; border-bottom: 1px solid #222; }
-        .admin-table th { color: #888; font-family: 'Oswald', sans-serif; font-size: 14px; text-transform: uppercase; }
+        .admin-table { width: 100%; border-collapse: collapse; background: #0a0a0a; border: 1px solid #222; font-size: 14px;}
+        .admin-table th, .admin-table td { padding: 15px; text-align: right; border-bottom: 1px solid #222; vertical-align: middle;}
+        .admin-table th { color: #888; font-family: 'Oswald', sans-serif; font-size: 14px; text-transform: uppercase; background: #111;}
         .admin-table img { width: 50px; height: 50px; object-fit: cover; border: 1px solid #444; }
         
-        .action-btn { padding: 8px 12px; border: none; cursor: pointer; font-family: 'Tajawal', sans-serif; font-weight: bold; font-size: 12px; transition: 0.3s; }
+        .action-btn { padding: 8px 12px; border: none; cursor: pointer; font-family: 'Tajawal', sans-serif; font-weight: bold; font-size: 12px; transition: 0.3s; border-radius: 2px;}
         .edit-btn { background: #333; color: #fff; margin-left: 5px; }
         .edit-btn:hover { background: var(--accent-yellow); color: #000; }
         .delete-btn { background: transparent; color: #ff3333; border: 1px solid #ff3333; }
         .delete-btn:hover { background: #ff3333; color: #fff; }
 
-        /* سويتش التفعيل */
         .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px;}
         .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;}
         input:checked + .slider { background-color: var(--accent-yellow); }
         input:checked + .slider:before { transform: translateX(26px); background-color: #000;}
+
+        .order-status-select { background: #111; color: #fff; border: 1px solid #333; padding: 8px; font-family: 'Tajawal', sans-serif; outline: none; cursor: pointer; transition: 0.3s; border-radius: 2px; width: 100%;}
+        .order-status-select:focus { border-color: var(--accent-yellow); }
     </style>
 </head>
 <body>
@@ -99,13 +102,37 @@
         </div>
 
         <div class="tabs-nav">
-            <button class="tab-btn active" onclick="switchTab('productsTab', this)">إدارة المنتجات</button>
+            <button class="tab-btn active" onclick="switchTab('ordersTab', this)">الطلبات الواردة (الجديدة)</button>
+            <button class="tab-btn" onclick="switchTab('productsTab', this)">إدارة المنتجات</button>
             <button class="tab-btn" onclick="switchTab('dropTab', this)">إعدادات الإطلاق (Drop)</button>
             <button class="tab-btn" onclick="switchTab('aboutTab', this)">إعدادات (من نحن)</button>
         </div>
 
+        <!-- ================= الطلبات الواردة المطور بالدفع والطباعة ================= -->
+        <div id="ordersTab" class="tab-content active">
+            <h2 style="font-family: 'Oswald', sans-serif; color: var(--accent-yellow); margin-bottom: 20px;">سجل الطلبات والتحويلات المكتملة</h2>
+            <div style="overflow-x:auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب / التاريخ</th>
+                            <th>بيانات العميل</th>
+                            <th>عنوان الشحن</th>
+                            <th>القطع المطلوبة</th>
+                            <th>الماليات والدفع</th>
+                            <th style="width: 140px;">حالة الطلب</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersBody">
+                        <!-- الطلبات هتظهر هنا تلقائياً -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- ================= إدارة المنتجات ================= -->
-        <div id="productsTab" class="tab-content active">
+        <div id="productsTab" class="tab-content">
             <form id="addProductForm" onsubmit="saveProduct(event)">
                 <div class="form-group">
                     <label>اسم القطعة</label>
@@ -189,7 +216,7 @@
             </div>
         </div>
 
-        <!-- ================= التبويب الجديد: إعدادات الإطلاق (Drop) ================= -->
+        <!-- ================= إعدادات الإطلاق (Drop) ================= -->
         <div id="dropTab" class="tab-content">
             <div class="form-group">
                 <label style="display:flex; align-items:center; gap:15px;">
@@ -200,19 +227,16 @@
                     </label>
                 </label>
             </div>
-            
             <div class="form-group">
                 <label>عنوان الإطلاق (مثال: COMING SOON)</label>
                 <input type="text" id="dropTitleInput" placeholder="COMING SOON...">
             </div>
-
             <div class="form-group">
                 <label>موعد الإطلاق (التاريخ والوقت)</label>
                 <input type="datetime-local" id="dropTimeInput" style="color-scheme: dark;">
             </div>
-
             <div class="form-group">
-                <label>صورة تشويقية للقطعة (يُفضل صورة معتمة أو ظل)</label>
+                <label>صورة تشويقية للقطعة</label>
                 <div class="image-inputs">
                     <input type="file" id="dropFileInput" accept="image/*" onchange="addFromFile(event, 'drop')">
                     <input type="text" id="dropUrlInput" placeholder="أو أدخل رابط صورة خارجية">
@@ -220,7 +244,6 @@
                 </div>
                 <div id="dropImageGallery"></div>
             </div>
-
             <button type="button" class="submit-btn" style="width: auto; padding: 12px 30px;" onclick="saveDropData()" id="dropSaveBtn">حفظ إعدادات الإطلاق</button>
         </div>
 
@@ -258,7 +281,7 @@
         if(sessionStorage.getItem('isAdminLogged') === 'true') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
-            listenToInventory(); loadAboutData(); loadDropData();
+            initAdmin();
         }
 
         function checkPassword() {
@@ -266,12 +289,239 @@
                 sessionStorage.setItem('isAdminLogged', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                listenToInventory(); loadAboutData(); loadDropData();
+                initAdmin();
             } else { document.getElementById('loginError').style.display = 'block'; }
         }
 
         function logout() { sessionStorage.removeItem('isAdminLogged'); location.reload(); }
 
+        function initAdmin() {
+            listenToOrders(); 
+            listenToInventory(); 
+            loadAboutData(); 
+            loadDropData();
+        }
+
+        // ================= إدارة الطلبات المطورة والطباعة =================
+        let loadedOrders = []; 
+
+        function listenToOrders() {
+            const tbody = document.getElementById('ordersBody');
+            
+            db.collection("orders").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                tbody.innerHTML = '';
+                loadedOrders = []; 
+                
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888; padding:30px;">لا توجد طلبات مسجلة حتى الآن.</td></tr>`;
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const order = doc.data();
+                    const orderId = doc.id;
+                    order.id = orderId; 
+                    loadedOrders.push(order);
+                    
+                    // 1. تنسيق التاريخ والوقت
+                    let orderDate = 'جاري المعالجة';
+                    if(order.createdAt) {
+                        const dateObj = order.createdAt.toDate();
+                        orderDate = dateObj.toLocaleDateString('ar-EG') + '<br><small style="color:#666;">' + dateObj.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'}) + '</small>';
+                    }
+
+                    // 2. تنسيق المنتجات
+                    let itemsHtml = `<div style="display:flex; flex-direction:column; gap:8px;">`;
+                    order.items.forEach(item => {
+                        itemsHtml += `
+                            <div style="display:flex; align-items:center; gap:10px; background:#111; padding:8px; border:1px solid #222; border-radius:4px;">
+                                <img src="${item.image}" style="width:40px; height:50px; object-fit:cover; border:1px solid #333; border-radius:2px;">
+                                <div style="text-align:right; font-size:12px; line-height:1.4;">
+                                    <strong style="color:var(--accent-yellow); font-family:'Oswald', sans-serif; font-size:14px;">${item.name}</strong><br>
+                                    مقاس: ${item.size}
+                                </div>
+                            </div>`;
+                    });
+                    itemsHtml += `</div>`;
+
+                    // 3. تنسيق الهواتف
+                    let phonesHtml = order.customerInfo.phone;
+                    if(order.customerInfo.altPhone) {
+                        phonesHtml += `<br><small style="color:#aaa;">بديل: ${order.customerInfo.altPhone}</small>`;
+                    }
+
+                    // 4. تنسيق قسم الماليات والدفع الجديد
+                    let paymentMethod = 'غير محدد';
+                    let paymentTxIDHtml = '';
+                    
+                    if(order.paymentInfo) {
+                        paymentMethod = order.paymentInfo.method;
+                        if(order.paymentInfo.transactionID) {
+                            paymentTxIDHtml = `<br><span style="color:#aaa; font-size:11px;">إيصال/رقم: ${order.paymentInfo.transactionID}</span>`;
+                        }
+                    }
+                    
+                    let paymentStatus = order.paymentStatus || 'غير مدفوع';
+                    
+                    let financeHtml = `
+                        <div style="font-family:'Oswald', sans-serif; font-size:18px; color:var(--accent-yellow); font-weight:bold;">${order.totalAmount} ج.م</div>
+                        <div style="font-size:13px; color:#fff; margin-top:5px;">طريقة: ${paymentMethod} ${paymentTxIDHtml}</div>
+                        <select class="order-status-select" style="margin-top:10px; padding:4px; font-size:12px;" onchange="updatePaymentStatus('${orderId}', this.value)">
+                            <option value="غير مدفوع" ${paymentStatus === 'غير مدفوع' ? 'selected' : ''}>🔴 غير مدفوع</option>
+                            <option value="مدفوع" ${paymentStatus === 'مدفوع' ? 'selected' : ''}>🟢 مدفوع</option>
+                        </select>
+                    `;
+
+                    // تجهيز رابط التتبع
+                    let trackingUrl = window.location.origin + window.location.pathname.replace('admin.html', '') + 'track.html?id=' + orderId;
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td style="font-family:'Oswald'; color:#ccc; font-size:13px; text-align:center;">
+                                <span style="color:var(--accent-yellow); letter-spacing:1px;">ID: ${orderId.slice(-6).toUpperCase()}</span><br>
+                                <span style="font-family:'Tajawal', sans-serif;">${orderDate}</span>
+                            </td>
+                            <td>
+                                <strong style="color:#fff; font-size:15px;">${order.customerInfo.name}</strong><br>
+                                <div style="margin-top:5px; direction:ltr; text-align:right; font-family:'Oswald', sans-serif;">${phonesHtml}</div>
+                            </td>
+                            <td style="font-size:13px; line-height:1.6;">
+                                <strong style="color:#fff;">${order.customerInfo.governorate}</strong> - ${order.customerInfo.city}<br>
+                                <span style="color:#888;">${order.customerInfo.address}</span>
+                            </td>
+                            <td style="min-width: 200px;">${itemsHtml}</td>
+                            <td style="text-align:center;">${financeHtml}</td>
+                            <td>
+                                <select class="order-status-select" onchange="updateOrderStatus('${orderId}', this.value)">
+                                    <option value="قيد المراجعة" ${order.status === 'قيد المراجعة' ? 'selected' : ''}>قيد المراجعة</option>
+                                    <option value="تم التأكيد" ${order.status === 'تم التأكيد' ? 'selected' : ''}>تم التأكيد</option>
+                                    <option value="جاري الشحن" ${order.status === 'جاري الشحن' ? 'selected' : ''}>جاري الشحن</option>
+                                    <option value="تم التوصيل" ${order.status === 'تم التوصيل' ? 'selected' : ''}>تم التوصيل</option>
+                                    <option value="ملغي" ${order.status === 'ملغي' ? 'selected' : ''}>ملغي</option>
+                                </select>
+                            </td>
+                            <td style="display:flex; flex-direction:column; gap:5px; align-items:center;">
+                                <button class="action-btn" style="background:#fff; color:#000; font-family:'Tajawal', sans-serif; font-size:13px; width:100%; padding:10px 0;" onclick="printOrder('${orderId}')">🖨️ طباعة البوليصة</button>
+                                <button class="action-btn" style="background:#222; color:#fff; border:1px solid #444; width:100%; padding:10px 0;" onclick="copyToClipboard('${trackingUrl}')">نسخ رابط التتبع</button>
+                                <button class="action-btn delete-btn" style="width:100%; padding:10px 0;" onclick="deleteOrder('${orderId}')">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }, (error) => {
+                console.error("خطأ في جلب الطلبات:", error);
+            });
+        }
+
+        // تحديث حالة الدفع في قاعدة البيانات
+        window.updatePaymentStatus = async function(orderId, newStatus) {
+            try {
+                await db.collection("orders").doc(orderId).update({ paymentStatus: newStatus });
+            } catch (error) {
+                console.error("خطأ:", error);
+                alert("حدث خطأ أثناء تحديث حالة الدفع.");
+            }
+        }
+
+        // دالة طباعة البوليصة لمندوب الشحن
+        window.printOrder = function(orderId) {
+            const order = loadedOrders.find(o => o.id === orderId);
+            if(!order) return;
+
+            let itemsHtml = '';
+            order.items.forEach(item => {
+                itemsHtml += `<tr><td>${item.name}</td><td>${item.size}</td><td>${item.price} ج.م</td></tr>`;
+            });
+
+            // تحديد حالة التحصيل للمندوب
+            let paymentStatus = order.paymentStatus || 'غير مدفوع';
+            let collectAmountHtml = '';
+            if(paymentStatus === 'مدفوع') {
+                collectAmountHtml = `<div class="total" style="background:#e6ffe6; border: 2px solid #00cc00; padding:10px;">🟢 الأوردر مدفوع مسبقاً - لا تقم بتحصيل أموال من العميل (غير رسوم الشحن إن وُجدت)</div>`;
+            } else {
+                collectAmountHtml = `<div class="total" style="background:#fff; padding:10px;">المطلوب تحصيله من العميل: ${order.totalAmount} ج.م (بالإضافة لرسوم الشحن)</div>`;
+            }
+
+            const printWindow = window.open('', '_blank', 'width=800,height=600');
+            printWindow.document.write(`
+                <html dir="rtl" lang="ar">
+                <head>
+                    <title>بوليصة شحن - ${orderId.slice(-6).toUpperCase()}</title>
+                    <style>
+                        body { font-family: Tahoma, Arial, sans-serif; padding: 20px; color: #000; background: #fff;}
+                        .invoice-box { border: 2px solid #000; padding: 20px; max-width: 800px; margin: auto; }
+                        .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+                        .header h1 { margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 2px;}
+                        .details { margin-bottom: 20px; font-size: 18px; line-height: 2.2; }
+                        .items-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 16px;}
+                        .items-table th, .items-table td { border: 1px solid #000; padding: 12px; text-align: center; }
+                        .items-table th { background-color: #f2f2f2; }
+                        .total { font-size: 20px; font-weight: bold; text-align: center; margin-top: 20px; border: 2px solid #000; }
+                        .footer { text-align: center; font-size: 14px; margin-top: 30px; font-weight: bold;}
+                    </style>
+                </head>
+                <body>
+                    <div class="invoice-box">
+                        <div class="header">
+                            <h1>UNOVERSE</h1>
+                            <p style="font-size:18px; margin-top:5px;">بوليصة شحن وتوصيل ✦ 1 OF 1 EXCLUSIVE</p>
+                            <p style="font-weight:bold; font-size:16px;">رقم الطلب: ${orderId.slice(-6).toUpperCase()}</p>
+                        </div>
+                        <div class="details">
+                            <strong>الاسم:</strong> ${order.customerInfo.name}<br>
+                            <strong>رقم الهاتف:</strong> <span dir="ltr">${order.customerInfo.phone}</span> ${order.customerInfo.altPhone ? ' / <span dir="ltr">' + order.customerInfo.altPhone + '</span>' : ''}<br>
+                            <strong>المحافظة:</strong> ${order.customerInfo.governorate}<br>
+                            <strong>العنوان بالتفصيل:</strong> ${order.customerInfo.city} - ${order.customerInfo.address}
+                        </div>
+                        <table class="items-table">
+                            <tr><th>القطعة</th><th>المقاس</th><th>السعر</th></tr>
+                            ${itemsHtml}
+                        </table>
+                        
+                        ${collectAmountHtml}
+
+                        <div class="footer">
+                            شكراً لثقتكم بنا ✦ UNOVERSE ARCHIVE
+                        </div>
+                    </div>
+                    <script>
+                        window.onload = function() { window.print(); }
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('تم نسخ رابط التتبع للعميل بنجاح! ✦');
+            }).catch(err => {
+                console.error('خطأ في النسخ', err);
+            });
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            try {
+                await db.collection("orders").doc(orderId).update({ status: newStatus });
+            } catch (error) {
+                console.error("خطأ في تحديث الحالة:", error);
+                alert("فشل تحديث حالة الطلب.");
+            }
+        }
+
+        async function deleteOrder(orderId) {
+            if(confirm("هل أنت متأكد من حذف هذا الطلب نهائياً؟ لا يمكن التراجع عن هذه الخطوة.")) {
+                try {
+                    await db.collection("orders").doc(orderId).delete();
+                } catch (error) {
+                    console.error("خطأ في الحذف:", error);
+                    alert("فشل حذف الطلب.");
+                }
+            }
+        }
+
+        // ================= الأكواد السابقة (من نحن، المنتجات، الإطلاق) =================
         async function loadAboutData() {
             try {
                 const doc = await db.collection("settings").doc("about").get();
@@ -286,7 +536,6 @@
             } catch (error) { alert("خطأ!"); } finally { btn.innerText = "حفظ وتحديث النص"; btn.disabled = false; }
         }
 
-        // ================= إدارة صور المنتجات والدروب =================
         let currentImages = []; 
         let dropImage = ""; 
         let editingProductId = null; 
@@ -333,7 +582,6 @@
             }
         }
 
-        // ================= إعدادات Drop =================
         async function loadDropData() {
             try {
                 const doc = await db.collection("settings").doc("drop").get();
@@ -360,7 +608,6 @@
             } catch (error) { alert("حدث خطأ!"); } finally { btn.innerText = "حفظ إعدادات الإطلاق"; btn.disabled = false; }
         }
 
-        // ================= إدارة المنتجات =================
         async function saveProduct(e) {
             e.preventDefault();
             if(currentImages.length === 0) { alert("يجب إضافة صورة!"); return; }
