@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UnoVerse | The Archive</title>
+    <title>UnoVerse</title>
     
     <link rel="icon" type="image/png" href="icon.png">
     
@@ -23,6 +23,11 @@
             --line-color: rgba(230, 225, 214, 0.08); 
         }
 
+        /* إخفاء الماوس الأصلي بشكل إجباري وقاطع في جميع الحالات (Focus / Active / Hover) */
+        html, body, *, *::before, *::after, *:hover, *:active, *:focus, a, button, input, textarea, select, label { 
+            cursor: none !important; 
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         
         body { 
@@ -31,7 +36,6 @@
             font-family: 'Tajawal', sans-serif; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased; 
-            cursor: none;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
             -webkit-touch-callout: none;
             background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='400' cy='400' r='399' fill='none' stroke='%23E6E1D6' stroke-opacity='0.03' stroke-width='1' stroke-dasharray='4 12'/%3E%3Ccircle cx='400' cy='400' r='200' fill='none' stroke='%23E6E1D6' stroke-opacity='0.02' stroke-width='1' stroke-dasharray='4 12'/%3E%3C/svg%3E");
@@ -41,7 +45,6 @@
         
         img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
         .slide-arrow, .checkout-btn, .close-cart, .login-btn, button, a, input, textarea { pointer-events: auto; }
-        *, *::before, *::after { cursor: none !important; }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
@@ -64,7 +67,7 @@
         .loader-logo { 
             font-family: 'Oswald', sans-serif; font-size: 50px; color: var(--text-cream); 
             letter-spacing: 12px; margin-bottom: 10px; font-weight: 700;
-            direction: ltr; /* ضمان الترتيب الصحيح */
+            direction: ltr;
         }
         .loader-logo span { color: var(--text-muted); }
         .loader-subtitle {
@@ -79,12 +82,12 @@
         }
         body.loaded #loader-overlay { transform: translateY(-100%); opacity: 0; pointer-events: none; }
 
-        /* الماوس */
+        /* ================= الماوس المخصص ================= */
         .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 999999; will-change: transform; mix-blend-mode: exclusion; }
         .cursor-dot { width: 10px; height: 10px; background-color: var(--text-cream); border-radius: 50%; transform: translate(-50%, -50%) scale(1); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease; box-shadow: 0 0 15px rgba(230, 225, 214, 0.2); will-change: transform; }
         .cursor-wrapper.hovered .cursor-dot { transform: translate(-50%, -50%) scale(5); background-color: transparent; border: 1px solid var(--text-cream); box-shadow: none; }
 
-        /* ================= الهيدر الفخم ================= */
+        /* ================= الهيدر ================= */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
             width: 100%; height: 100px; padding: 0 6%; 
@@ -122,7 +125,6 @@
             .main-header .main-nav { display: none; } 
             .main-header .header-actions { gap: 20px; }
             .main-header .login-btn { font-size: 11px; letter-spacing: 1px;}
-            body, *, *::before, *::after { cursor: auto !important; }
             .cursor-wrapper { display: none !important; }
         }
 
@@ -226,20 +228,36 @@
             width: 100%; height: 100%; object-fit: cover; pointer-events: none;
         }
         
+        /* ------------------ البايدجات المضيئة والواضحة لحالة المنتج ------------------ */
         .overlay-badge { 
             position: absolute; top: 15px; left: 15px; 
-            font-family: 'Oswald', sans-serif; font-size: 9px; 
-            color: var(--text-cream); 
-            background: rgba(4, 6, 10, 0.3); 
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(230, 225, 214, 0.3);
-            padding: 6px 12px; font-weight: 400; z-index: 4; 
-            text-transform: uppercase; letter-spacing: 4px; 
+            font-family: 'Oswald', sans-serif; font-size: 10px; 
+            padding: 6px 14px; font-weight: 700; z-index: 4; 
+            text-transform: uppercase; letter-spacing: 3px; 
+            transition: 0.3s ease;
         }
+        
+        .overlay-badge.available {
+            background: rgba(4, 6, 10, 0.85); 
+            color: var(--text-cream); 
+            border: 1px solid var(--text-cream);
+            box-shadow: 0 0 10px rgba(230, 225, 214, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .overlay-badge.offer {
+            background: #FFD700; 
+            color: #000;
+            border: 1px solid #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
         .overlay-badge.sold-out { 
-            color: var(--text-muted);
-            border-color: rgba(107, 128, 150, 0.3);
-            background: rgba(4, 6, 10, 0.6); 
+            background: rgba(255, 51, 51, 0.85); 
+            color: #fff;
+            border: 1px solid #ff3333;
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+            backdrop-filter: blur(4px);
         }
         
         .album-info { padding-top: 20px; display: flex; flex-direction: column; gap: 12px; text-align: left; }
@@ -285,7 +303,7 @@
             .info-top h3 { font-size: 14px; letter-spacing: 1px;}
             .info-top .price { font-size: 12px; }
             .sizes-display { font-size: 9px; }
-            .overlay-badge { top: 10px; left: 10px; padding: 4px 8px; font-size: 8px; letter-spacing: 2px;}
+            .overlay-badge { top: 10px; left: 10px; padding: 5px 10px; font-size: 8px; letter-spacing: 2px;}
             .carousel-controls { gap: 20px; }
         }
 
@@ -322,7 +340,7 @@
         .footer-section h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; margin-bottom: 25px; font-weight: 400; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; display: inline-block; letter-spacing: 5px; text-transform: uppercase;}
         .footer-section p { color: var(--text-muted); font-size: 11px; line-height: 2.5; font-weight: 300; margin-bottom: 10px; font-family: 'Tajawal', sans-serif; letter-spacing: 1px;}
         .social-links { display: flex; flex-direction: column; gap: 15px; }
-        .social-links a { color: var(--text-muted); text-decoration: none; font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 4px; transition: 0.3s; cursor: none; text-transform: uppercase;}
+        .social-links a { color: var(--text-muted); text-decoration: none; font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 4px; transition: 0.3s; text-transform: uppercase;}
         .social-links a:hover { color: var(--text-cream); padding-right: 5px;}
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 40px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 6px; text-transform: uppercase;}
 
@@ -331,7 +349,7 @@
         .login-overlay.active { visibility: visible; }
         .close-login { position: absolute; top: -40px; right: 20px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 300; color: var(--text-muted); background: transparent; border: none; transition: 0.3s; text-transform: uppercase; letter-spacing: 4px; z-index: 999999; cursor: pointer !important; }
         .close-login:hover { color: var(--text-cream); }
-        .login-bg { position: absolute; left: 0; width: 100%; height: 50vh; background-color: var(--k10); transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1); will-change: transform; z-index: 1; border-bottom: 1px solid var(--line-color);}
+        .login-bg { position: absolute; left: 0; width: 100%; height: 50vh; background-color: var(--bg-deep); transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1); will-change: transform; z-index: 1; border-bottom: 1px solid var(--line-color);}
         .login-bg-top { top: 0; transform: translateY(-100%); }
         .login-bg-bottom { bottom: 0; transform: translateY(100%); border-bottom: none; border-top: 1px solid var(--line-color);}
         .login-overlay.active .login-bg-top { transform: translateY(0); }
@@ -424,7 +442,7 @@
 
     <section id="about" class="editorial-section section-fade">
         <div style="color: var(--accent-blue); font-size: 20px; font-weight: bold; letter-spacing: 5px; margin-bottom: 30px;">///</div>
-        <h2 class="ed-title">Built<br>Different.</h2>
+        <h2 class="ed-title">About<br>Us.</h2>
         <div class="ed-text" id="aboutContent">
             WE DON'T FOLLOW TRENDS. WE CREATE TIMELESS PIECES MADE FOR THOSE WHO VALUE QUALITY.
         </div>
@@ -480,7 +498,7 @@
                 <h4>CONNECT.</h4>
                 <div class="social-links">
                     <a href="https://www.instagram.com/unoverse.eg">INSTAGRAM</a>
-                    <a href="#">TIKTOK</a>
+                    <a href="https://www.tiktok.com/@unoverse.eg">TIKTOK</a>
                     <a href="mailto:unoverse.eg@gmail.com">EMAIL US</a>
                 </div>
             </div>
@@ -552,15 +570,21 @@
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100;
         let cursorX = -100, cursorY = -100;
-        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-        function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
-            cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-            requestAnimationFrame(animateCursor);
+        
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        
+        if(!isMobile) {
+            document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
+                cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
         }
-        animateCursor();
 
         function attachCursorEffects() {
+            if(isMobile) return;
             document.querySelectorAll('a, .close-cart, button, input, textarea, .carousel-btn, .album-card').forEach(el => {
                 el.removeEventListener('mouseenter', addHover);
                 el.removeEventListener('mouseleave', removeHover);
@@ -739,9 +763,15 @@
                         ? `<span class="old">${price} EGP</span> <span class="current">${discount} EGP</span>` 
                         : `<span class="current">${price} EGP</span>`;
 
+                    // ------------------ البايدجات المضيئة للحالة ------------------
                     let badgeHTML = ''; 
-                    if (prod.status === 'offer') badgeHTML = `<div class="overlay-badge">SPECIAL</div>`;
-                    else if (prod.status === 'out') badgeHTML = `<div class="overlay-badge sold-out">ARCHIVED</div>`;
+                    if (prod.status === 'offer') {
+                        badgeHTML = `<div class="overlay-badge offer">SPECIAL</div>`;
+                    } else if (prod.status === 'out') {
+                        badgeHTML = `<div class="overlay-badge sold-out">ARCHIVED</div>`;
+                    } else {
+                        badgeHTML = `<div class="overlay-badge available">AVAILABLE</div>`;
+                    }
 
                     let singleImg = prod.image || (prod.gallery ? prod.gallery[0] : '');
                     
@@ -803,15 +833,28 @@
             if (totalEl) totalEl.innerText = total + ' EGP';
         }
 
+        // ================= دالة إرسال الإيميل =================
         function sendSupportEmail(e) {
             e.preventDefault();
             const name = document.getElementById('supportName').value;
             const email = document.getElementById('supportEmail').value;
             const message = document.getElementById('supportMessage').value;
-            const subject = encodeURIComponent('رسالة دعم من موقع UnoVerse');
-            const body = encodeURIComponent(`الاسم: ${name}\nالبريد الإلكتروني: ${email}\n\nالرسالة:\n${message}`);
-            window.location.href = `mailto:unoverse.eg@gmail.com?subject=${subject}&body=${body}`;
-            document.getElementById('supportForm').reset();
+            
+            const subject = encodeURIComponent('UnoVerse Client Support');
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+
+            const btn = document.querySelector('#supportForm .submit-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "REDIRECTING TO GMAIL...";
+
+            const gmailWebUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=unoverse.eg@gmail.com&su=${subject}&body=${body}`;
+            
+            window.open(gmailWebUrl, '_blank');
+
+            setTimeout(() => {
+                document.getElementById('supportForm').reset();
+                btn.innerText = originalText;
+            }, 1000);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
