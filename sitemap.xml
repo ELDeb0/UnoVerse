@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+    <!-- الصفحة الرئيسية -->
+    <url>
+        <loc>https://uno-verse-ten.vercel.app/</loc>
+        <lastmod>2026-07-25</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- صفحة تفاصيل المنتج -->
+    <url>
+        <loc>https://uno-verse-ten.vercel.app/product.html</loc>
+        <lastmod>2026-07-25</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- صفحة إتمام الطلب -->
+    <url>
+        <loc>https://uno-verse-ten.vercel.app/checkout.html</loc>
+        <lastmod>2026-07-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- صفحة التتبع -->
+    <url>
+        <loc>https://uno-verse-ten.vercel.app/track.html</loc>
+        <lastmod>2026-07-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+</urlset>
