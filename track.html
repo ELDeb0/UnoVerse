@@ -3,118 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UnoVerse | ORDER TRACKING</title>
+    <title>UnoVerse</title>
+    
+    <link rel="icon" type="image/png" href="icon.png">
     
     <!-- مكتبات Firebase السحابية -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,600;0,900;1,600&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <!-- خطوط UnoVerse -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Tajawal:wght@300;400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* ================= الهوية البصرية الأرشيفية ================= */
         :root {
-            --bg-void: #030303; --bg-dark: #070707; --accent-yellow: #FFD700;
-            --text-main: #F4F3EF; --text-dim: #888888; --border-fine: #1a1a1a; 
-            --font-ar: 'Tajawal', sans-serif; --font-en: 'Oswald', sans-serif;
+            --bg-deep: #04060A;       
+            --bg-card: #080C14;       
+            --text-cream: #E6E1D6;    
+            --text-muted: #6B8096;    
+            --accent-blue: #4A6B8C;   
+            --line-color: rgba(230, 225, 214, 0.08); 
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ================= إخفاء الماوس الأصلي بشكل إجباري وجذري ================= */
+        *, *::before, *::after, html, body, a, button, input, textarea, select, label, .copy-btn, .action-link { 
+            cursor: none !important; 
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         
         body { 
-            background-color: var(--bg-void); color: var(--text-main); font-family: var(--font-ar); 
-            overflow-x: hidden; -webkit-font-smoothing: antialiased; cursor: none; 
+            background-color: var(--bg-deep); 
+            color: var(--text-cream); 
+            font-family: 'Tajawal', sans-serif; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased; 
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            -webkit-touch-callout: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='400' cy='400' r='399' fill='none' stroke='%23E6E1D6' stroke-opacity='0.03' stroke-width='1' stroke-dasharray='4 12'/%3E%3Ccircle cx='400' cy='400' r='200' fill='none' stroke='%23E6E1D6' stroke-opacity='0.02' stroke-width='1' stroke-dasharray='4 12'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+            background-position: center;
         }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg-void); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
         button, a { pointer-events: auto; }
-        *, *::before, *::after { cursor: none !important; }
 
-        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; will-change: transform; mix-blend-mode: exclusion; }
-        .cursor-dot { width: 14px; height: 14px; background-color: var(--accent-yellow); border-radius: 50%; transform: translate(-50%, -50%) scale(1); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease; box-shadow: 0 0 15px var(--accent-yellow); will-change: transform; }
-        .cursor-wrapper.hovered .cursor-dot { transform: translate(-50%, -50%) scale(4.5); background-color: #fff; box-shadow: none; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
 
-        /* HEADER */
-        .main-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 25px 5%; position: absolute; top: 0; right: 0; z-index: 9999; border-bottom: 1px solid var(--border-fine); background: var(--bg-dark); }
-        .main-header .logo { font-family: var(--font-en); font-size: 24px; font-weight: 700; letter-spacing: 5px; text-decoration: none; color: var(--text-main); }
-        .main-header .logo span { color: var(--accent-yellow); }
-        .header-actions .action-link { color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; letter-spacing: 1px; cursor: pointer !important; }
-        .header-actions .action-link:hover { color: var(--text-main); }
+        /* ================= النسيج السينمائي الأصلي (الـ SVG Filter) ================= */
+        .cinematic-grain { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            pointer-events: none; z-index: 99998; opacity: 0.05; 
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
+            will-change: transform; transform: translateZ(0); 
+        }
 
-        /* TRACKING LAYOUT */
-        .tracking-container { max-width: 900px; margin: 150px auto 100px; padding: 0 5%; text-align: center; }
+        /* ================= الماوس المخصص ================= */
+        .cursor-wrapper { 
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; 
+            will-change: transform; mix-blend-mode: exclusion; transition: opacity 0.3s ease;
+        }
+        .cursor-dot { 
+            width: 12px; height: 12px; background-color: var(--text-cream); border-radius: 50%;
+            transform: translate(-50%, -50%) scale(1); 
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease; 
+        }
+        .cursor-wrapper.hovered .cursor-dot { 
+            transform: translate(-50%, -50%) scale(4); 
+            background-color: transparent; border: 1px solid var(--text-cream); box-shadow: none; 
+        }
+
+        /* ================= خلفية الحروف الإنجليزية الفاخرة ================= */
+        .eng-typography-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 5vh; }
+        .eng-typography-bg .word-1 { font-family: 'Oswald', sans-serif; font-size: 18vw; font-weight: 700; color: rgba(132, 155, 179, 0.08); line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanRight 45s linear infinite; transform: translateZ(0);}
+        .eng-typography-bg .word-2 { font-family: 'Playfair Display', serif; font-size: 15vw; font-weight: 900; font-style: italic; color: rgba(132, 155, 179, 0.05); line-height: 0.8; white-space: nowrap; will-change: transform; animation: smoothPanLeft 55s linear infinite; transform: translateZ(0);}
+        @keyframes smoothPanRight { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(50%, 0, 0); } }
+        @keyframes smoothPanLeft { 0% { transform: translate3d(50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
+
+        /* ================= شاشة التحميل ================= */
+        #loader-overlay { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: var(--bg-deep); z-index: 9999999; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease; 
+        }
+        .loader-logo { 
+            font-family: 'Oswald', sans-serif; font-size: 50px; color: var(--text-cream); 
+            letter-spacing: 12px; margin-bottom: 10px; font-weight: 700; direction: ltr;
+        }
+        .loader-logo span { color: var(--text-muted); }
+        .loader-line-container { width: 150px; height: 1px; background: rgba(255,255,255,0.1); overflow: hidden; position: relative;}
+        #loader-line { 
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%); 
+            width: 0%; height: 100%; background: var(--text-cream); 
+            transition: width 1s cubic-bezier(0.25, 1, 0.5, 1); 
+        }
+        body.loaded #loader-overlay { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+
+        /* ================= الهيدر ================= */
+        .main-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            width: 100%; height: 85px; padding: 0 6%; position: absolute; top: 0; right: 0; 
+            z-index: 9999; border-bottom: 1px solid var(--line-color); background: var(--bg-card);
+        }
+        .main-header .logo { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; text-decoration: none; color: var(--text-cream); display: flex; align-items: center; height: 100%; }
+        .main-header .logo span { color: var(--text-muted); font-weight: 300;}
+        .header-actions .action-link { color: var(--text-muted); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 11px; font-weight: 300; transition: 0.3s; letter-spacing: 4px; text-transform: uppercase;}
+        .header-actions .action-link:hover { color: var(--text-cream); }
+
+        /* ================= TRACKING LAYOUT ================= */
+        .tracking-container { position: relative; z-index: 10; max-width: 900px; margin: 150px auto 100px; padding: 0 5%; text-align: center; }
         
-        .success-msg { color: var(--accent-yellow); font-family: var(--font-ar); font-size: 28px; font-weight: 800; margin-bottom: 10px;}
-        .save-link-msg { font-size: 15px; color: var(--text-dim); margin-bottom: 50px; line-height: 1.8;}
-        .save-link-msg strong { color: #fff; font-family: var(--font-en); letter-spacing: 2px; background: #111; padding: 5px 15px; border: 1px solid #333;}
+        .success-msg { color: var(--text-cream); font-family: 'Tajawal', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 15px;}
+        .save-link-msg { font-size: 14px; color: var(--text-muted); margin-bottom: 50px; line-height: 2; font-weight: 300;}
+        .order-id-display { 
+            color: var(--text-cream); font-family: 'Oswald', sans-serif; letter-spacing: 4px; 
+            background: var(--bg-card); padding: 8px 20px; border: 1px solid var(--line-color); 
+            display: inline-block; margin-top: 15px; font-weight: 300;
+        }
 
-        /* TIMELINE */
-        .timeline { display: flex; justify-content: space-between; align-items: center; margin: 60px 0; position: relative; }
-        .timeline::before { content: ''; position: absolute; top: 20px; left: 5%; right: 5%; height: 2px; background: #222; z-index: 1; }
-        .progress-bar { position: absolute; top: 20px; right: 5%; height: 2px; background: var(--accent-yellow); z-index: 2; transition: width 0.8s ease; width: 0%; }
+        .copy-actions { display: flex; justify-content: center; gap: 15px; margin-top: 25px; flex-wrap: wrap;}
+        .copy-btn { 
+            background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); 
+            padding: 12px 25px; font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 400; 
+            letter-spacing: 3px; transition: 0.3s; text-transform: uppercase; outline: none;
+        }
+        .copy-btn:hover { border-color: var(--text-cream); color: var(--bg-deep); background: var(--text-cream); }
+        .copy-btn.copied { background: var(--text-muted); color: var(--bg-deep); border-color: var(--text-muted); }
+
+        /* ================= TIMELINE ================= */
+        .timeline { display: flex; justify-content: space-between; align-items: center; margin: 80px 0; position: relative; }
+        .timeline::before { content: ''; position: absolute; top: 20px; left: 5%; right: 5%; height: 1px; background: var(--line-color); z-index: 1; }
+        .progress-bar { position: absolute; top: 20px; right: 5%; height: 1px; background: var(--text-cream); z-index: 2; transition: width 0.8s ease; width: 0%; box-shadow: 0 0 10px rgba(230, 225, 214, 0.5);}
         
         .step { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 15px; width: 25%; }
-        .step-icon { width: 40px; height: 40px; border-radius: 50%; background: #111; border: 2px solid #333; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #555; transition: 0.5s; font-family: var(--font-en); }
-        .step.active .step-icon { background: var(--accent-yellow); border-color: var(--accent-yellow); color: #000; box-shadow: 0 0 15px rgba(255,215,0,0.4); }
-        .step-label { font-family: var(--font-ar); font-size: 14px; font-weight: 700; color: #555; transition: 0.5s; }
-        .step.active .step-label { color: #fff; }
+        .step-icon { 
+            width: 40px; height: 40px; border-radius: 50%; background: var(--bg-deep); border: 1px solid var(--line-color); 
+            display: flex; justify-content: center; align-items: center; font-size: 14px; color: var(--text-muted); 
+            transition: 0.5s; font-family: 'Oswald', sans-serif; font-weight: 300;
+        }
+        .step.active .step-icon { background: var(--text-cream); border-color: var(--text-cream); color: var(--bg-deep); box-shadow: 0 0 15px rgba(230, 225, 214, 0.3); font-weight: 700;}
+        .step-label { font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); transition: 0.5s; }
+        .step.active .step-label { color: var(--text-cream); }
 
-        /* ORDER DETAILS */
-        .order-details-box { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 40px; text-align: right; margin-top: 50px; }
-        .box-title { font-family: var(--font-en); font-size: 18px; color: var(--accent-yellow); letter-spacing: 2px; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px;}
+        /* ================= ORDER DETAILS ================= */
+        .order-details-box { background: var(--bg-card); border: 1px solid var(--line-color); padding: 40px; text-align: right; margin-top: 50px; }
+        .box-title { font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--text-cream); letter-spacing: 4px; margin-bottom: 30px; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; text-transform: uppercase;}
         
         .items-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
-        .item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #222; padding-bottom: 10px;}
-        .item-name { font-size: 15px; color: #fff; }
-        .item-size { font-size: 13px; color: var(--text-dim); }
-        .item-price { font-family: var(--font-en); color: var(--accent-yellow); }
+        .item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--line-color); padding-bottom: 15px;}
+        .item-name { font-size: 14px; color: var(--text-cream); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 300;}
+        .item-size { font-size: 11px; color: var(--text-muted); font-family: 'Oswald', sans-serif; letter-spacing: 2px;}
+        .item-price { font-family: 'Oswald', sans-serif; color: var(--text-cream); font-size: 14px; font-weight: 300; letter-spacing: 1px;}
 
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .info-block h4 { font-size: 12px; color: var(--text-dim); margin-bottom: 5px; }
-        .info-block p { font-size: 15px; color: #fff; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; border-top: 1px solid var(--line-color); padding-top: 30px;}
+        .info-block h4 { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-family: 'Oswald', sans-serif; letter-spacing: 3px; text-transform: uppercase;}
+        .info-block p { font-size: 14px; color: var(--text-cream); font-weight: 300; line-height: 1.8;}
 
-        /* LOADER */
-        #loader-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; transition: opacity 0.5s ease; }
-        #loader-overlay .logo-load { font-family: 'Oswald', sans-serif; font-size: 32px; color: #fff; letter-spacing: 5px; margin-bottom: 20px; }
-        #loader-overlay .logo-load span { color: var(--accent-yellow); }
+        /* ================= الفوتر ================= */
+        .main-footer { padding: 80px 6% 40px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 80px;}
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; margin-bottom: 60px; }
+        .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; color: var(--text-cream); margin-bottom: 20px; display: flex; align-items: center;}
+        .footer-brand h2 span { color: var(--text-muted); font-weight: 300;}
+        .footer-brand p { color: var(--text-muted); font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 4px; line-height: 2.5; text-transform: uppercase;}
+        .footer-section h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; margin-bottom: 25px; font-weight: 400; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; display: inline-block; letter-spacing: 5px; text-transform: uppercase;}
+        .footer-section p { color: var(--text-muted); font-size: 11px; line-height: 2.5; font-weight: 300; margin-bottom: 10px; font-family: 'Tajawal', sans-serif; letter-spacing: 1px;}
+        .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 30px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 6px; text-transform: uppercase;}
 
+        /* ================= RESPONSIVE ================= */
         @media (max-width: 768px) {
-            .step-label { font-size: 11px; text-align: center; }
-            .step-icon { width: 30px; height: 30px; font-size: 14px; }
+            .main-header { padding: 15px 5%; height: 75px;}
+            .main-header .logo { font-size: 20px; letter-spacing: 3px; }
+            .header-actions .action-link { font-size: 10px; letter-spacing: 2px; }
+            
+            .tracking-container { margin-top: 120px; }
+            .success-msg { font-size: 24px; }
+            .order-id-display { font-size: 12px; padding: 6px 15px; }
+
+            .step-label { font-size: 10px; text-align: center; }
+            .step-icon { width: 30px; height: 30px; font-size: 12px; }
             .timeline::before, .progress-bar { top: 15px; }
-            .info-grid { grid-template-columns: 1fr; }
-            .save-link-msg strong { display: block; margin-top: 10px; font-size: 12px;}
+            
+            .info-grid { grid-template-columns: 1fr; gap: 20px;}
+            .order-details-box { padding: 25px; }
+            
+            .copy-actions { flex-direction: column; gap: 10px; }
+            .copy-btn { width: 100%; }
+
+            /* إخفاء الماوس المخصص نهائياً في الموبايل لتوفير المعالجة */
+            .cursor-wrapper { display: none !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- الفلتر السينمائي SVG الأصلي -->
+    <div class="cinematic-grain"></div>
+
     <div id="loader-overlay">
-        <div class="logo-load">UNO<span>VERSE</span></div>
-        <div style="width: 200px; height: 2px; background: #222; position: relative; overflow: hidden;">
-            <div id="progress-bar" style="width: 0%; height: 100%; background: #D4AF37; transition: width 1.5s ease;"></div>
+        <div class="loader-logo" dir="ltr">UNO<span>VERSE</span></div>
+        <div class="loader-line-container">
+            <div id="loader-line"></div>
         </div>
+    </div>
+
+    <div class="eng-typography-bg">
+        <div class="word-1">UNOVERSE</div>
+        <div class="word-2">SECURE PROTOCOL</div>
+        <div class="word-1" style="font-size: 15vw; opacity: 0.5;">TRACKING</div>
     </div>
 
     <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
     <header class="main-header">
-        <a href="index.html" class="logo">UNO<span>VERSE</span></a>
+        <a href="index.html" class="logo" dir="ltr">UNO<span>VERSE</span></a>
         <div class="header-actions">
-            <a href="index.html" class="action-link">العودة للأرشيف ✕</a>
+            <a href="index.html" class="action-link">RETURN TO ARCHIVE ✕</a>
         </div>
     </header>
 
     <div class="tracking-container" id="trackingContainer">
-        <h1 class="success-msg">تم استلام طلبك بنجاح ✦</h1>
+        <h1 class="success-msg">ORDER RECEIVED ✦</h1>
         <p class="save-link-msg">
-            نحن نجهّز قطعتك الحصرية الآن. يرجى الاحتفاظ بهذا الرابط (أو عمل سكرين شوت) لمتابعة حالة الطلب:<br>
-            <strong id="orderIdDisplay">...</strong>
+            نحن نجهّز قطعتك الحصرية الآن. يرجى الاحتفاظ ببيانات التتبع لمتابعة حالة الطلب:<br>
+            <strong class="order-id-display" id="orderIdDisplay">...</strong>
         </p>
 
-        <!-- مسار تتبع الطلب -->
+        <!-- أزرار النسخ -->
+        <div class="copy-actions">
+            <button class="copy-btn" id="copyLinkBtn" onclick="copyTrackingLink()">COPY TRACKING LINK</button>
+            <button class="copy-btn" id="copyIdBtn" onclick="copyOrderID()">COPY ORDER ID</button>
+        </div>
+
         <div class="timeline" id="timeline">
             <div class="progress-bar" id="progressBar"></div>
             
@@ -136,34 +258,66 @@
             </div>
         </div>
 
-        <!-- تفاصيل الأوردر -->
         <div class="order-details-box">
-            <h3 class="box-title">تفاصيل الفاتورة // INVOICE DETAILS</h3>
+            <h3 class="box-title">INVOICE DETAILS //</h3>
             
-            <div class="items-list" id="itemsList">
-                <!-- المنتجات هتظهر هنا -->
-            </div>
+            <div class="items-list" id="itemsList"></div>
 
             <div class="info-grid">
                 <div class="info-block">
-                    <h4>الاسم</h4>
+                    <h4>CLIENT NAME</h4>
                     <p id="clientName">...</p>
                 </div>
                 <div class="info-block">
-                    <h4>العنوان</h4>
+                    <h4>SHIPPING ADDRESS</h4>
                     <p id="clientAddress">...</p>
                 </div>
-                <div class="info-block">
-                    <h4>الإجمالي (بدون الشحن)</h4>
-                    <p id="clientTotal" style="color:var(--accent-yellow); font-family:var(--font-en); font-size:20px; font-weight:bold;">...</p>
+                <div class="info-block" style="grid-column: 1 / -1; border-top: 1px dashed var(--line-color); padding-top: 20px; margin-top: 10px;">
+                    <h4>TOTAL AMOUNT (EXCL. SHIPPING)</h4>
+                    <p id="clientTotal" style="color:var(--text-cream); font-family:'Oswald', sans-serif; font-size:22px; font-weight:300; letter-spacing: 2px;">...</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
+    <!-- الفوتر مع السياسات -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2><span dir="ltr">UNO<span>VERSE</span></span></h2>
+                <p>WE DON'T MAKE CLOTHES.<br>WE MAKE ARCHIVE PIECES.<br>1 OF 1 ONLY.</p>
+            </div>
+            <div class="footer-section">
+                <h4>SHIPPING POLICY</h4>
+                <p>✦ يتم تجهيز القطع وتغليفها داخل صناديق أرشيفية مخصصة لحمايتها.</p>
+                <p>✦ التوصيل يتم خلال 2 إلى 4 أيام عمل لجميع المحافظات.</p>
+                <p>✦ جميع الشحنات مؤمنة بالكامل حتى باب المنزل.</p>
+            </div>
+            <div class="footer-section">
+                <h4>RETURN POLICY</h4>
+                <p>✦ نظراً لكون القطع إصدارات 1/1، لا يُسمح بالاسترجاع أو الاستبدال إلا في حالة وجود عيب مصنعي ملحوظ.</p>
+                <p>✦ كل قطعة تأتي مصحوبة برمز أصالة يؤكد تفردها.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 UNOVERSE ARCHIVE. ALL RIGHTS RESERVED. EXCLUSIVE SINGLE-PRODUCTION PIECES.</p>
+        </div>
+    </footer>
 
+    <script>
+        // ================= حماية صارمة للصفحة ومنع التحديد والنسخ =================
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
+        
+        document.addEventListener('keydown', function(e) {
+            if(e.keyCode == 123) { e.preventDefault(); return false; }
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) { e.preventDefault(); return false; }
+            if(e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; }
+            if(e.ctrlKey && (e.keyCode == 67 || e.keyCode == 88)) { e.preventDefault(); return false; }
+            if(e.ctrlKey && e.keyCode == 83) { e.preventDefault(); return false; }
+            if(e.ctrlKey && e.keyCode == 80) { e.preventDefault(); return false; }
+        });
+
+        // Firebase 
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -175,45 +329,65 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // حركة الماوس المخصص
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100;
         let cursorX = -100, cursorY = -100;
-        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-        function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
-            cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-            requestAnimationFrame(animateCursor);
+        
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+        if (!isMobile) {
+            document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
+                cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
         }
-        animateCursor();
+
+        // إظهار تأثير الماوس المفرغ على العناصر (Hover Effect)
+        function addHover() { cursorWrapper.classList.add('hovered'); }
+        function removeHover() { cursorWrapper.classList.remove('hovered'); }
+
+        function attachCursorEffects() {
+            if (isMobile) return;
+            document.querySelectorAll('a, button, .copy-btn, .action-link').forEach(el => {
+                el.removeEventListener('mouseenter', addHover);
+                el.removeEventListener('mouseleave', removeHover);
+                el.addEventListener('mouseenter', addHover);
+                el.addEventListener('mouseleave', removeHover);
+            });
+        }
 
         window.addEventListener('load', () => {
-            const bar = document.getElementById('progress-bar');
+            const line = document.getElementById('loader-line');
             const overlay = document.getElementById('loader-overlay');
-            if (bar) bar.style.width = '100%';
-            setTimeout(() => { if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 500); } }, 800);
+            if (line) line.style.width = '100%';
+            setTimeout(() => { document.body.classList.add('loaded'); }, 1000);
             
             fetchOrderDetails();
+            attachCursorEffects();
         });
 
-        function fetchOrderDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const orderId = urlParams.get('id');
+        const urlParams = new URLSearchParams(window.location.search);
+        const globalOrderId = urlParams.get('id');
 
-            if (!orderId) {
-                document.getElementById('trackingContainer').innerHTML = "<h2 style='color:#ff3333; margin-top:50px;'>رابط التتبع غير صحيح أو مفقود.</h2>";
+        function fetchOrderDetails() {
+            if (!globalOrderId) {
+                document.getElementById('trackingContainer').innerHTML = "<h2 style='color:var(--text-muted); margin-top:50px; font-family:Oswald; letter-spacing:4px;'>INVALID TRACKING LINK.</h2>";
                 return;
             }
 
-            document.getElementById('orderIdDisplay').innerText = "ORDER ID: " + orderId.toUpperCase();
+            document.getElementById('orderIdDisplay').innerText = "ID: " + globalOrderId.toUpperCase();
 
-            // الاتصال المباشر (Real-time) بقاعدة البيانات لمراقبة التحديثات
-            db.collection("orders").doc(orderId).onSnapshot((doc) => {
+            db.collection("orders").doc(globalOrderId).onSnapshot((doc) => {
                 if (doc.exists) {
                     const order = doc.data();
                     renderOrderData(order);
                     updateTimeline(order.status);
                 } else {
-                    document.getElementById('trackingContainer').innerHTML = "<h2 style='color:#ff3333; margin-top:50px;'>لم يتم العثور على هذا الطلب في الأرشيف.</h2>";
+                    document.getElementById('trackingContainer').innerHTML = "<h2 style='color:var(--text-muted); margin-top:50px; font-family:Oswald; letter-spacing:4px;'>ORDER NOT FOUND IN ARCHIVE.</h2>";
                 }
             });
         }
@@ -221,16 +395,16 @@
         function renderOrderData(order) {
             document.getElementById('clientName').innerText = order.customerInfo.name;
             document.getElementById('clientAddress').innerText = order.customerInfo.governorate + " - " + order.customerInfo.address;
-            document.getElementById('clientTotal').innerText = order.totalAmount + " ج.م";
+            document.getElementById('clientTotal').innerText = order.totalAmount + " EGP";
 
             const itemsContainer = document.getElementById('itemsList');
             itemsContainer.innerHTML = order.items.map(item => `
                 <div class="item-row">
                     <div>
                         <div class="item-name">${item.name}</div>
-                        <div class="item-size">المقاس: ${item.size}</div>
+                        <div class="item-size">SIZE: ${item.size}</div>
                     </div>
-                    <div class="item-price">${item.price} ج.م</div>
+                    <div class="item-price">${item.price} EGP</div>
                 </div>
             `).join('');
         }
@@ -244,7 +418,6 @@
             ];
             const progressBar = document.getElementById('progressBar');
 
-            // تصفير كل الخطوات أولاً
             steps.forEach(step => step.classList.remove('active'));
 
             let progressWidth = "0%";
@@ -265,11 +438,37 @@
                 steps.forEach(step => step.classList.add('active'));
                 progressWidth = "100%";
             } else if (status === "ملغي") {
-                // حالة الإلغاء
-                document.getElementById('timeline').innerHTML = "<h3 style='color:#ff3333; width:100%; text-align:center;'>تم إلغاء هذا الطلب ✕</h3>";
+                document.getElementById('timeline').innerHTML = "<h3 style='color:#ff3333; width:100%; text-align:center; font-family:Oswald; letter-spacing:4px;'>ORDER CANCELLED ✕</h3>";
             }
 
             if (progressBar) progressBar.style.width = progressWidth;
+        }
+
+        function copyTrackingLink() {
+            if (!globalOrderId) return;
+            const link = window.location.href;
+            navigator.clipboard.writeText(link).then(() => {
+                const btn = document.getElementById('copyLinkBtn');
+                btn.innerText = "COPIED ✓";
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = "COPY TRACKING LINK";
+                    btn.classList.remove('copied');
+                }, 3000);
+            });
+        }
+
+        function copyOrderID() {
+            if (!globalOrderId) return;
+            navigator.clipboard.writeText(globalOrderId).then(() => {
+                const btn = document.getElementById('copyIdBtn');
+                btn.innerText = "COPIED ✓";
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = "COPY ORDER ID";
+                    btn.classList.remove('copied');
+                }, 3000);
+            });
         }
     </script>
 </body>
