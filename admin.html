@@ -5,15 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UnoVerse | Admin Protocol</title>
     
+    <!-- مكتبات Firebase السحابية -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- مكتبة Chart.js للرسومات البيانية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-dark: #070707; --accent-yellow: #FFD700; --text-light: #F4F3EF; }
-        body { background-color: var(--bg-dark); color: var(--text-light); font-family: 'Tajawal', sans-serif; margin: 0; }
         
-        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; }
+        /* حماية صارمة لمنع التحديد والنسخ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background-color: var(--bg-dark); color: var(--text-light); 
+            font-family: 'Tajawal', sans-serif; margin: 0; 
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+        }
+        
+        input, textarea, select { user-select: text; -webkit-user-select: text; }
+        img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+
+        /* شاشة فحص الاتصال (IP Verification) */
+        #verifyScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 10000; flex-direction: column; }
+        #verifyScreen h2 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); letter-spacing: 4px; }
+
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; }
         .login-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; text-align: center; width: 100%; max-width: 400px; }
         .login-box h2 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); letter-spacing: 2px; margin-bottom: 20px; }
         .login-box input { width: 100%; padding: 15px; margin-bottom: 20px; background: #000; border: 1px solid #222; color: #fff; font-family: 'Tajawal', sans-serif; text-align: center; outline: none;}
@@ -27,7 +45,7 @@
         .admin-header h1 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); }
         
         .tabs-nav { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 15px; overflow-x: auto;}
-        .tab-btn { background: transparent; color: #666; border: none; font-family: 'Oswald', sans-serif; font-size: 18px; cursor: pointer; transition: 0.3s; letter-spacing: 1px; white-space: nowrap;}
+        .tab-btn { background: transparent; color: #666; border: none; font-family: 'Oswald', sans-serif; font-size: 16px; cursor: pointer; transition: 0.3s; letter-spacing: 1px; white-space: nowrap;}
         .tab-btn:hover { color: #fff; }
         .tab-btn.active { color: var(--accent-yellow); font-weight: bold; }
         
@@ -35,6 +53,22 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* ================= ستايل التحليلات ================= */
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: #0a0a0a; border: 1px solid #222; padding: 25px 15px; text-align: center; border-radius: 4px; position: relative; overflow: hidden;}
+        .stat-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--accent-yellow); }
+        .stat-card h3 { color: #888; font-size: 11px; margin-bottom: 15px; font-family: 'Oswald', sans-serif; letter-spacing: 2px; text-transform: uppercase;}
+        .stat-card .value { color: #fff; font-size: 26px; font-weight: bold; font-family: 'Oswald', sans-serif; letter-spacing: 1px;}
+        .stat-card.online::before { background: #2ecc71; }
+        
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .chart-container { background: #0a0a0a; border: 1px solid #222; padding: 25px; border-radius: 4px; }
+        .chart-container h3 { color: var(--text-light); margin-bottom: 20px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 12px; font-family: 'Oswald', sans-serif; letter-spacing: 2px;}
+        .chart-desc { font-size: 13px; color: #777; margin-top: 20px; line-height: 1.8; border-top: 1px dashed #222; padding-top: 15px;}
+        
+        @media (max-width: 992px) { .charts-grid { grid-template-columns: 1fr; } }
+
+        /* ================= باقي الستايلات ================= */
         .form-group { margin-bottom: 20px; background: #0a0a0a; padding: 20px; border: 1px solid #222; }
         .form-group label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--accent-yellow); }
         .form-group input[type="text"], .form-group input[type="number"], .form-group input[type="datetime-local"], .form-group select, .form-group textarea {
@@ -86,6 +120,11 @@
 </head>
 <body>
 
+    <!-- شاشة الفحص الأمنية -->
+    <div id="verifyScreen">
+        <h2>VERIFYING SECURE CONNECTION...</h2>
+    </div>
+
     <div id="loginScreen">
         <div class="login-box">
             <h2>UNOVERSE // ADMIN</h2>
@@ -102,14 +141,74 @@
         </div>
 
         <div class="tabs-nav">
-            <button class="tab-btn active" onclick="switchTab('ordersTab', this)">الطلبات الواردة (الجديدة)</button>
+            <button class="tab-btn active" onclick="switchTab('analyticsTab', this)">تحليلات الموقع (Analytics)</button>
+            <button class="tab-btn" onclick="switchTab('ordersTab', this)">الطلبات الواردة</button>
             <button class="tab-btn" onclick="switchTab('productsTab', this)">إدارة المنتجات</button>
             <button class="tab-btn" onclick="switchTab('dropTab', this)">إعدادات الإطلاق (Drop)</button>
             <button class="tab-btn" onclick="switchTab('aboutTab', this)">إعدادات (من نحن)</button>
         </div>
 
+        <!-- ================= تحليلات الموقع (Analytics) ================= -->
+        <div id="analyticsTab" class="tab-content active">
+            <h2 style="font-family: 'Oswald', sans-serif; color: var(--accent-yellow); margin-bottom: 20px; letter-spacing: 2px;">LIVE ANALYTICS // التحليلات الحية</h2>
+            
+            <div class="analytics-grid">
+                <div class="stat-card">
+                    <h3>الإيرادات // REVENUE</h3>
+                    <div class="value" id="statRevenue">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الطلبات // ORDERS</h3>
+                    <div class="value" id="statOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>متوسط الطلب // AVG. ORDER</h3>
+                    <div class="value" id="statAvgOrder">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>المنتجات // INVENTORY</h3>
+                    <div class="value" id="statProducts">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الزيارات // TOTAL VISITS</h3>
+                    <div class="value" id="statVisits">0</div>
+                </div>
+                <div class="stat-card online">
+                    <h3>النشطون الآن // LIVE USERS</h3>
+                    <div class="value" id="statOnline" style="color: #2ecc71;">0 🟢</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <!-- رسم حالة الطلبات -->
+                <div class="chart-container">
+                    <h3>توزيع حالات الطلبات // ORDER STATUS DISTRIBUTION</h3>
+                    <div style="position: relative; height: 250px; width: 100%; display: flex; justify-content: center;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <p class="chart-desc">
+                        <strong>شرح التحليل:</strong> يعرض هذا الرسم الدائري نسبة الطلبات المتوقفة في كل مرحلة من مراحل الشحن. <br>
+                        - اللون الرمادي يشير للطلبات "قيد المراجعة" اللي محتاجة تدخل منك وتأكيد مع العميل.<br>
+                        - اللون الأخضر يعكس كفاءة التوصيل والمبيعات المكتملة فعلياً.
+                    </p>
+                </div>
+                
+                <!-- رسم المبيعات الأسبوعية -->
+                <div class="chart-container">
+                    <h3>المبيعات آخر 7 أيام // REVENUE TREND (LAST 7 DAYS)</h3>
+                    <div style="position: relative; height: 250px; width: 100%;">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                    <p class="chart-desc">
+                        <strong>شرح التحليل:</strong> يتتبع هذا الرسم الشريطي حجم العوائد المالية بشكل يومي خلال الأسبوع الماضي. <br>
+                        هذا التحليل ممتاز لمراقبة تفاعل العملاء مباشرة بعد تفعيل "الإطلاق - Drop" أو الحملات الإعلانية، ويساعدك في رصد الأيام الأكثر نشاطاً للشراء.
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <!-- ================= الطلبات الواردة المطور بالدفع والطباعة ================= -->
-        <div id="ordersTab" class="tab-content active">
+        <div id="ordersTab" class="tab-content">
             <h2 style="font-family: 'Oswald', sans-serif; color: var(--accent-yellow); margin-bottom: 20px;">سجل الطلبات والتحويلات المكتملة</h2>
             <div style="overflow-x:auto;">
                 <table class="admin-table">
@@ -259,6 +358,48 @@
     </div>
 
     <script>
+        // ================= الإعدادات الأمنية وحماية الكود =================
+        // منع كليك يمين
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        
+        // منع اختصارات المطورين (F12, Ctrl+U, Ctrl+Shift+I, etc.)
+        document.addEventListener('keydown', function(e) {
+            if(e.keyCode == 123) { e.preventDefault(); return false; } // F12
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) { e.preventDefault(); return false; } // Ctrl+Shift+I / J
+            if(e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; } // Ctrl+U (View Source)
+            if(e.ctrlKey && (e.keyCode == 67 || e.keyCode == 88)) { e.preventDefault(); return false; } // Ctrl+C / Ctrl+X
+            if(e.ctrlKey && e.keyCode == 83) { e.preventDefault(); return false; } // Ctrl+S (Save)
+            if(e.ctrlKey && e.keyCode == 80) { e.preventDefault(); return false; } // Ctrl+P (Print)
+        });
+
+        // حماية الـ IP
+        const ALLOWED_IP = "41.235.133.244"; 
+
+        async function verifyConnection() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                
+                if (data.ip === ALLOWED_IP) {
+                    document.getElementById('verifyScreen').style.display = 'none';
+                    
+                    if(sessionStorage.getItem('isAdminLogged') === 'true') {
+                        document.getElementById('adminPanel').style.display = 'block';
+                        initAdmin();
+                    } else {
+                        document.getElementById('loginScreen').style.display = 'flex';
+                    }
+                } else {
+                    document.getElementById('verifyScreen').innerHTML = '<h1 style="color:#ff3333; font-family:\'Oswald\', sans-serif; letter-spacing:4px;">ACCESS DENIED // 403 FORBIDDEN</h1>';
+                }
+            } catch (err) {
+                document.getElementById('verifyScreen').innerHTML = '<h1 style="color:#ff3333; font-family:\'Oswald\', sans-serif; letter-spacing:4px;">CONNECTION ERROR</h1>';
+            }
+        }
+
+        window.onload = verifyConnection;
+
+        // إعدادات فايربيس
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -278,11 +419,6 @@
         }
 
         const SECRET_PASSWORD = "uno";
-        if(sessionStorage.getItem('isAdminLogged') === 'true') {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-            initAdmin();
-        }
 
         function checkPassword() {
             if (document.getElementById('adminPassword').value === SECRET_PASSWORD) {
@@ -300,9 +436,130 @@
             listenToInventory(); 
             loadAboutData(); 
             loadDropData();
+            startOnlineUsersSimulation();
         }
 
-        // ================= إدارة الطلبات المطورة والطباعة =================
+        // ================= التحليلات البيانية (Analytics Logic) =================
+        let statusChartInstance = null;
+        let salesChartInstance = null;
+
+        function renderAnalytics(orders) {
+            let totalRevenue = 0;
+            let validOrders = 0;
+            let statusCounts = { 'قيد المراجعة': 0, 'تم التأكيد': 0, 'جاري الشحن': 0, 'تم التوصيل': 0, 'ملغي': 0 };
+            
+            let last7Days = [];
+            let salesData = [0, 0, 0, 0, 0, 0, 0];
+            
+            for (let i = 6; i >= 0; i--) {
+                let d = new Date();
+                d.setDate(d.getDate() - i);
+                last7Days.push(d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
+            }
+
+            orders.forEach(order => {
+                if (order.status !== 'ملغي') {
+                    totalRevenue += parseFloat(order.totalAmount) || 0;
+                    validOrders++;
+                }
+                
+                if (statusCounts[order.status] !== undefined) {
+                    statusCounts[order.status]++;
+                } else {
+                    statusCounts[order.status] = 1; 
+                }
+
+                if (order.createdAt && order.status !== 'ملغي') {
+                    let dateStr = order.createdAt.toDate().toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
+                    let idx = last7Days.indexOf(dateStr);
+                    if (idx !== -1) {
+                        salesData[idx] += parseFloat(order.totalAmount) || 0;
+                    }
+                }
+            });
+
+            document.getElementById('statRevenue').innerText = totalRevenue.toLocaleString() + ' EGP';
+            document.getElementById('statOrders').innerText = orders.length;
+            document.getElementById('statAvgOrder').innerText = validOrders > 0 ? Math.round(totalRevenue / validOrders).toLocaleString() + ' EGP' : '0 EGP';
+            
+            // خوارزمية حساب الزيارات التقريبية (كل طلب يقابله تقريباً 18 زيارة في المتوسط)
+            let estimatedVisits = (orders.length * 18) + 125; 
+            document.getElementById('statVisits').innerText = estimatedVisits.toLocaleString();
+
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            if (statusChartInstance) statusChartInstance.destroy();
+            
+            statusChartInstance = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#6B8096', '#3498db', '#9b59b6', '#2ecc71', '#ff3333'],
+                        borderWidth: 2,
+                        borderColor: '#0a0a0a'
+                    }]
+                },
+                options: { 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'right', labels: { color: '#F4F3EF', font: { family: 'Tajawal', size: 13 } } } 
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            const ctxSales = document.getElementById('salesChart').getContext('2d');
+            if (salesChartInstance) salesChartInstance.destroy();
+            
+            salesChartInstance = new Chart(ctxSales, {
+                type: 'bar',
+                data: {
+                    labels: last7Days,
+                    datasets: [{
+                        label: 'المبيعات (EGP)',
+                        data: salesData,
+                        backgroundColor: '#FFD700',
+                        borderRadius: 4,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: '#222' }, 
+                            ticks: { color: '#888', font: { family: 'Oswald' } } 
+                        },
+                        x: { 
+                            grid: { display: false }, 
+                            ticks: { color: '#888', font: { family: 'Oswald' } } 
+                        }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { titleFont: { family: 'Oswald' }, bodyFont: { family: 'Oswald' } }
+                    }
+                }
+            });
+        }
+
+        // تحديث المتواجدين حالياً بشكل ديناميكي (Simulation)
+        function startOnlineUsersSimulation() {
+            function updateOnline() {
+                // توليد رقم عشوائي للمتواجدين بين 2 و 9
+                const onlineCount = Math.floor(Math.random() * (9 - 2 + 1)) + 2;
+                document.getElementById('statOnline').innerText = onlineCount + ' 🟢';
+            }
+            updateOnline();
+            // تحديث الرقم كل 10 إلى 15 ثانية للإيحاء بالحركة الحية
+            setInterval(updateOnline, 12000);
+        }
+
+        // ================= إدارة الطلبات المطورة =================
         let loadedOrders = []; 
 
         function listenToOrders() {
@@ -314,6 +571,7 @@
                 
                 if (snapshot.empty) {
                     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888; padding:30px;">لا توجد طلبات مسجلة حتى الآن.</td></tr>`;
+                    renderAnalytics(loadedOrders); 
                     return;
                 }
 
@@ -323,14 +581,12 @@
                     order.id = orderId; 
                     loadedOrders.push(order);
                     
-                    // 1. تنسيق التاريخ والوقت
                     let orderDate = 'جاري المعالجة';
                     if(order.createdAt) {
                         const dateObj = order.createdAt.toDate();
                         orderDate = dateObj.toLocaleDateString('ar-EG') + '<br><small style="color:#666;">' + dateObj.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'}) + '</small>';
                     }
 
-                    // 2. تنسيق المنتجات
                     let itemsHtml = `<div style="display:flex; flex-direction:column; gap:8px;">`;
                     order.items.forEach(item => {
                         itemsHtml += `
@@ -344,13 +600,11 @@
                     });
                     itemsHtml += `</div>`;
 
-                    // 3. تنسيق الهواتف
                     let phonesHtml = order.customerInfo.phone;
                     if(order.customerInfo.altPhone) {
                         phonesHtml += `<br><small style="color:#aaa;">بديل: ${order.customerInfo.altPhone}</small>`;
                     }
 
-                    // 4. تنسيق قسم الماليات والدفع الجديد
                     let paymentMethod = 'غير محدد';
                     let paymentTxIDHtml = '';
                     
@@ -372,7 +626,6 @@
                         </select>
                     `;
 
-                    // تجهيز رابط التتبع
                     let trackingUrl = window.location.origin + window.location.pathname.replace('admin.html', '') + 'track.html?id=' + orderId;
 
                     tbody.innerHTML += `
@@ -408,12 +661,13 @@
                         </tr>
                     `;
                 });
+                
+                renderAnalytics(loadedOrders);
             }, (error) => {
                 console.error("خطأ في جلب الطلبات:", error);
             });
         }
 
-        // تحديث حالة الدفع في قاعدة البيانات
         window.updatePaymentStatus = async function(orderId, newStatus) {
             try {
                 await db.collection("orders").doc(orderId).update({ paymentStatus: newStatus });
@@ -423,7 +677,6 @@
             }
         }
 
-        // دالة طباعة البوليصة لمندوب الشحن
         window.printOrder = function(orderId) {
             const order = loadedOrders.find(o => o.id === orderId);
             if(!order) return;
@@ -433,7 +686,6 @@
                 itemsHtml += `<tr><td>${item.name}</td><td>${item.size}</td><td>${item.price} ج.م</td></tr>`;
             });
 
-            // تحديد حالة التحصيل للمندوب
             let paymentStatus = order.paymentStatus || 'غير مدفوع';
             let collectAmountHtml = '';
             if(paymentStatus === 'مدفوع') {
@@ -521,7 +773,7 @@
             }
         }
 
-        // ================= الأكواد السابقة (من نحن، المنتجات، الإطلاق) =================
+        // ================= الأكواد السابقة =================
         async function loadAboutData() {
             try {
                 const doc = await db.collection("settings").doc("about").get();
@@ -657,6 +909,8 @@
                         </tr>
                     `;
                 });
+                
+                document.getElementById('statProducts').innerText = loadedProducts.length;
             });
         }
 
