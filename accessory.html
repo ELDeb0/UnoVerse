@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UnoVerse | ARCHIVE ACCESSORY DETAILS</title>
+    <title>UnoVerse | ACCESSORY DETAILS</title>
     
     <link rel="icon" type="image/png" href="icon.png">
     
@@ -112,7 +112,6 @@
         .mobile-menu-btn { display: none; flex-direction: column; justify-content: center; gap: 6px; width: 30px; height: 30px; cursor: pointer !important; z-index: 10000; }
         .mobile-menu-btn span { display: block; width: 100%; height: 1px; background-color: var(--text-cream); transition: 0.3s ease; }
         
-        /* ================= القائمة المنسدلة للموبايل (خط كبير وأنيق) ================= */
         .mobile-nav-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: rgba(4, 6, 10, 0.92); backdrop-filter: blur(10px); 
@@ -143,7 +142,7 @@
         }
         .mobile-nav-links li a { 
             text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; 
-            font-size: 20px !important; /* تكبير الخط ليكون بارزاً ومقروءاً */
+            font-size: 20px !important;
             letter-spacing: 4px; text-transform: uppercase; font-weight: 600; 
             transition: 0.3s; display: inline-block; 
         }
@@ -199,7 +198,7 @@
         
         .meta-specs { 
             display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
+            grid-template-columns: repeat(3, 1fr); 
             gap: 10px; 
             border-top: 1px solid var(--line-color); 
             border-bottom: 1px solid var(--line-color); 
@@ -421,7 +420,7 @@
             .product-price-box .old { font-size: 14px !important; }
             
             .meta-specs { 
-                grid-template-columns: repeat(2, 1fr) !important; 
+                grid-template-columns: repeat(3, 1fr) !important; 
                 gap: 10px !important; 
                 padding: 12px 0 !important; 
                 margin-bottom: 15px !important;
@@ -482,7 +481,7 @@
             <li><a href="index.html#support" class="mobile-nav-link">SUPPORT</a></li>
         </ul>
         <div class="mobile-nav-footer">
-            <p>1 / 1 EXCLUSIVE ARCHIVE</p>
+            <p>ACCESSORIES COLLECTION</p>
         </div>
     </div>
 
@@ -523,12 +522,12 @@
 
     <main id="accessoryContent">
         <div style="text-align: center; padding: 250px 0; font-family: 'Oswald'; letter-spacing: 5px; color: var(--text-muted);">
-            LOADING ARCHIVE ACCESSORY...
+            LOADING ACCESSORY...
         </div>
     </main>
 
     <section class="related-section">
-        <h3 class="related-title">// EXPLORE MORE ARCHIVES</h3>
+        <h3 class="related-title">// EXPLORE MORE ACCESSORIES</h3>
         <div class="related-grid" id="relatedGrid"></div>
     </section>
 
@@ -536,7 +535,7 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <h2><span dir="ltr">UNO<span>VERSE</span></span></h2>
-                <p>WE DON'T MAKE CLOTHES.<br>WE MAKE ARCHIVE PIECES.<br>1 OF 1 ONLY.</p>
+                <p>WE DON'T MAKE CLOTHES.<br>WE MAKE ARCHIVE PIECES.</p>
             </div>
             <div class="footer-section">
                 <h4>SHIPPING.</h4>
@@ -546,8 +545,8 @@
             </div>
             <div class="footer-section">
                 <h4>AUTHENTICITY.</h4>
-                <p>No returns on 1/1 pieces unless defective.</p>
-                <p>Each piece includes an authenticity token.</p>
+                <p>Original high-grade materials.</p>
+                <p>Each piece is quality inspected.</p>
             </div>
             <div class="footer-social">
                 <h4>CONNECT.</h4>
@@ -715,40 +714,36 @@
                         <!-- تفاصيل القطعة (متصلة بالأسفل في الموبايل) -->
                         <div class="product-info-panel">
                             <div>
-                                <div class="product-tag">ARCHIVE ACCESSORY // SPEC-0${stock}</div>
+                                <div class="product-tag">ACCESSORY // STOCK: ${stock}</div>
                                 <h1 class="product-name">${item.name}</h1>
                                 <div class="product-price-box">${priceDisplay}</div>
 
                                 <div class="meta-specs">
                                     <div class="spec-item">
                                         <span class="label">AVAILABILITY</span>
-                                        <span class="val" style="color:${isOutOfStock ? '#ff3333' : '#2ecc71'}">${isOutOfStock ? 'SOLD OUT' : `${stock} PIECES`}</span>
+                                        <span class="val" style="color:${isOutOfStock ? '#ff3333' : '#2ecc71'}">${isOutOfStock ? 'OUT OF STOCK' : `${stock} IN STOCK`}</span>
                                     </div>
                                     <div class="spec-item">
-                                        <span class="label">EDITION</span>
-                                        <span class="val">LIMITED CRAFT</span>
+                                        <span class="label">MATERIAL</span>
+                                        <span class="val">PREMIUM QUALITY</span>
                                     </div>
                                     <div class="spec-item">
                                         <span class="label">AUTHENTICITY</span>
                                         <span class="val">100% VERIFIED</span>
                                     </div>
-                                    <div class="spec-item">
-                                        <span class="label">MATERIAL</span>
-                                        <span class="val">ARCHIVE SPEC</span>
-                                    </div>
                                 </div>
 
                                 ${tickerHTML}
-                                <p class="product-desc">${item.description || 'قطعة إكسسوار فريدة مصنعة يدوياً بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.'}</p>
+                                <p class="product-desc">${item.description || 'قطعة إكسسوار فريدة مصنعة بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.'}</p>
                                 
                                 <div class="archive-perks-grid">
                                     <div class="perk-card">
-                                        <span class="perk-title">✦ ARCHIVE BOX</span>
-                                        <span class="perk-sub">صندوق فاخر مخصص</span>
+                                        <span class="perk-title">✦ CUSTOM PACKAGING</span>
+                                        <span class="perk-sub">تغليف فاخر مخصص لحفظ القطعة</span>
                                     </div>
                                     <div class="perk-card">
                                         <span class="perk-title">✦ EXPRESS TRANSIT</span>
-                                        <span class="perk-sub">توصيل خلال ٢-٤ أيام</span>
+                                        <span class="perk-sub">توصيل سريع ومؤمن خلال ٢-٤ أيام</span>
                                     </div>
                                 </div>
 
@@ -795,7 +790,7 @@
                     name: accessoryData.name + (isCustom ? ' (Custom Engraved)' : ''),
                     price: currentFinalPrice,
                     image: accessoryData.image || (accessoryData.gallery ? accessoryData.gallery[0] : ''),
-                    size: 'Accessory',
+                    size: 'Standard',
                     customDetails: customDetails,
                     type: 'accessory'
                 };
