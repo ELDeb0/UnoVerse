@@ -1,0 +1,214 @@
+/* =========================================================
+   UNOVERSE GLOBAL RESPONSIVE ENGINE (Universal Viewport Fix)
+   ========================================================= */
+
+/* 1. ضبط الأساسيات لمنع أي Scroll أفقي غير مرغوب فيه */
+html, body {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    -webkit-text-size-adjust: 100%;
+}
+
+img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 2. شاشات الحواسيب المحمولة والشاشات المتوسطة (Laptop / Small Desktop <= 1200px) */
+@media screen and (max-width: 1200px) {
+    .product-wrapper, 
+    .product-container, 
+    .checkout-wrapper, 
+    .checkout-container {
+        padding-left: 4% !important;
+        padding-right: 4% !important;
+        gap: 30px !important;
+    }
+
+    .hero-image-wrapper {
+        width: 45vw !important;
+    }
+}
+
+/* 3. شاشات التابلت والأجهزة اللوحية (Tablets <= 992px) */
+@media screen and (max-width: 992px) {
+    /* الهيدر */
+    .main-header {
+        padding: 0 5% !important;
+        height: 75px !important;
+    }
+    .main-header .main-nav {
+        display: none !important;
+    }
+    .main-header .logo {
+        font-size: 20px !important;
+        letter-spacing: 4px !important;
+    }
+
+    /* تخطيط المنتجات وتفاصيل الإكسسوار */
+    .product-wrapper,
+    .product-container {
+        flex-direction: column-reverse !important;
+        padding-top: 110px !important;
+        padding-bottom: 50px !important;
+        gap: 35px !important;
+        min-height: auto !important;
+    }
+
+    .product-info-panel, 
+    .product-details, 
+    .product-gallery-panel, 
+    .product-gallery {
+        width: 100% !important;
+    }
+
+    .main-frame, .main-img-box {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    /* صفحة إتمام الطلب */
+    .checkout-wrapper,
+    .checkout-container {
+        flex-direction: column-reverse !important;
+        padding: 100px 5% 50px !important;
+        gap: 35px !important;
+    }
+
+    .checkout-form-section, 
+    .checkout-form-side, 
+    .order-summary-section, 
+    .checkout-summary-side {
+        width: 100% !important;
+        position: relative !important;
+        top: 0 !important;
+    }
+
+    /* كروت التحليلات في الأدمن */
+    .charts-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* إخفاء مؤشر الماوس المخصص نهائياً على الشاشات اللمسية */
+    .cursor-wrapper {
+        display: none !important;
+    }
+    
+    *, *::before, *::after, html, body, a, button, input, textarea, select, label {
+        cursor: auto !important;
+    }
+}
+
+/* 4. شاشات الهواتف الذكية (Mobile Devices <= 768px) */
+@media screen and (max-width: 768px) {
+    /* شاشة التحميل */
+    .loader-logo {
+        font-size: 34px !important;
+        letter-spacing: 6px !important;
+    }
+
+    /* سكشن الهيرو */
+    .hero-section {
+        height: 90vh !important;
+        padding: 0 5% !important;
+    }
+    .hero-image-wrapper {
+        width: 85vw !important;
+        height: 55vh !important;
+        right: 50% !important;
+        transform: translate(50%, -50%) !important;
+        opacity: 0.35 !important;
+    }
+    .hero-text h1 {
+        font-size: clamp(42px, 11vw, 65px) !important;
+        line-height: 1 !important;
+        text-align: center !important;
+    }
+    .hero-text p {
+        letter-spacing: 5px !important;
+        font-size: 11px !important;
+        text-align: center !important;
+    }
+
+    /* الكاروسيل ثلاثي الأبعاد للملابس */
+    .archive-section {
+        padding: 80px 0 !important;
+    }
+    .section-header h2 {
+        font-size: 32px !important;
+        letter-spacing: 3px !important;
+    }
+    .carousel-wrapper {
+        height: 55vh !important;
+        min-height: 440px !important;
+    }
+    .album-card {
+        width: 260px !important;
+    }
+
+    /* مسرح الإكسسوارات */
+    .accessories-viewport {
+        padding: 20px 10vw !important;
+    }
+    .acc-stage-card {
+        width: 270px !important;
+    }
+
+    /* كوليكشن وشبكات الإكسسوارات */
+    .catalog-container {
+        padding: 100px 5% 60px !important;
+    }
+    .accessories-grid {
+        grid-template-columns: 1fr !important;
+        gap: 25px !important;
+    }
+
+    /* النماذج وحقول الإدخال */
+    .form-grid, .input-row {
+        grid-template-columns: 1fr !important;
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    /* السلة الجانبية */
+    .cart-drawer {
+        width: 100% !important;
+        padding: 30px 20px !important;
+    }
+
+    /* الفوتر */
+    .main-footer {
+        padding: 60px 6% 30px !important;
+    }
+    .footer-content {
+        grid-template-columns: 1fr !important;
+        gap: 35px !important;
+        text-align: center;
+    }
+    .footer-brand h2 {
+        justify-content: center;
+    }
+    .footer-section h4 {
+        margin-bottom: 15px !important;
+    }
+}
+
+/* 5. شاشات الهواتف الصغيرة جداً (Small Mobile <= 400px) */
+@media screen and (max-width: 400px) {
+    .product-name {
+        font-size: 26px !important;
+    }
+    .product-price-box, .product-price {
+        font-size: 22px !important;
+    }
+    .meta-specs {
+        gap: 15px !important;
+        flex-wrap: wrap;
+    }
+    .submit-order-btn, .btn-add-cart, .checkout-btn {
+        padding: 16px !important;
+        font-size: 12px !important;
+        letter-spacing: 3px !important;
+    }
+}

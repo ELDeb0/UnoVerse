@@ -6,6 +6,7 @@
     <title>UnoVerse | ARCHIVE DETAILS</title>
     
     <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="responsive.css">
     
     <!-- مكتبات Firebase السحابية -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -24,8 +25,14 @@
             --line-color: rgba(230, 225, 214, 0.08); 
         }
 
+        /* إخفاء الماوس الأصلي وحماية المحتوى */
         html, body, *, *::before, *::after, *:hover, *:active, *:focus, a, button, input, textarea, select, label { 
             cursor: none !important; 
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
@@ -36,14 +43,12 @@
             font-family: 'Tajawal', sans-serif; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased; 
-            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-            -webkit-touch-callout: none;
             background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='400' cy='400' r='399' fill='none' stroke='%23E6E1D6' stroke-opacity='0.03' stroke-width='1' stroke-dasharray='4 12'/%3E%3Ccircle cx='400' cy='400' r='200' fill='none' stroke='%23E6E1D6' stroke-opacity='0.02' stroke-width='1' stroke-dasharray='4 12'/%3E%3C/svg%3E");
             background-attachment: fixed;
             background-position: center;
         }
 
-        img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+        img { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none; }
         button, a, input, textarea { pointer-events: auto; }
 
         ::-webkit-scrollbar { width: 4px; }
@@ -126,7 +131,7 @@
         .custom-header label { font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 2px; color: var(--text-cream); text-transform: uppercase;}
         .custom-price-tag { color: var(--accent-blue); font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: bold;}
         .custom-input-box { margin-top: 15px; display: none; }
-        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 12px; font-family: 'Tajawal', sans-serif; font-size: 13px; outline: none; resize: none; height: 75px;}
+        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 12px; font-family: 'Tajawal', sans-serif; font-size: 13px; outline: none; resize: none; height: 75px; user-select: text !important;}
 
         .btn-add-cart { width: 100%; padding: 20px; background: var(--text-cream); color: var(--bg-deep); border: 1px solid var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 6px; text-transform: uppercase; transition: 0.3s; }
         .btn-add-cart:hover { background: transparent; color: var(--text-cream); }
@@ -139,7 +144,6 @@
         .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
 
-        /* قسم القطع المقترحة */
         .related-section { padding: 80px 6%; max-width: 1400px; margin: 0 auto; position: relative; z-index: 10; border-top: 1px solid var(--line-color); }
         .related-title { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 5px; color: var(--text-cream); margin-bottom: 40px; text-transform: uppercase; text-align: center;}
         .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
@@ -149,7 +153,6 @@
         .related-card h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;}
         .related-card p { color: var(--text-muted); font-family: 'Oswald', sans-serif; font-size: 13px;}
 
-        /* الفوتر وقسم الحقوق */
         .main-footer { padding: 90px 6% 40px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 60px;}
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; margin-bottom: 60px; }
         .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; color: var(--text-cream); margin-bottom: 20px;}
@@ -179,7 +182,6 @@
         <div class="word-2">ACCESSORIES ARCHIVE</div>
     </div>
 
-    <!-- السلة الجانبية -->
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -216,13 +218,11 @@
         </div>
     </main>
 
-    <!-- قسم القطع المقترحة -->
     <section class="related-section">
         <h3 class="related-title">EXPLORE MORE ARCHIVES //</h3>
         <div class="related-grid" id="relatedGrid"></div>
     </section>
 
-    <!-- الفوتر وحقوق الملكية -->
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-brand">
@@ -254,265 +254,284 @@
         </div>
     </footer>
 
+    <!-- سكربت الحماية المتقدمة والتشفير -->
     <script>
-        document.addEventListener('contextmenu', e => e.preventDefault());
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
-            authDomain: "unoverse-5babd.firebaseapp.com",
-            projectId: "unoverse-5babd",
-            storageBucket: "unoverse-5babd.firebasestorage.app",
-            messagingSenderId: "543082257571",
-            appId: "1:543082257571:web:28b1d5931cbc75e6793316"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        const cursorWrapper = document.getElementById('cursorWrapper');
-        let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
-        if (!window.matchMedia("(max-width: 992px)").matches) {
-            document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-            function animateCursor() {
-                cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
-                cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
-        }
-
-        function addHover() { cursorWrapper.classList.add('hovered'); }
-        function removeHover() { cursorWrapper.classList.remove('hovered'); }
-        function attachCursorEffects() {
-            document.querySelectorAll('a, button, input, textarea, label, .thumb-item, .related-card').forEach(el => {
-                el.removeEventListener('mouseenter', addHover);
-                el.removeEventListener('mouseleave', removeHover);
-                el.addEventListener('mouseenter', addHover);
-                el.addEventListener('mouseleave', removeHover);
+        (function(_0xGuard){
+            document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
+            document.addEventListener('keydown', function(e){
+                if(e.keyCode === 123) { e.preventDefault(); return false; }
+                if(e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) { e.preventDefault(); return false; }
+                if(e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 88 || e.keyCode === 80)) { e.preventDefault(); return false; }
+                if(e.metaKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67)) { e.preventDefault(); return false; }
             });
-        }
+            document.addEventListener('copy', function(e){ e.preventDefault(); });
+            document.addEventListener('cut', function(e){ e.preventDefault(); });
+            document.addEventListener('dragstart', function(e){ e.preventDefault(); });
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const accessoryId = urlParams.get('id');
-        let accessoryData = null;
-        let basePrice = 0;
-        let currentFinalPrice = 0;
+            setInterval(function(){
+                (function(){ return false; }['constructor']('debugger')());
+            }, 500);
+        })();
 
-        async function fetchAccessory() {
-            const wrapper = document.getElementById('accessoryContent');
-            if (!accessoryId) {
-                wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">NO ACCESSORY SELECTED.</h2>';
-                return;
+        // المنطق المشفر لصفحة التفاصيل
+        const _0xAccessoryEngine = (function(){
+            const _0xcfg = {
+                apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
+                authDomain: "unoverse-5babd.firebaseapp.com",
+                projectId: "unoverse-5babd",
+                storageBucket: "unoverse-5babd.firebasestorage.app",
+                messagingSenderId: "543082257571",
+                appId: "1:543082257571:web:28b1d5931cbc75e6793316"
+            };
+            if (!firebase.apps.length) firebase.initializeApp(_0xcfg);
+            const _0xdb = firebase.firestore();
+
+            const _0xcur = document.getElementById('cursorWrapper');
+            let _0xmx = -100, _0xmy = -100, _0xcx = -100, _0xcy = -100;
+            if (!window.matchMedia("(max-width: 992px)").matches) {
+                document.addEventListener('mousemove', e => { _0xmx = e.clientX; _0xmy = e.clientY; });
+                function _0xanim() {
+                    _0xcx += (_0xmx - _0xcx) * 0.25; _0xcy += (_0xmy - _0xcy) * 0.25;
+                    _0xcur.style.transform = `translate3d(${_0xcx}px, ${_0xcy}px, 0)`;
+                    requestAnimationFrame(_0xanim);
+                }
+                _0xanim();
             }
-            try {
-                const doc = await db.collection("accessories").doc(accessoryId).get();
-                if (!doc.exists) {
-                    wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">ACCESSORY NOT FOUND.</h2>';
+
+            function _0xhov() { _0xcur.classList.add('hovered'); }
+            function _0xunhov() { _0xcur.classList.remove('hovered'); }
+            function _0xbind() {
+                document.querySelectorAll('a, button, input, textarea, label, .thumb-item, .related-card').forEach(el => {
+                    el.removeEventListener('mouseenter', _0xhov);
+                    el.removeEventListener('mouseleave', _0xunhov);
+                    el.addEventListener('mouseenter', _0xhov);
+                    el.addEventListener('mouseleave', _0xunhov);
+                });
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const accessoryId = urlParams.get('id');
+            let accessoryData = null;
+            let basePrice = 0;
+            let currentFinalPrice = 0;
+
+            async function _0xfetch() {
+                const wrapper = document.getElementById('accessoryContent');
+                if (!accessoryId) {
+                    wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">NO ACCESSORY SELECTED.</h2>';
                     return;
                 }
-                accessoryData = doc.data();
-                accessoryData.id = doc.id;
-                renderAccessory(accessoryData);
-                loadRelatedAccessories(accessoryId);
-            } catch (err) {
-                console.error(err);
+                try {
+                    const doc = await _0xdb.collection("accessories").doc(accessoryId).get();
+                    if (!doc.exists) {
+                        wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">ACCESSORY NOT FOUND.</h2>';
+                        return;
+                    }
+                    accessoryData = doc.data();
+                    accessoryData.id = doc.id;
+                    _0xrender(accessoryData);
+                    _0xloadRelated(accessoryId);
+                } catch (err) {
+                    console.error(err);
+                }
             }
-        }
 
-        function renderAccessory(item) {
-            const wrapper = document.getElementById('accessoryContent');
-            const price = parseFloat(item.price) || 0;
-            const discount = parseFloat(item.discount) || price;
-            basePrice = discount < price ? discount : price;
-            currentFinalPrice = basePrice;
+            function _0xrender(item) {
+                const wrapper = document.getElementById('accessoryContent');
+                const price = parseFloat(item.price) || 0;
+                const discount = parseFloat(item.discount) || price;
+                basePrice = discount < price ? discount : price;
+                currentFinalPrice = basePrice;
 
-            const stock = parseInt(item.stock) || 0;
-            const isOutOfStock = stock <= 0;
+                const stock = parseInt(item.stock) || 0;
+                const isOutOfStock = stock <= 0;
 
-            let priceDisplay = (discount < price)
-                ? `<span id="dynamicPrice">${discount} EGP</span> <span class="old">${price} EGP</span>`
-                : `<span id="dynamicPrice">${price} EGP</span>`;
+                let priceDisplay = (discount < price)
+                    ? `<span id="dynamicPrice">${discount} EGP</span> <span class="old">${price} EGP</span>`
+                    : `<span id="dynamicPrice">${price} EGP</span>`;
 
-            let customDesignHTML = '';
-            if (item.allowCustomDesign) {
-                const extraPrice = parseFloat(item.customDesignPrice) || 0;
-                customDesignHTML = `
-                    <div class="custom-design-card">
-                        <div class="custom-header">
-                            <label style="display:flex; align-items:center; gap:10px;">
-                                <input type="checkbox" id="customCheck" onchange="toggleCustomDesign(${extraPrice})">
-                                <span>طلب نقش / تصميم مخصص (+${extraPrice} EGP)</span>
-                            </label>
-                            <span class="custom-price-tag">+${extraPrice} EGP</span>
+                let customDesignHTML = '';
+                if (item.allowCustomDesign) {
+                    const extraPrice = parseFloat(item.customDesignPrice) || 0;
+                    customDesignHTML = `
+                        <div class="custom-design-card">
+                            <div class="custom-header">
+                                <label style="display:flex; align-items:center; gap:10px;">
+                                    <input type="checkbox" id="customCheck" onchange="_0xtoggleCustom(${extraPrice})">
+                                    <span>طلب نقش / تصميم مخصص (+${extraPrice} EGP)</span>
+                                </label>
+                                <span class="custom-price-tag">+${extraPrice} EGP</span>
+                            </div>
+                            <div class="custom-input-box" id="customInputBox">
+                                <textarea id="customNote" placeholder="اكتب تفاصيل النقش أو التخصيص المطلوب هنا بدقة..."></textarea>
+                            </div>
                         </div>
-                        <div class="custom-input-box" id="customInputBox">
-                            <textarea id="customNote" placeholder="اكتب تفاصيل النقش أو التخصيص المطلوب هنا بدقة..."></textarea>
+                    `;
+                }
+
+                const images = item.gallery && item.gallery.length > 0 ? item.gallery : [item.image];
+                let thumbsHTML = images.map((img, idx) => `
+                    <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="_0xsetMainImg('${img}', this)">
+                        <img src="${img}" alt="thumbnail">
+                    </div>
+                `).join('');
+
+                let btnHTML = isOutOfStock
+                    ? `<button class="btn-add-cart" style="opacity:0.3; cursor:not-allowed !important;" disabled>OUT OF STOCK</button>`
+                    : `<button class="btn-add-cart" onclick="_0xaddToCart()">ADD TO CART</button>`;
+
+                wrapper.innerHTML = `
+                    <div class="product-wrapper">
+                        <div class="product-info-panel">
+                            <div class="product-tag">ARCHIVE ACCESSORY // SPEC-0${stock}</div>
+                            <h1 class="product-name">${item.name}</h1>
+                            <div class="product-price-box">${priceDisplay}</div>
+
+                            <div class="meta-specs">
+                                <div class="spec-item">
+                                    <span class="label">AVAILABILITY</span>
+                                    <span class="val" style="color:${isOutOfStock ? '#ff3333' : '#2ecc71'}">${isOutOfStock ? 'SOLD OUT' : `${stock} PIECES`}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="label">EDITION</span>
+                                    <span class="val">LIMITED CRAFT</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="label">AUTHENTICITY</span>
+                                    <span class="val">100% VERIFIED</span>
+                                </div>
+                            </div>
+
+                            <p class="product-desc">${item.description || 'قطعة إكسسوار فريدة مصنعة يدوياً بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.'}</p>
+                            ${customDesignHTML}
+                            ${btnHTML}
+                        </div>
+
+                        <div class="product-gallery-panel">
+                            <div class="main-frame">
+                                <img id="mainDisplayImg" src="${images[0]}" alt="${item.name}">
+                            </div>
+                            ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
                         </div>
                     </div>
                 `;
+
+                _0xbind();
             }
 
-            const images = item.gallery && item.gallery.length > 0 ? item.gallery : [item.image];
-            let thumbsHTML = images.map((img, idx) => `
-                <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="setMainImage('${img}', this)">
-                    <img src="${img}" alt="thumbnail">
-                </div>
-            `).join('');
-
-            let btnHTML = isOutOfStock
-                ? `<button class="btn-add-cart" style="opacity:0.3; cursor:not-allowed !important;" disabled>OUT OF STOCK</button>`
-                : `<button class="btn-add-cart" onclick="addAccessoryToCart()">ADD TO CART</button>`;
-
-            wrapper.innerHTML = `
-                <div class="product-wrapper">
-                    <div class="product-info-panel">
-                        <div class="product-tag">ARCHIVE ACCESSORY // SPEC-0${stock}</div>
-                        <h1 class="product-name">${item.name}</h1>
-                        <div class="product-price-box">${priceDisplay}</div>
-
-                        <div class="meta-specs">
-                            <div class="spec-item">
-                                <span class="label">AVAILABILITY</span>
-                                <span class="val" style="color:${isOutOfStock ? '#ff3333' : '#2ecc71'}">${isOutOfStock ? 'SOLD OUT' : `${stock} PIECES`}</span>
-                            </div>
-                            <div class="spec-item">
-                                <span class="label">EDITION</span>
-                                <span class="val">LIMITED CRAFT</span>
-                            </div>
-                            <div class="spec-item">
-                                <span class="label">AUTHENTICITY</span>
-                                <span class="val">100% VERIFIED</span>
-                            </div>
-                        </div>
-
-                        <p class="product-desc">${item.description || 'قطعة إكسسوار فريدة مصنعة يدوياً بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.'}</p>
-                        ${customDesignHTML}
-                        ${btnHTML}
-                    </div>
-
-                    <div class="product-gallery-panel">
-                        <div class="main-frame">
-                            <img id="mainDisplayImg" src="${images[0]}" alt="${item.name}">
-                        </div>
-                        ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
-                    </div>
-                </div>
-            `;
-
-            attachCursorEffects();
-        }
-
-        window.setMainImage = function(src, el) {
-            document.getElementById('mainDisplayImg').src = src;
-            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-        };
-
-        function toggleCustomDesign(extraPrice) {
-            const check = document.getElementById('customCheck');
-            const box = document.getElementById('customInputBox');
-            const priceEl = document.getElementById('dynamicPrice');
-
-            if (check.checked) {
-                box.style.display = 'block';
-                currentFinalPrice = basePrice + extraPrice;
-            } else {
-                box.style.display = 'none';
-                currentFinalPrice = basePrice;
-            }
-            priceEl.innerText = `${currentFinalPrice} EGP`;
-        }
-
-        function addAccessoryToCart() {
-            if (!accessoryData || accessoryData.stock <= 0) return;
-
-            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-            const isCustom = document.getElementById('customCheck')?.checked || false;
-            const customDetails = isCustom ? document.getElementById('customNote').value.trim() : '';
-
-            const item = {
-                id: accessoryData.id,
-                name: accessoryData.name + (isCustom ? ' (Custom Engraved)' : ''),
-                price: currentFinalPrice,
-                image: accessoryData.image || (accessoryData.gallery ? accessoryData.gallery[0] : ''),
-                size: 'Accessory',
-                customDetails: customDetails,
-                type: 'accessory'
+            window._0xsetMainImg = function(src, el) {
+                document.getElementById('mainDisplayImg').src = src;
+                document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
             };
 
-            cart.push(item);
-            localStorage.setItem('unoCart', JSON.stringify(cart));
-            updateCartUI();
+            window._0xtoggleCustom = function(extraPrice) {
+                const check = document.getElementById('customCheck');
+                const box = document.getElementById('customInputBox');
+                const priceEl = document.getElementById('dynamicPrice');
 
-            document.getElementById('cartDrawer').classList.add('active');
-            document.getElementById('cartOverlay').classList.add('active');
-        }
+                if (check.checked) {
+                    box.style.display = 'block';
+                    currentFinalPrice = basePrice + extraPrice;
+                } else {
+                    box.style.display = 'none';
+                    currentFinalPrice = basePrice;
+                }
+                priceEl.innerText = `${currentFinalPrice} EGP`;
+            };
 
-        // جلب القطع المقترحة
-        function loadRelatedAccessories(currentId) {
-            db.collection("accessories").limit(5).get().then(snapshot => {
-                const grid = document.getElementById('relatedGrid');
-                if (!grid) return;
-                grid.innerHTML = '';
-                
-                snapshot.forEach(doc => {
-                    if (doc.id !== currentId) {
-                        const d = doc.data();
-                        const p = d.discount || d.price;
-                        grid.innerHTML += `
-                            <a href="accessory.html?id=${doc.id}" class="related-card">
-                                <img src="${d.image || (d.gallery ? d.gallery[0] : '')}" alt="${d.name}">
-                                <h4>${d.name}</h4>
-                                <p>${p} EGP</p>
-                            </a>
-                        `;
-                    }
+            window._0xaddToCart = function() {
+                if (!accessoryData || accessoryData.stock <= 0) return;
+
+                let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+                const isCustom = document.getElementById('customCheck')?.checked || false;
+                const customDetails = isCustom ? document.getElementById('customNote').value.trim() : '';
+
+                const item = {
+                    id: accessoryData.id,
+                    name: accessoryData.name + (isCustom ? ' (Custom Engraved)' : ''),
+                    price: currentFinalPrice,
+                    image: accessoryData.image || (accessoryData.gallery ? accessoryData.gallery[0] : ''),
+                    size: 'Accessory',
+                    customDetails: customDetails,
+                    type: 'accessory'
+                };
+
+                cart.push(item);
+                localStorage.setItem('unoCart', JSON.stringify(cart));
+                _0xcartUI();
+
+                document.getElementById('cartDrawer').classList.add('active');
+                document.getElementById('cartOverlay').classList.add('active');
+            };
+
+            function _0xloadRelated(currentId) {
+                _0xdb.collection("accessories").limit(5).get().then(snapshot => {
+                    const grid = document.getElementById('relatedGrid');
+                    if (!grid) return;
+                    grid.innerHTML = '';
+                    
+                    snapshot.forEach(doc => {
+                        if (doc.id !== currentId) {
+                            const d = doc.data();
+                            const p = d.discount || d.price;
+                            grid.innerHTML += `
+                                <a href="accessory.html?id=${doc.id}" class="related-card">
+                                    <img src="${d.image || (d.gallery ? d.gallery[0] : '')}" alt="${d.name}">
+                                    <h4>${d.name}</h4>
+                                    <p>${p} EGP</p>
+                                </a>
+                            `;
+                        }
+                    });
+                    _0xbind();
                 });
-                attachCursorEffects();
-            });
-        }
-
-        function updateCartUI() {
-            const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-            const container = document.getElementById('cartItemsContainer');
-            const badge = document.getElementById('cartBadge');
-            
-            if (badge) badge.innerText = cart.length;
-            if (!container) return;
-
-            if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:3px; margin-top:50px;">EMPTY CART.</p>';
-            } else {
-                container.innerHTML = cart.map((item, idx) => `
-                    <div class="cart-item">
-                        <img src="${item.image}">
-                        <div style="flex:1; padding:0 15px; text-align:left;">
-                            <h4 style="color:var(--text-cream); font-family:'Oswald'; font-weight:400; font-size:13px;">${item.name}</h4>
-                            <p style="color:var(--text-muted); font-size:12px; margin-top:5px; font-family:'Oswald';">${item.price} EGP</p>
-                        </div>
-                        <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:16px;">✕</button>
-                    </div>
-                `).join('');
             }
-            const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
-            document.getElementById('cartTotalPrice').innerText = total + ' EGP';
-        }
 
-        function removeFromCart(idx) {
-            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-            cart.splice(idx, 1);
-            localStorage.setItem('unoCart', JSON.stringify(cart));
-            updateCartUI();
-        }
+            function _0xcartUI() {
+                const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+                const container = document.getElementById('cartItemsContainer');
+                const badge = document.getElementById('cartBadge');
+                
+                if (badge) badge.innerText = cart.length;
+                if (!container) return;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchAccessory();
-            updateCartUI();
-            attachCursorEffects();
+                if (cart.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:3px; margin-top:50px;">EMPTY CART.</p>';
+                } else {
+                    container.innerHTML = cart.map((item, idx) => `
+                        <div class="cart-item">
+                            <img src="${item.image}">
+                            <div style="flex:1; padding:0 15px; text-align:left;">
+                                <h4 style="color:var(--text-cream); font-family:'Oswald'; font-weight:400; font-size:13px;">${item.name}</h4>
+                                <p style="color:var(--text-muted); font-size:12px; margin-top:5px; font-family:'Oswald';">${item.price} EGP</p>
+                            </div>
+                            <button onclick="_0xdelItem(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:16px;">✕</button>
+                        </div>
+                    `).join('');
+                }
+                const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+                document.getElementById('cartTotalPrice').innerText = total + ' EGP';
+            }
 
-            document.getElementById('openCart')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
-            document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
-            document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
-        });
+            window._0xdelItem = function(idx) {
+                let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+                cart.splice(idx, 1);
+                localStorage.setItem('unoCart', JSON.stringify(cart));
+                _0xcartUI();
+            };
+
+            document.addEventListener('DOMContentLoaded', () => {
+                _0xfetch();
+                _0xcartUI();
+                _0xbind();
+
+                document.getElementById('openCart')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
+                document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+                document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+            });
+        })();
     </script>
+    <script src="developer-credit.js"></script>
 </body>
 </html>

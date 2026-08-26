@@ -6,6 +6,7 @@
     <title>UnoVerse | THE ACCESSORIES ARCHIVE</title>
     
     <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="responsive.css">
     
     <!-- مكتبات Firebase السحابية -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -24,9 +25,14 @@
             --line-color: rgba(230, 225, 214, 0.08); 
         }
 
-        /* إخفاء الماوس الأصلي بشكل إجباري وقاطع */
+        /* إخفاء الماوس الأصلي ومنع التحديد بشكل قاطع */
         html, body, *, *::before, *::after, *:hover, *:active, *:focus, a, button, input, textarea, select, label { 
             cursor: none !important; 
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
@@ -37,21 +43,18 @@
             font-family: 'Tajawal', sans-serif; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased; 
-            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-            -webkit-touch-callout: none;
             background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='400' cy='400' r='399' fill='none' stroke='%23E6E1D6' stroke-opacity='0.03' stroke-width='1' stroke-dasharray='4 12'/%3E%3Ccircle cx='400' cy='400' r='200' fill='none' stroke='%23E6E1D6' stroke-opacity='0.02' stroke-width='1' stroke-dasharray='4 12'/%3E%3C/svg%3E");
             background-attachment: fixed;
             background-position: center;
         }
 
-        img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+        img { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none; }
         button, a { pointer-events: auto; }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
 
-        /* النسيج السينمائي */
         .cinematic-grain { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             pointer-events: none; z-index: 99998; opacity: 0.05; 
@@ -59,7 +62,6 @@
             will-change: transform; transform: translateZ(0); 
         }
 
-        /* الماوس المخصص */
         .cursor-wrapper { 
             position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; 
             will-change: transform; mix-blend-mode: exclusion; transition: opacity 0.3s ease;
@@ -74,7 +76,6 @@
             background-color: transparent; border: 1px solid var(--text-cream); box-shadow: none; 
         }
 
-        /* الهيدر */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
             width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
@@ -90,7 +91,6 @@
         .action-link { color: var(--text-cream); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 12px; letter-spacing: 3px; opacity: 0.8; transition: 0.3s;}
         .action-link:hover { opacity: 1; }
 
-        /* السلة */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
@@ -105,7 +105,6 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream);}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
-        /* شبكة الإكسسوارات */
         .catalog-container { padding: 140px 6% 100px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 10;}
         .page-header { text-align: center; margin-bottom: 60px; }
         .page-header h1 { font-family: 'Oswald', sans-serif; font-size: clamp(35px, 5vw, 65px); font-weight: 700; letter-spacing: 5px; color: var(--text-cream); text-transform: uppercase; margin-bottom: 15px;}
@@ -143,7 +142,6 @@
         .acc-bottom span { font-size: 10px; color: var(--text-muted); font-family: 'Oswald', sans-serif; letter-spacing: 2px;}
         .acc-bottom .view-btn { font-size: 10px; color: var(--text-cream); font-family: 'Oswald', sans-serif; letter-spacing: 2px; border-bottom: 1px solid var(--text-cream); padding-bottom: 2px;}
 
-        /* الفوتر */
         .main-footer { padding: 80px 6% 40px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 80px;}
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; margin-bottom: 60px; }
         .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; color: var(--text-cream); margin-bottom: 20px;}
@@ -157,13 +155,13 @@
             .cursor-wrapper { display: none !important; }
         }
     </style>
+    
 </head>
 <body>
 
     <div class="cinematic-grain"></div>
     <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
-    <!-- السلة الجانبية -->
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -219,131 +217,152 @@
         </div>
     </footer>
 
+    <!-- سكربت الحماية المتقدمة والتشفير -->
     <script>
-        document.addEventListener('contextmenu', e => e.preventDefault());
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
-            authDomain: "unoverse-5babd.firebaseapp.com",
-            projectId: "unoverse-5babd",
-            storageBucket: "unoverse-5babd.firebasestorage.app",
-            messagingSenderId: "543082257571",
-            appId: "1:543082257571:web:28b1d5931cbc75e6793316"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // حركة الماوس المخصص
-        const cursorWrapper = document.getElementById('cursorWrapper');
-        let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
-        if (!window.matchMedia("(max-width: 768px)").matches) {
-            document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-            function animateCursor() {
-                cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
-                cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
-        }
-
-        function addHover() { cursorWrapper.classList.add('hovered'); }
-        function removeHover() { cursorWrapper.classList.remove('hovered'); }
-        function attachCursorEffects() {
-            document.querySelectorAll('a, button, .accessory-card').forEach(el => {
-                el.removeEventListener('mouseenter', addHover);
-                el.removeEventListener('mouseleave', removeHover);
-                el.addEventListener('mouseenter', addHover);
-                el.addEventListener('mouseleave', removeHover);
-            });
-        }
-
-        // جلب الإكسسوارات من Firebase
-        function loadAllAccessories() {
-            db.collection("accessories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-                const grid = document.getElementById('accessoriesGrid');
-                if (snapshot.empty) {
-                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:4px; padding: 100px 0;">NO ACCESSORIES IN ARCHIVE CURRENTLY.</p>';
-                    return;
-                }
-
-                grid.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const acc = doc.data();
-                    const price = parseFloat(acc.price) || 0;
-                    const discount = parseFloat(acc.discount) || price;
-                    const stock = parseInt(acc.stock) || 0;
-                    const isOut = stock <= 0;
-
-                    let priceDisplay = discount < price 
-                        ? `<span class="old">${price} EGP</span> <span>${discount} EGP</span>` 
-                        : `<span>${price} EGP</span>`;
-
-                    grid.innerHTML += `
-                        <a href="accessory.html?id=${doc.id}" class="accessory-card" dir="ltr">
-                            <div class="accessory-img-box">
-                                <img src="${acc.image}" alt="${acc.name}">
-                                <div class="overlay-badge ${isOut ? 'sold-out' : 'available'}">${isOut ? 'OUT OF STOCK' : 'AVAILABLE'}</div>
-                            </div>
-                            <div class="acc-info">
-                                <div class="acc-top">
-                                    <h3>${acc.name}</h3>
-                                    <p class="price">${priceDisplay}</p>
-                                </div>
-                                <div class="acc-bottom">
-                                    <span>${isOut ? 'ARCHIVED' : `STOCK // ${stock} PCS`}</span>
-                                    <span class="view-btn">VIEW DETAILS</span>
-                                </div>
-                            </div>
-                        </a>
-                    `;
-                });
-                attachCursorEffects();
-            });
-        }
-
-        // إدارة السلة
-        function updateCartUI() {
-            const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-            const container = document.getElementById('cartItemsContainer');
-            const badge = document.getElementById('cartBadge');
+        (function(_0xGuard){
+            // حظر قائمة الفحص والنقر الأيمن
+            document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
             
-            if (badge) badge.innerText = cart.length;
-            if (!container) return;
+            // حظر اختصارات لوحة المفاتيح المتقدمة
+            document.addEventListener('keydown', function(e){
+                if(e.keyCode === 123) { e.preventDefault(); return false; } // F12
+                if(e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) { e.preventDefault(); return false; } // Ctrl+Shift+I/J/C
+                if(e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 88 || e.keyCode === 80)) { e.preventDefault(); return false; } // Ctrl+U/S/C/X/P
+                if(e.metaKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67)) { e.preventDefault(); return false; } // MacOS Command keys
+            });
 
-            if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:3px; margin-top:50px;">EMPTY CART.</p>';
-            } else {
-                container.innerHTML = cart.map((item, idx) => `
-                    <div class="cart-item">
-                        <img src="${item.image}">
-                        <div style="flex:1; padding:0 15px; text-align:left;">
-                            <h4 style="color:var(--text-cream); font-family:'Oswald'; font-weight:400; font-size:13px;">${item.name}</h4>
-                            <p style="color:var(--text-muted); font-size:12px; margin-top:5px; font-family:'Oswald';">${item.price} EGP</p>
-                        </div>
-                        <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
-                    </div>
-                `).join('');
+            // حظر النسخ والسحب
+            document.addEventListener('copy', function(e){ e.preventDefault(); });
+            document.addEventListener('cut', function(e){ e.preventDefault(); });
+            document.addEventListener('dragstart', function(e){ e.preventDefault(); });
+
+            // تشويش أدوات المطورين
+            setInterval(function(){
+                (function(){ return false; }['constructor']('debugger')());
+            }, 500);
+        })();
+
+        // المنطق المشفر للصفحة
+        const _0xInit = (function(){
+            const _0xcfg = {
+                apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
+                authDomain: "unoverse-5babd.firebaseapp.com",
+                projectId: "unoverse-5babd",
+                storageBucket: "unoverse-5babd.firebasestorage.app",
+                messagingSenderId: "543082257571",
+                appId: "1:543082257571:web:28b1d5931cbc75e6793316"
+            };
+            if (!firebase.apps.length) firebase.initializeApp(_0xcfg);
+            const _0xdb = firebase.firestore();
+
+            const _0xcur = document.getElementById('cursorWrapper');
+            let _0xmx = -100, _0xmy = -100, _0xcx = -100, _0xcy = -100;
+            if (!window.matchMedia("(max-width: 768px)").matches) {
+                document.addEventListener('mousemove', e => { _0xmx = e.clientX; _0xmy = e.clientY; });
+                function _0xanim() {
+                    _0xcx += (_0xmx - _0xcx) * 0.25; _0xcy += (_0xmy - _0xcy) * 0.25;
+                    _0xcur.style.transform = `translate3d(${_0xcx}px, ${_0xcy}px, 0)`;
+                    requestAnimationFrame(_0xanim);
+                }
+                _0xanim();
             }
-            const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
-            document.getElementById('cartTotalPrice').innerText = total + ' EGP';
-        }
 
-        function removeFromCart(idx) {
-            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-            cart.splice(idx, 1);
-            localStorage.setItem('unoCart', JSON.stringify(cart));
-            updateCartUI();
-        }
+            function _0xhov() { _0xcur.classList.add('hovered'); }
+            function _0xunhov() { _0xcur.classList.remove('hovered'); }
+            function _0xbind() {
+                document.querySelectorAll('a, button, .accessory-card').forEach(el => {
+                    el.removeEventListener('mouseenter', _0xhov);
+                    el.removeEventListener('mouseleave', _0xunhov);
+                    el.addEventListener('mouseenter', _0xhov);
+                    el.addEventListener('mouseleave', _0xunhov);
+                });
+            }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAllAccessories();
-            updateCartUI();
-            attachCursorEffects();
+            function _0xload() {
+                _0xdb.collection("accessories").orderBy("createdAt", "desc").onSnapshot(snap => {
+                    const _0xgrid = document.getElementById('accessoriesGrid');
+                    if (snap.empty) {
+                        _0xgrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:4px; padding: 100px 0;">NO ACCESSORIES IN ARCHIVE CURRENTLY.</p>';
+                        return;
+                    }
+                    _0xgrid.innerHTML = '';
+                    snap.forEach(doc => {
+                        const acc = doc.data();
+                        const price = parseFloat(acc.price) || 0;
+                        const discount = parseFloat(acc.discount) || price;
+                        const stock = parseInt(acc.stock) || 0;
+                        const isOut = stock <= 0;
 
-            document.getElementById('openCart')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
-            document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
-            document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
-        });
+                        let priceDisplay = discount < price 
+                            ? `<span class="old">${price} EGP</span> <span>${discount} EGP</span>` 
+                            : `<span>${price} EGP</span>`;
+
+                        _0xgrid.innerHTML += `
+                            <a href="accessory.html?id=${doc.id}" class="accessory-card" dir="ltr">
+                                <div class="accessory-img-box">
+                                    <img src="${acc.image || (acc.gallery ? acc.gallery[0] : '')}" alt="${acc.name}">
+                                    <div class="overlay-badge ${isOut ? 'sold-out' : 'available'}">${isOut ? 'OUT OF STOCK' : 'AVAILABLE'}</div>
+                                </div>
+                                <div class="acc-info">
+                                    <div class="acc-top">
+                                        <h3>${acc.name}</h3>
+                                        <p class="price">${priceDisplay}</p>
+                                    </div>
+                                    <div class="acc-bottom">
+                                        <span>${isOut ? 'ARCHIVED' : `STOCK // ${stock} PCS`}</span>
+                                        <span class="view-btn">VIEW DETAILS</span>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                    });
+                    _0xbind();
+                });
+            }
+
+            function _0xcartUI() {
+                const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+                const cont = document.getElementById('cartItemsContainer');
+                const badge = document.getElementById('cartBadge');
+                if (badge) badge.innerText = cart.length;
+                if (!cont) return;
+
+                if (cart.length === 0) {
+                    cont.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:3px; margin-top:50px;">EMPTY CART.</p>';
+                } else {
+                    cont.innerHTML = cart.map((item, idx) => `
+                        <div class="cart-item">
+                            <img src="${item.image}">
+                            <div style="flex:1; padding:0 15px; text-align:left;">
+                                <h4 style="color:var(--text-cream); font-family:'Oswald'; font-weight:400; font-size:13px;">${item.name}</h4>
+                                <p style="color:var(--text-muted); font-size:12px; margin-top:5px; font-family:'Oswald';">${item.price} EGP</p>
+                            </div>
+                            <button onclick="_0xdelItem(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:16px;">✕</button>
+                        </div>
+                    `).join('');
+                }
+                const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+                document.getElementById('cartTotalPrice').innerText = total + ' EGP';
+            }
+
+            window._0xdelItem = function(idx) {
+                let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+                cart.splice(idx, 1);
+                localStorage.setItem('unoCart', JSON.stringify(cart));
+                _0xcartUI();
+            };
+
+            document.addEventListener('DOMContentLoaded', () => {
+                _0xload();
+                _0xcartUI();
+                _0xbind();
+
+                document.getElementById('openCart')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
+                document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+                document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+            });
+        })();
     </script>
+    <script src="developer-credit.js"></script>
 </body>
 </html>
