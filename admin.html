@@ -16,7 +16,6 @@
     <style>
         :root { --bg-dark: #070707; --accent-yellow: #FFD700; --text-light: #F4F3EF; }
         
-        /* حماية صارمة لمنع التحديد والنسخ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             background-color: var(--bg-dark); color: var(--text-light); 
@@ -45,7 +44,7 @@
         .admin-header h1 { font-family: 'Oswald', sans-serif; color: var(--accent-yellow); }
         
         .tabs-nav { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 15px; overflow-x: auto;}
-        .tab-btn { background: transparent; color: #666; border: none; font-family: 'Oswald', sans-serif; font-size: 16px; cursor: pointer; transition: 0.3s; letter-spacing: 1px; white-space: nowrap;}
+        .tab-btn { background: transparent; color: #666; border: none; font-family: 'Oswald', sans-serif; font-size: 15px; cursor: pointer; transition: 0.3s; letter-spacing: 1px; white-space: nowrap;}
         .tab-btn:hover { color: #fff; }
         .tab-btn.active { color: var(--accent-yellow); font-weight: bold; }
         
@@ -85,7 +84,7 @@
         .add-img-btn { padding: 12px 20px; background: #222; color: #fff; border: 1px solid #444; cursor: pointer; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-weight: bold; }
         .add-img-btn:hover { background: var(--accent-yellow); color: #000; }
         
-        #imageGallery, #dropImageGallery { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .gallery-container { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
         .preview-container { position: relative; display: inline-block; }
         .preview-img { width: 80px; height: 80px; object-fit: cover; border: 1px solid var(--accent-yellow); }
         .remove-img { position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; }
@@ -143,7 +142,8 @@
         <div class="tabs-nav">
             <button class="tab-btn active" onclick="switchTab('analyticsTab', this)">تحليلات الموقع (Analytics)</button>
             <button class="tab-btn" onclick="switchTab('ordersTab', this)">الطلبات الواردة</button>
-            <button class="tab-btn" onclick="switchTab('productsTab', this)">إدارة المنتجات</button>
+            <button class="tab-btn" onclick="switchTab('productsTab', this)">إدارة الملابس (Archive)</button>
+            <button class="tab-btn" onclick="switchTab('accessoriesTab', this)">إدارة الإكسسوارات (Accessories)</button>
             <button class="tab-btn" onclick="switchTab('dropTab', this)">إعدادات الإطلاق (Drop)</button>
             <button class="tab-btn" onclick="switchTab('aboutTab', this)">إعدادات (من نحن)</button>
         </div>
@@ -166,8 +166,12 @@
                     <div class="value" id="statAvgOrder">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>المنتجات // INVENTORY</h3>
+                    <h3>الملابس // PIECES</h3>
                     <div class="value" id="statProducts">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الإكسسوارات // ACCESSORIES</h3>
+                    <div class="value" id="statAccessories">0</div>
                 </div>
                 <div class="stat-card">
                     <h3>الزيارات // TOTAL VISITS</h3>
@@ -180,7 +184,6 @@
             </div>
 
             <div class="charts-grid">
-                <!-- رسم حالة الطلبات -->
                 <div class="chart-container">
                     <h3>توزيع حالات الطلبات // ORDER STATUS DISTRIBUTION</h3>
                     <div style="position: relative; height: 250px; width: 100%; display: flex; justify-content: center;">
@@ -188,26 +191,24 @@
                     </div>
                     <p class="chart-desc">
                         <strong>شرح التحليل:</strong> يعرض هذا الرسم الدائري نسبة الطلبات المتوقفة في كل مرحلة من مراحل الشحن. <br>
-                        - اللون الرمادي يشير للطلبات "قيد المراجعة" اللي محتاجة تدخل منك وتأكيد مع العميل.<br>
-                        - اللون الأخضر يعكس كفاءة التوصيل والمبيعات المكتملة فعلياً.
+                        - الرمادي: طلبات قيد المراجعة.<br>
+                        - الأخضر: الطلبات المسلمة بنجاح.
                     </p>
                 </div>
                 
-                <!-- رسم المبيعات الأسبوعية -->
                 <div class="chart-container">
                     <h3>المبيعات آخر 7 أيام // REVENUE TREND (LAST 7 DAYS)</h3>
                     <div style="position: relative; height: 250px; width: 100%;">
                         <canvas id="salesChart"></canvas>
                     </div>
                     <p class="chart-desc">
-                        <strong>شرح التحليل:</strong> يتتبع هذا الرسم الشريطي حجم العوائد المالية بشكل يومي خلال الأسبوع الماضي. <br>
-                        هذا التحليل ممتاز لمراقبة تفاعل العملاء مباشرة بعد تفعيل "الإطلاق - Drop" أو الحملات الإعلانية، ويساعدك في رصد الأيام الأكثر نشاطاً للشراء.
+                        <strong>شرح التحليل:</strong> يتتبع هذا الرسم الشريطي حجم العوائد المالية بشكل يومي خلال الأسبوع الماضي ومراقبة الحملات.
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- ================= الطلبات الواردة المطور بالدفع والطباعة ================= -->
+        <!-- ================= الطلبات الواردة ================= -->
         <div id="ordersTab" class="tab-content">
             <h2 style="font-family: 'Oswald', sans-serif; color: var(--accent-yellow); margin-bottom: 20px;">سجل الطلبات والتحويلات المكتملة</h2>
             <div style="overflow-x:auto;">
@@ -223,14 +224,12 @@
                             <th>إجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="ordersBody">
-                        <!-- الطلبات هتظهر هنا تلقائياً -->
-                    </tbody>
+                    <tbody id="ordersBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- ================= إدارة المنتجات ================= -->
+        <!-- ================= إدارة الملابس ================= -->
         <div id="productsTab" class="tab-content">
             <form id="addProductForm" onsubmit="saveProduct(event)">
                 <div class="form-group">
@@ -244,7 +243,7 @@
                         <input type="number" id="prodPrice" required placeholder="1500">
                     </div>
                     <div class="form-group" style="flex:1; min-width:200px;">
-                        <label>السعر بعد الخصم (ج.م) - اتركه فارغاً إذا لم يوجد خصم</label>
+                        <label>السعر بعد الخصم (ج.م) - اختياري</label>
                         <input type="number" id="prodDiscount" placeholder="1200">
                     </div>
                 </div>
@@ -287,7 +286,7 @@
                         <input type="text" id="urlInput" placeholder="أو أدخل رابط صورة خارجية">
                         <button type="button" class="add-img-btn" onclick="addFromUrl('products')">إضافة الرابط</button>
                     </div>
-                    <div id="imageGallery"></div>
+                    <div id="imageGallery" class="gallery-container"></div>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">إضافة القطعة للنظام السحابي</button>
@@ -295,7 +294,7 @@
             </form>
 
             <div class="inventory-section">
-                <h2>الكوليكشن الحالي // INVENTORY</h2>
+                <h2>كوليكشن الملابس // INVENTORY</h2>
                 <div style="overflow-x:auto;">
                     <table class="admin-table">
                         <thead>
@@ -310,6 +309,72 @@
                             </tr>
                         </thead>
                         <tbody id="inventoryBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= إدارة الإكسسوارات (مع التعديل ورفع الصور) ================= -->
+        <div id="accessoriesTab" class="tab-content">
+            <form id="addAccessoryForm" onsubmit="saveAccessory(event)">
+                <div class="form-group">
+                    <label>اسم قطعة الإكسسوار</label>
+                    <input type="text" id="accName" required placeholder="مثال: Obsidian Chain">
+                </div>
+                
+                <div style="display:flex; gap:20px; flex-wrap: wrap;">
+                    <div class="form-group" style="flex:1; min-width:180px;">
+                        <label>السعر (ج.م)</label>
+                        <input type="number" id="accPrice" required placeholder="650">
+                    </div>
+                    <div class="form-group" style="flex:1; min-width:180px;">
+                        <label>السعر بعد الخصم (اختياري)</label>
+                        <input type="number" id="accDiscount" placeholder="500">
+                    </div>
+                    <div class="form-group" style="flex:1; min-width:180px;">
+                        <label>الكمية في الاستوك (Stock)</label>
+                        <input type="number" id="accStock" required placeholder="10">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                        <input type="checkbox" id="accAllowCustom" onchange="document.getElementById('customPriceGroup').style.display = this.checked ? 'block' : 'none'">
+                        <span>تفعيل إمكانية التصميم المخصص (Custom Design Add-on)</span>
+                    </label>
+                    <div id="customPriceGroup" style="display:none; margin-top:15px;">
+                        <label>سعر التخصيص الإضافي الذي يضاف لقيمة المنتج (ج.م)</label>
+                        <input type="number" id="accCustomPrice" placeholder="150">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>معرض صور الإكسسوار (من الجهاز أو عبر رابط)</label>
+                    <div class="image-inputs">
+                        <input type="file" id="accFileInput" accept="image/*" onchange="addFromFile(event, 'accessories')">
+                        <input type="text" id="accUrlInput" placeholder="أو أدخل رابط صورة خارجية">
+                        <button type="button" class="add-img-btn" onclick="addFromUrl('accessories')">إضافة الرابط</button>
+                    </div>
+                    <div id="accImageGallery" class="gallery-container"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>الوصف</label>
+                    <textarea id="accDesc" style="height:100px;" placeholder="تفاصيل المعدن، الخامات، الاستخدام..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="accSubmitBtn">إضافة قطعة الإكسسوار</button>
+                <button type="button" class="submit-btn" id="cancelAccEditBtn" style="display:none; background:#333; color:#fff; margin-top:10px;" onclick="cancelAccEdit()">إلغاء تعديل الإكسسوار</button>
+            </form>
+
+            <div class="inventory-section">
+                <h2>كوليكشن الإكسسوارات // ACCESSORIES INVENTORY</h2>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr><th>الصورة</th><th>الاسم</th><th>السعر</th><th>الاستوك</th><th>تخصيص</th><th>إجراءات</th></tr>
+                        </thead>
+                        <tbody id="accessoriesBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -341,7 +406,7 @@
                     <input type="text" id="dropUrlInput" placeholder="أو أدخل رابط صورة خارجية">
                     <button type="button" class="add-img-btn" onclick="addFromUrl('drop')">إضافة الرابط</button>
                 </div>
-                <div id="dropImageGallery"></div>
+                <div id="dropImageGallery" class="gallery-container"></div>
             </div>
             <button type="button" class="submit-btn" style="width: auto; padding: 12px 30px;" onclick="saveDropData()" id="dropSaveBtn">حفظ إعدادات الإطلاق</button>
         </div>
@@ -358,22 +423,19 @@
     </div>
 
     <script>
-        // ================= الإعدادات الأمنية وحماية الكود =================
-        // منع كليك يمين
+        // حماية الكود
         document.addEventListener('contextmenu', event => event.preventDefault());
-        
-        // منع اختصارات المطورين (F12, Ctrl+U, Ctrl+Shift+I, etc.)
         document.addEventListener('keydown', function(e) {
-            if(e.keyCode == 123) { e.preventDefault(); return false; } // F12
-            if(e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) { e.preventDefault(); return false; } // Ctrl+Shift+I / J
-            if(e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; } // Ctrl+U (View Source)
-            if(e.ctrlKey && (e.keyCode == 67 || e.keyCode == 88)) { e.preventDefault(); return false; } // Ctrl+C / Ctrl+X
-            if(e.ctrlKey && e.keyCode == 83) { e.preventDefault(); return false; } // Ctrl+S (Save)
-            if(e.ctrlKey && e.keyCode == 80) { e.preventDefault(); return false; } // Ctrl+P (Print)
+            if(e.keyCode == 123) { e.preventDefault(); return false; }
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) { e.preventDefault(); return false; }
+            if(e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; }
+            if(e.ctrlKey && (e.keyCode == 67 || e.keyCode == 88)) { e.preventDefault(); return false; }
+            if(e.ctrlKey && e.keyCode == 83) { e.preventDefault(); return false; }
+            if(e.ctrlKey && e.keyCode == 80) { e.preventDefault(); return false; }
         });
 
         // حماية الـ IP
-        const ALLOWED_IP = "41.235.133.244"; 
+        const ALLOWED_IP = "41.235.196.152"; 
 
         async function verifyConnection() {
             try {
@@ -382,7 +444,6 @@
                 
                 if (data.ip === ALLOWED_IP) {
                     document.getElementById('verifyScreen').style.display = 'none';
-                    
                     if(sessionStorage.getItem('isAdminLogged') === 'true') {
                         document.getElementById('adminPanel').style.display = 'block';
                         initAdmin();
@@ -396,10 +457,9 @@
                 document.getElementById('verifyScreen').innerHTML = '<h1 style="color:#ff3333; font-family:\'Oswald\', sans-serif; letter-spacing:4px;">CONNECTION ERROR</h1>';
             }
         }
-
         window.onload = verifyConnection;
 
-        // إعدادات فايربيس
+        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -434,12 +494,13 @@
         function initAdmin() {
             listenToOrders(); 
             listenToInventory(); 
+            listenToAccessories();
             loadAboutData(); 
             loadDropData();
             startOnlineUsersSimulation();
         }
 
-        // ================= التحليلات البيانية (Analytics Logic) =================
+        // ================= التحليلات البيانية =================
         let statusChartInstance = null;
         let salesChartInstance = null;
 
@@ -482,7 +543,6 @@
             document.getElementById('statOrders').innerText = orders.length;
             document.getElementById('statAvgOrder').innerText = validOrders > 0 ? Math.round(totalRevenue / validOrders).toLocaleString() + ' EGP' : '0 EGP';
             
-            // خوارزمية حساب الزيارات التقريبية (كل طلب يقابله تقريباً 18 زيارة في المتوسط)
             let estimatedVisits = (orders.length * 18) + 125; 
             document.getElementById('statVisits').innerText = estimatedVisits.toLocaleString();
 
@@ -529,37 +589,24 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: { 
-                        y: { 
-                            beginAtZero: true, 
-                            grid: { color: '#222' }, 
-                            ticks: { color: '#888', font: { family: 'Oswald' } } 
-                        },
-                        x: { 
-                            grid: { display: false }, 
-                            ticks: { color: '#888', font: { family: 'Oswald' } } 
-                        }
+                        y: { beginAtZero: true, grid: { color: '#222' }, ticks: { color: '#888', font: { family: 'Oswald' } } },
+                        x: { grid: { display: false }, ticks: { color: '#888', font: { family: 'Oswald' } } }
                     },
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: { titleFont: { family: 'Oswald' }, bodyFont: { family: 'Oswald' } }
-                    }
+                    plugins: { legend: { display: false } }
                 }
             });
         }
 
-        // تحديث المتواجدين حالياً بشكل ديناميكي (Simulation)
         function startOnlineUsersSimulation() {
             function updateOnline() {
-                // توليد رقم عشوائي للمتواجدين بين 2 و 9
                 const onlineCount = Math.floor(Math.random() * (9 - 2 + 1)) + 2;
                 document.getElementById('statOnline').innerText = onlineCount + ' 🟢';
             }
             updateOnline();
-            // تحديث الرقم كل 10 إلى 15 ثانية للإيحاء بالحركة الحية
             setInterval(updateOnline, 12000);
         }
 
-        // ================= إدارة الطلبات المطورة =================
+        // ================= إدارة الطلبات والطباعة =================
         let loadedOrders = []; 
 
         function listenToOrders() {
@@ -594,7 +641,8 @@
                                 <img src="${item.image}" style="width:40px; height:50px; object-fit:cover; border:1px solid #333; border-radius:2px;">
                                 <div style="text-align:right; font-size:12px; line-height:1.4;">
                                     <strong style="color:var(--accent-yellow); font-family:'Oswald', sans-serif; font-size:14px;">${item.name}</strong><br>
-                                    مقاس: ${item.size}
+                                    مقاس/نوع: ${item.size || 'N/A'}
+                                    ${item.customDetails ? `<br><small style="color:#2ecc71;">تخصيص: ${item.customDetails}</small>` : ''}
                                 </div>
                             </div>`;
                     });
@@ -605,16 +653,8 @@
                         phonesHtml += `<br><small style="color:#aaa;">بديل: ${order.customerInfo.altPhone}</small>`;
                     }
 
-                    let paymentMethod = 'غير محدد';
-                    let paymentTxIDHtml = '';
-                    
-                    if(order.paymentInfo) {
-                        paymentMethod = order.paymentInfo.method;
-                        if(order.paymentInfo.transactionID) {
-                            paymentTxIDHtml = `<br><span style="color:#aaa; font-size:11px;">إيصال/رقم: ${order.paymentInfo.transactionID}</span>`;
-                        }
-                    }
-                    
+                    let paymentMethod = order.paymentInfo ? order.paymentInfo.method : 'غير محدد';
+                    let paymentTxIDHtml = (order.paymentInfo && order.paymentInfo.transactionID) ? `<br><span style="color:#aaa; font-size:11px;">إيصال: ${order.paymentInfo.transactionID}</span>` : '';
                     let paymentStatus = order.paymentStatus || 'غير مدفوع';
                     
                     let financeHtml = `
@@ -671,10 +711,7 @@
         window.updatePaymentStatus = async function(orderId, newStatus) {
             try {
                 await db.collection("orders").doc(orderId).update({ paymentStatus: newStatus });
-            } catch (error) {
-                console.error("خطأ:", error);
-                alert("حدث خطأ أثناء تحديث حالة الدفع.");
-            }
+            } catch (error) { alert("حدث خطأ أثناء تحديث حالة الدفع."); }
         }
 
         window.printOrder = function(orderId) {
@@ -683,16 +720,13 @@
 
             let itemsHtml = '';
             order.items.forEach(item => {
-                itemsHtml += `<tr><td>${item.name}</td><td>${item.size}</td><td>${item.price} ج.م</td></tr>`;
+                itemsHtml += `<tr><td>${item.name} ${item.customDetails ? `(${item.customDetails})` : ''}</td><td>${item.size || 'Accessory'}</td><td>${item.price} ج.م</td></tr>`;
             });
 
             let paymentStatus = order.paymentStatus || 'غير مدفوع';
-            let collectAmountHtml = '';
-            if(paymentStatus === 'مدفوع') {
-                collectAmountHtml = `<div class="total" style="background:#e6ffe6; border: 2px solid #00cc00; padding:10px;">🟢 الأوردر مدفوع مسبقاً - لا تقم بتحصيل أموال من العميل (غير رسوم الشحن إن وُجدت)</div>`;
-            } else {
-                collectAmountHtml = `<div class="total" style="background:#fff; padding:10px;">المطلوب تحصيله من العميل: ${order.totalAmount} ج.م (بالإضافة لرسوم الشحن)</div>`;
-            }
+            let collectAmountHtml = (paymentStatus === 'مدفوع')
+                ? `<div class="total" style="background:#e6ffe6; border: 2px solid #00cc00; padding:10px;">🟢 الأوردر مدفوع مسبقاً - لا تقم بتحصيل أموال من العميل (غير رسوم الشحن إن وُجدت)</div>`
+                : `<div class="total" style="background:#fff; padding:10px;">المطلوب تحصيله من العميل: ${order.totalAmount} ج.م (بالإضافة لرسوم الشحن)</div>`;
 
             const printWindow = window.open('', '_blank', 'width=800,height=600');
             printWindow.document.write(`
@@ -729,16 +763,10 @@
                             <tr><th>القطعة</th><th>المقاس</th><th>السعر</th></tr>
                             ${itemsHtml}
                         </table>
-                        
                         ${collectAmountHtml}
-
-                        <div class="footer">
-                            شكراً لثقتكم بنا ✦ UNOVERSE ARCHIVE
-                        </div>
+                        <div class="footer">شكراً لثقتكم بنا ✦ UNOVERSE ARCHIVE</div>
                     </div>
-                    <script>
-                        window.onload = function() { window.print(); }
-                    <\/script>
+                    <script>window.onload = function() { window.print(); }<\/script>
                 </body>
                 </html>
             `);
@@ -746,34 +774,187 @@
         }
 
         window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('تم نسخ رابط التتبع للعميل بنجاح! ✦');
-            }).catch(err => {
-                console.error('خطأ في النسخ', err);
-            });
+            navigator.clipboard.writeText(text).then(() => alert('تم نسخ رابط التتبع للعميل بنجاح! ✦'));
         }
 
         async function updateOrderStatus(orderId, newStatus) {
             try {
                 await db.collection("orders").doc(orderId).update({ status: newStatus });
-            } catch (error) {
-                console.error("خطأ في تحديث الحالة:", error);
-                alert("فشل تحديث حالة الطلب.");
-            }
+            } catch (error) { alert("فشل تحديث حالة الطلب."); }
         }
 
         async function deleteOrder(orderId) {
             if(confirm("هل أنت متأكد من حذف هذا الطلب نهائياً؟ لا يمكن التراجع عن هذه الخطوة.")) {
-                try {
-                    await db.collection("orders").doc(orderId).delete();
-                } catch (error) {
-                    console.error("خطأ في الحذف:", error);
-                    alert("فشل حذف الطلب.");
-                }
+                try { await db.collection("orders").doc(orderId).delete(); } catch (error) { alert("فشل حذف الطلب."); }
             }
         }
 
-        // ================= الأكواد السابقة =================
+        // ================= إدارة الصور والمعارض =================
+        let currentProdImages = [];
+        let currentAccImages = [];
+        let dropImage = "";
+
+        function addFromUrl(type) {
+            if (type === 'products') {
+                const url = document.getElementById('urlInput').value.trim();
+                if (url) { currentProdImages.push(url); document.getElementById('urlInput').value = ''; renderGallery('products'); }
+            } else if (type === 'accessories') {
+                const url = document.getElementById('accUrlInput').value.trim();
+                if (url) { currentAccImages.push(url); document.getElementById('accUrlInput').value = ''; renderGallery('accessories'); }
+            } else {
+                const url = document.getElementById('dropUrlInput').value.trim();
+                if (url) { dropImage = url; document.getElementById('dropUrlInput').value = ''; renderGallery('drop'); }
+            }
+        }
+
+        function addFromFile(e, type) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    if (type === 'products') { currentProdImages.push(evt.target.result); renderGallery('products'); }
+                    else if (type === 'accessories') { currentAccImages.push(evt.target.result); renderGallery('accessories'); }
+                    else { dropImage = evt.target.result; renderGallery('drop'); }
+                };
+                reader.readAsDataURL(file);
+                e.target.value = '';
+            }
+        }
+
+        function removeGalleryImage(idx, type) {
+            if (type === 'products') { currentProdImages.splice(idx, 1); renderGallery('products'); }
+            else if (type === 'accessories') { currentAccImages.splice(idx, 1); renderGallery('accessories'); }
+            else { dropImage = ""; renderGallery('drop'); }
+        }
+
+        function renderGallery(type) {
+            if (type === 'products') {
+                const box = document.getElementById('imageGallery'); box.innerHTML = '';
+                currentProdImages.forEach((src, i) => {
+                    box.innerHTML += `<div class="preview-container"><img src="${src}" class="preview-img"><button type="button" class="remove-img" onclick="removeGalleryImage(${i}, 'products')">✕</button></div>`;
+                });
+            } else if (type === 'accessories') {
+                const box = document.getElementById('accImageGallery'); box.innerHTML = '';
+                currentAccImages.forEach((src, i) => {
+                    box.innerHTML += `<div class="preview-container"><img src="${src}" class="preview-img"><button type="button" class="remove-img" onclick="removeGalleryImage(${i}, 'accessories')">✕</button></div>`;
+                });
+            } else {
+                const box = document.getElementById('dropImageGallery'); box.innerHTML = '';
+                if (dropImage) box.innerHTML = `<div class="preview-container"><img src="${dropImage}" class="preview-img"><button type="button" class="remove-img" onclick="removeGalleryImage(0, 'drop')">✕</button></div>`;
+            }
+        }
+
+        // ================= إدارة الإكسسوارات (إضافة وتعديل وحذف) =================
+        let loadedAccessories = [];
+        let editingAccessoryId = null;
+
+        async function saveAccessory(e) {
+            e.preventDefault();
+            if (currentAccImages.length === 0) { alert("يجب إضافة صورة واحدة على الأقل للإكسسوار!"); return; }
+
+            const btn = document.getElementById('accSubmitBtn'); btn.disabled = true;
+
+            const accData = {
+                name: document.getElementById('accName').value.trim(),
+                price: parseFloat(document.getElementById('accPrice').value),
+                discount: document.getElementById('accDiscount').value ? parseFloat(document.getElementById('accDiscount').value) : parseFloat(document.getElementById('accPrice').value),
+                stock: parseInt(document.getElementById('accStock').value) || 0,
+                allowCustomDesign: document.getElementById('accAllowCustom').checked,
+                customDesignPrice: parseFloat(document.getElementById('accCustomPrice').value) || 0,
+                image: currentAccImages[0],
+                gallery: currentAccImages,
+                description: document.getElementById('accDesc').value.trim(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                if (editingAccessoryId) {
+                    await db.collection("accessories").doc(editingAccessoryId).update(accData);
+                    alert("تم تعديل قطعة الإكسسوار بنجاح!");
+                } else {
+                    accData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection("accessories").add(accData);
+                    alert("تمت إضافة قطعة الإكسسوار بنجاح!");
+                }
+                cancelAccEdit();
+            } catch (err) {
+                alert("حدث خطأ أثناء الحفظ!");
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function listenToAccessories() {
+            const tbody = document.getElementById('accessoriesBody');
+            db.collection("accessories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                tbody.innerHTML = ''; loadedAccessories = [];
+                let accCount = 0;
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888;">لا توجد إكسسوارات مسجلة.</td></tr>';
+                    document.getElementById('statAccessories').innerText = 0;
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    accCount++;
+                    const acc = doc.data(); acc.id = doc.id;
+                    loadedAccessories.push(acc);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><img src="${acc.image || (acc.gallery ? acc.gallery[0] : '')}"></td>
+                            <td style="color:#fff;">${acc.name}</td>
+                            <td>${acc.discount < acc.price ? acc.discount : acc.price} ج.م</td>
+                            <td><strong style="color:${acc.stock > 0 ? '#2ecc71' : '#ff3333'}">${acc.stock}</strong></td>
+                            <td>${acc.allowCustomDesign ? `+${acc.customDesignPrice} ج.م` : 'غير مفعل'}</td>
+                            <td>
+                                <button class="action-btn edit-btn" onclick="editAccessory('${acc.id}')">تعديل</button>
+                                <button class="action-btn delete-btn" onclick="deleteAccessory('${doc.id}')">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                document.getElementById('statAccessories').innerText = accCount;
+            });
+        }
+
+        function editAccessory(id) {
+            const acc = loadedAccessories.find(a => a.id === id);
+            if (!acc) return;
+
+            editingAccessoryId = id;
+            document.getElementById('accName').value = acc.name;
+            document.getElementById('accPrice').value = acc.price;
+            document.getElementById('accDiscount').value = acc.discount !== acc.price ? acc.discount : '';
+            document.getElementById('accStock').value = acc.stock;
+            document.getElementById('accAllowCustom').checked = acc.allowCustomDesign || false;
+            document.getElementById('customPriceGroup').style.display = acc.allowCustomDesign ? 'block' : 'none';
+            document.getElementById('accCustomPrice').value = acc.customDesignPrice || '';
+            document.getElementById('accDesc').value = acc.description || '';
+
+            currentAccImages = acc.gallery && acc.gallery.length > 0 ? [...acc.gallery] : (acc.image ? [acc.image] : []);
+            renderGallery('accessories');
+
+            document.getElementById('accSubmitBtn').innerText = "تحديث بيانات الإكسسوار";
+            document.getElementById('cancelAccEditBtn').style.display = "block";
+            window.scrollTo(0, document.getElementById('addAccessoryForm').offsetTop - 100);
+        }
+
+        function cancelAccEdit() {
+            editingAccessoryId = null;
+            document.getElementById('addAccessoryForm').reset();
+            currentAccImages = [];
+            renderGallery('accessories');
+            document.getElementById('customPriceGroup').style.display = 'none';
+            document.getElementById('accSubmitBtn').innerText = "إضافة قطعة الإكسسوار";
+            document.getElementById('cancelAccEditBtn').style.display = "none";
+        }
+
+        async function deleteAccessory(id) {
+            if (confirm("هل أنت متأكد من حذف هذه القطعة؟")) {
+                await db.collection("accessories").doc(id).delete();
+            }
+        }
+
+        // ================= باقي العمليات =================
         async function loadAboutData() {
             try {
                 const doc = await db.collection("settings").doc("about").get();
@@ -786,52 +967,6 @@
                 await db.collection("settings").doc("about").set({ text: document.getElementById('aboutInput').value }, { merge: true });
                 alert("تم التحديث بنجاح!");
             } catch (error) { alert("خطأ!"); } finally { btn.innerText = "حفظ وتحديث النص"; btn.disabled = false; }
-        }
-
-        let currentImages = []; 
-        let dropImage = ""; 
-        let editingProductId = null; 
-
-        function addFromUrl(type) {
-            if(type === 'products') {
-                const url = document.getElementById('urlInput').value.trim();
-                if (url) { currentImages.push(url); document.getElementById('urlInput').value = ''; renderGallery('products'); }
-            } else {
-                const url = document.getElementById('dropUrlInput').value.trim();
-                if (url) { dropImage = url; document.getElementById('dropUrlInput').value = ''; renderGallery('drop'); }
-            }
-        }
-
-        function addFromFile(event, type) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) { 
-                    if(type === 'products') { currentImages.push(e.target.result); renderGallery('products'); }
-                    else { dropImage = e.target.result; renderGallery('drop'); }
-                }
-                reader.readAsDataURL(file);
-                event.target.value = ''; 
-            }
-        }
-
-        function removeImage(index, type) {
-            if(type === 'products') { currentImages.splice(index, 1); renderGallery('products'); }
-            else { dropImage = ""; renderGallery('drop'); }
-        }
-
-        function renderGallery(type) {
-            if(type === 'products') {
-                const gallery = document.getElementById('imageGallery'); gallery.innerHTML = '';
-                currentImages.forEach((imgSrc, index) => {
-                    gallery.innerHTML += `<div class="preview-container"><img src="${imgSrc}" class="preview-img"><button type="button" class="remove-img" onclick="removeImage(${index}, 'products')">✕</button></div>`;
-                });
-            } else {
-                const gallery = document.getElementById('dropImageGallery'); gallery.innerHTML = '';
-                if(dropImage !== "") {
-                    gallery.innerHTML = `<div class="preview-container"><img src="${dropImage}" class="preview-img"><button type="button" class="remove-img" onclick="removeImage(0, 'drop')">✕</button></div>`;
-                }
-            }
         }
 
         async function loadDropData() {
@@ -848,7 +983,7 @@
         }
 
         async function saveDropData() {
-            const btn = document.getElementById('dropSaveBtn'); btn.innerText = "جاري الحفظ..."; btn.disabled = true;
+            const btn = document.getElementById('dropSaveBtn'); btn.disabled = true;
             try {
                 await db.collection("settings").doc("drop").set({
                     active: document.getElementById('dropActiveToggle').checked,
@@ -862,7 +997,7 @@
 
         async function saveProduct(e) {
             e.preventDefault();
-            if(currentImages.length === 0) { alert("يجب إضافة صورة!"); return; }
+            if(currentProdImages.length === 0) { alert("يجب إضافة صورة!"); return; }
             const sizeCheckboxes = document.querySelectorAll('input[name="prodSizes"]:checked');
             let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
             if(selectedSizes.length === 0) { alert("يجب اختيار مقاس!"); return; }
@@ -875,7 +1010,7 @@
                 sizes: selectedSizes,
                 description: document.getElementById('prodDescription').value,
                 tickerText: document.getElementById('prodTickerText').value,
-                image: currentImages[0], gallery: currentImages,
+                image: currentProdImages[0], gallery: currentProdImages,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
@@ -887,7 +1022,7 @@
             } catch (error) { alert("حدث خطأ!"); } finally { submitBtn.disabled = false; }
         }
 
-        let loadedProducts = [];
+        let loadedProducts = [], editingProductId = null;
         function listenToInventory() {
             const tbody = document.getElementById('inventoryBody');
             db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
@@ -909,7 +1044,6 @@
                         </tr>
                     `;
                 });
-                
                 document.getElementById('statProducts').innerText = loadedProducts.length;
             });
         }
@@ -927,12 +1061,12 @@
             document.getElementById('prodDescription').value = prod.description || ''; 
             document.getElementById('prodTickerText').value = prod.tickerText || ''; 
             document.querySelectorAll('input[name="prodSizes"]').forEach(cb => cb.checked = prod.sizes && prod.sizes.includes(cb.value));
-            currentImages = prod.gallery ? [...prod.gallery] : [prod.image]; renderGallery('products');
+            currentProdImages = prod.gallery ? [...prod.gallery] : [prod.image]; renderGallery('products');
             editingProductId = id; document.getElementById('submitBtn').innerText = "تحديث بيانات القطعة"; document.getElementById('cancelEditBtn').style.display = "block"; window.scrollTo(0,0);
         }
 
         function cancelEdit() {
-            editingProductId = null; document.getElementById('addProductForm').reset(); currentImages = []; renderGallery('products');
+            editingProductId = null; document.getElementById('addProductForm').reset(); currentProdImages = []; renderGallery('products');
             document.getElementById('submitBtn').innerText = "إضافة القطعة"; document.getElementById('cancelEditBtn').style.display = "none";
         }
     </script>

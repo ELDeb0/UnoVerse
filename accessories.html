@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnoVerse | THE ACCESSORIES ARCHIVE</title>
+    
+    <link rel="icon" type="image/png" href="icon.png">
+    
+    <!-- مكتبات Firebase السحابية -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- خطوط UnoVerse -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Tajawal:wght@300;400;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-deep: #04060A;       
+            --bg-card: #080C14;       
+            --text-cream: #E6E1D6;    
+            --text-muted: #6B8096;    
+            --accent-blue: #4A6B8C;   
+            --line-color: rgba(230, 225, 214, 0.08); 
+        }
+
+        /* إخفاء الماوس الأصلي بشكل إجباري وقاطع */
+        html, body, *, *::before, *::after, *:hover, *:active, *:focus, a, button, input, textarea, select, label { 
+            cursor: none !important; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
+        body { 
+            background-color: var(--bg-deep); 
+            color: var(--text-cream); 
+            font-family: 'Tajawal', sans-serif; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased; 
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            -webkit-touch-callout: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='400' cy='400' r='399' fill='none' stroke='%23E6E1D6' stroke-opacity='0.03' stroke-width='1' stroke-dasharray='4 12'/%3E%3Ccircle cx='400' cy='400' r='200' fill='none' stroke='%23E6E1D6' stroke-opacity='0.02' stroke-width='1' stroke-dasharray='4 12'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+        button, a { pointer-events: auto; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+
+        /* النسيج السينمائي */
+        .cinematic-grain { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            pointer-events: none; z-index: 99998; opacity: 0.05; 
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
+            will-change: transform; transform: translateZ(0); 
+        }
+
+        /* الماوس المخصص */
+        .cursor-wrapper { 
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; 
+            will-change: transform; mix-blend-mode: exclusion; transition: opacity 0.3s ease;
+        }
+        .cursor-dot { 
+            width: 12px; height: 12px; background-color: var(--text-cream); border-radius: 50%;
+            transform: translate(-50%, -50%) scale(1); 
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease; 
+        }
+        .cursor-wrapper.hovered .cursor-dot { 
+            transform: translate(-50%, -50%) scale(4); 
+            background-color: transparent; border: 1px solid var(--text-cream); box-shadow: none; 
+        }
+
+        /* الهيدر */
+        .main-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
+            z-index: 9999; background: rgba(4, 6, 10, 0.95); border-bottom: 1px solid var(--line-color);
+            backdrop-filter: blur(15px);
+        }
+        .main-header .logo { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; text-decoration: none; color: var(--text-cream); display: flex; align-items: center; height: 100%; }
+        .main-header .logo span { color: var(--text-muted); font-weight: 300;}
+        .main-nav ul { display: flex; gap: 40px; list-style: none; }
+        .main-nav ul li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 300; letter-spacing: 4px; transition: 0.3s; opacity: 0.7; text-transform: uppercase;}
+        .main-nav ul li a:hover, .main-nav ul li a.active { opacity: 1; color: #fff;}
+        .header-actions { display: flex; gap: 30px; }
+        .action-link { color: var(--text-cream); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 12px; letter-spacing: 3px; opacity: 0.8; transition: 0.3s;}
+        .action-link:hover { opacity: 1; }
+
+        /* السلة */
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        .cart-overlay.active { opacity: 1; visibility: visible; }
+        .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
+        .cart-drawer.active { transform: translate3d(0, 0, 0); }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 20px; margin-bottom: 20px;}
+        .cart-header h3 { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 6px; color: var(--text-cream); font-weight: 300;}
+        .close-cart { font-size: 24px; color: var(--text-muted); cursor: pointer !important;}
+        .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;}
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 15px; }
+        .cart-item img { border: 1px solid var(--line-color); width: 60px; height: 75px; object-fit: cover;}
+        .cart-footer { border-top: 1px solid var(--line-color); padding-top: 25px; margin-top: 20px;}
+        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream);}
+        .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
+
+        /* شبكة الإكسسوارات */
+        .catalog-container { padding: 140px 6% 100px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 10;}
+        .page-header { text-align: center; margin-bottom: 60px; }
+        .page-header h1 { font-family: 'Oswald', sans-serif; font-size: clamp(35px, 5vw, 65px); font-weight: 700; letter-spacing: 5px; color: var(--text-cream); text-transform: uppercase; margin-bottom: 15px;}
+        .page-header p { font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--text-muted); letter-spacing: 8px; text-transform: uppercase;}
+
+        .accessories-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 40px; width: 100%;
+        }
+        .accessory-card {
+            display: flex; flex-direction: column; text-decoration: none;
+            background: var(--bg-card); border: 1px solid var(--line-color);
+            padding: 20px; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
+        }
+        .accessory-card:hover { transform: translateY(-8px); border-color: var(--text-cream); }
+        .accessory-img-box { width: 100%; aspect-ratio: 1/1; overflow: hidden; position: relative; margin-bottom: 20px; background: #04060A; display: flex; align-items: center; justify-content: center;}
+        .accessory-img-box img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s ease;}
+        .accessory-card:hover .accessory-img-box img { transform: scale(1.05); }
+
+        .overlay-badge { 
+            position: absolute; top: 12px; left: 12px; font-family: 'Oswald', sans-serif; 
+            font-size: 9px; padding: 5px 12px; font-weight: 700; z-index: 4; 
+            text-transform: uppercase; letter-spacing: 2px; 
+        }
+        .overlay-badge.available { background: rgba(4, 6, 10, 0.85); color: var(--text-cream); border: 1px solid var(--text-cream); backdrop-filter: blur(4px);}
+        .overlay-badge.sold-out { background: rgba(255, 51, 51, 0.85); color: #fff; border: 1px solid #ff3333; backdrop-filter: blur(4px);}
+
+        .acc-info { display: flex; flex-direction: column; gap: 10px; }
+        .acc-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--line-color); padding-bottom: 12px;}
+        .acc-top h3 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 16px; text-transform: uppercase; font-weight: 400; letter-spacing: 2px;}
+        .acc-top .price { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 1px;}
+        .acc-top .price .old { text-decoration: line-through; color: var(--text-muted); font-size: 11px; margin-left: 8px;}
+        
+        .acc-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .acc-bottom span { font-size: 10px; color: var(--text-muted); font-family: 'Oswald', sans-serif; letter-spacing: 2px;}
+        .acc-bottom .view-btn { font-size: 10px; color: var(--text-cream); font-family: 'Oswald', sans-serif; letter-spacing: 2px; border-bottom: 1px solid var(--text-cream); padding-bottom: 2px;}
+
+        /* الفوتر */
+        .main-footer { padding: 80px 6% 40px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 80px;}
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; margin-bottom: 60px; }
+        .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; color: var(--text-cream); margin-bottom: 20px;}
+        .footer-brand h2 span { color: var(--text-muted); font-weight: 300;}
+        .footer-brand p { color: var(--text-muted); font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 4px; line-height: 2.5; text-transform: uppercase;}
+        .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 30px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 6px; text-transform: uppercase;}
+
+        @media (max-width: 768px) {
+            .main-nav { display: none; }
+            .catalog-container { padding-top: 110px; }
+            .cursor-wrapper { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-grain"></div>
+    <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
+
+    <!-- السلة الجانبية -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3>CART.</h3>
+            <span class="close-cart" id="closeCart">✕</span>
+        </div>
+        <div class="cart-items" id="cartItemsContainer"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>TOTAL</span>
+                <span id="cartTotalPrice">0 EGP</span>
+            </div>
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">CHECKOUT</button>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <a href="index.html" class="logo" dir="ltr">UNO<span>VERSE</span></a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html#collection">ARCHIVE</a></li>
+                <li><a href="accessories.html" class="active">ACCESSORIES</a></li>
+                <li><a href="index.html#support">SUPPORT</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <a href="#" id="openCart" class="action-link">CART [<span id="cartBadge">0</span>]</a>
+        </div>
+    </header>
+
+    <main class="catalog-container">
+        <div class="page-header">
+            <h1>ACCESSORIES //</h1>
+            <p>TIMELESS OBJECTS TO COMPLETE THE PIECE</p>
+        </div>
+
+        <div class="accessories-grid" id="accessoriesGrid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 100px 0; color: var(--text-muted); font-family: 'Oswald'; letter-spacing: 4px;">
+                LOADING ACCESSORIES CATALOG...
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2><span dir="ltr">UNO<span>VERSE</span></span></h2>
+                <p>WE DON'T MAKE CLOTHES.<br>WE MAKE ARCHIVE PIECES.<br>1 OF 1 ONLY.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 UNOVERSE ARCHIVE. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
+            authDomain: "unoverse-5babd.firebaseapp.com",
+            projectId: "unoverse-5babd",
+            storageBucket: "unoverse-5babd.firebasestorage.app",
+            messagingSenderId: "543082257571",
+            appId: "1:543082257571:web:28b1d5931cbc75e6793316"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // حركة الماوس المخصص
+        const cursorWrapper = document.getElementById('cursorWrapper');
+        let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
+        if (!window.matchMedia("(max-width: 768px)").matches) {
+            document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
+                cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+        }
+
+        function addHover() { cursorWrapper.classList.add('hovered'); }
+        function removeHover() { cursorWrapper.classList.remove('hovered'); }
+        function attachCursorEffects() {
+            document.querySelectorAll('a, button, .accessory-card').forEach(el => {
+                el.removeEventListener('mouseenter', addHover);
+                el.removeEventListener('mouseleave', removeHover);
+                el.addEventListener('mouseenter', addHover);
+                el.addEventListener('mouseleave', removeHover);
+            });
+        }
+
+        // جلب الإكسسوارات من Firebase
+        function loadAllAccessories() {
+            db.collection("accessories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                const grid = document.getElementById('accessoriesGrid');
+                if (snapshot.empty) {
+                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:4px; padding: 100px 0;">NO ACCESSORIES IN ARCHIVE CURRENTLY.</p>';
+                    return;
+                }
+
+                grid.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const acc = doc.data();
+                    const price = parseFloat(acc.price) || 0;
+                    const discount = parseFloat(acc.discount) || price;
+                    const stock = parseInt(acc.stock) || 0;
+                    const isOut = stock <= 0;
+
+                    let priceDisplay = discount < price 
+                        ? `<span class="old">${price} EGP</span> <span>${discount} EGP</span>` 
+                        : `<span>${price} EGP</span>`;
+
+                    grid.innerHTML += `
+                        <a href="accessory.html?id=${doc.id}" class="accessory-card" dir="ltr">
+                            <div class="accessory-img-box">
+                                <img src="${acc.image}" alt="${acc.name}">
+                                <div class="overlay-badge ${isOut ? 'sold-out' : 'available'}">${isOut ? 'OUT OF STOCK' : 'AVAILABLE'}</div>
+                            </div>
+                            <div class="acc-info">
+                                <div class="acc-top">
+                                    <h3>${acc.name}</h3>
+                                    <p class="price">${priceDisplay}</p>
+                                </div>
+                                <div class="acc-bottom">
+                                    <span>${isOut ? 'ARCHIVED' : `STOCK // ${stock} PCS`}</span>
+                                    <span class="view-btn">VIEW DETAILS</span>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                });
+                attachCursorEffects();
+            });
+        }
+
+        // إدارة السلة
+        function updateCartUI() {
+            const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+            const container = document.getElementById('cartItemsContainer');
+            const badge = document.getElementById('cartBadge');
+            
+            if (badge) badge.innerText = cart.length;
+            if (!container) return;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:3px; margin-top:50px;">EMPTY CART.</p>';
+            } else {
+                container.innerHTML = cart.map((item, idx) => `
+                    <div class="cart-item">
+                        <img src="${item.image}">
+                        <div style="flex:1; padding:0 15px; text-align:left;">
+                            <h4 style="color:var(--text-cream); font-family:'Oswald'; font-weight:400; font-size:13px;">${item.name}</h4>
+                            <p style="color:var(--text-muted); font-size:12px; margin-top:5px; font-family:'Oswald';">${item.price} EGP</p>
+                        </div>
+                        <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
+                    </div>
+                `).join('');
+            }
+            const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+            document.getElementById('cartTotalPrice').innerText = total + ' EGP';
+        }
+
+        function removeFromCart(idx) {
+            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+            cart.splice(idx, 1);
+            localStorage.setItem('unoCart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllAccessories();
+            updateCartUI();
+            attachCursorEffects();
+
+            document.getElementById('openCart')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
+            document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+            document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>

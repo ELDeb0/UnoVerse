@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnoVerse | ARCHIVE DETAILS</title>
+    
+    <link rel="icon" type="image/png" href="icon.png">
+    
+    <!-- مكتبات Firebase السحابية -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- خطوط UnoVerse -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Tajawal:wght@300;400;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-deep: #04060A;       
+            --bg-card: #080C14;       
+            --text-cream: #E6E1D6;    
+            --text-muted: #6B8096;    
+            --accent-blue: #4A6B8C;   
+            --line-color: rgba(230, 225, 214, 0.08); 
+        }
+
+        html, body, *, *::before, *::after, *:hover, *:active, *:focus, a, button, input, textarea, select, label { 
+            cursor: none !important; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
+        body { 
+            background-color: var(--bg-deep); 
+            color: var(--text-cream); 
+            font-family: 'Tajawal', sans-serif; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased; 
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            -webkit-touch-callout: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='400' cy='400' r='399' fill='none' stroke='%23E6E1D6' stroke-opacity='0.03' stroke-width='1' stroke-dasharray='4 12'/%3E%3Ccircle cx='400' cy='400' r='200' fill='none' stroke='%23E6E1D6' stroke-opacity='0.02' stroke-width='1' stroke-dasharray='4 12'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+        button, a, input, textarea { pointer-events: auto; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+
+        .cinematic-grain { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            pointer-events: none; z-index: 99998; opacity: 0.05; 
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
+            will-change: transform; transform: translateZ(0); 
+        }
+
+        .cursor-wrapper { 
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; 
+            will-change: transform; mix-blend-mode: exclusion; transition: opacity 0.3s ease;
+        }
+        .cursor-dot { 
+            width: 12px; height: 12px; background-color: var(--text-cream); border-radius: 50%;
+            transform: translate(-50%, -50%) scale(1); 
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease; 
+        }
+        .cursor-wrapper.hovered .cursor-dot { 
+            transform: translate(-50%, -50%) scale(4); 
+            background-color: transparent; border: 1px solid var(--text-cream); box-shadow: none; 
+        }
+
+        .eng-typography-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 5vh; }
+        .eng-typography-bg .word-1 { font-family: 'Oswald', sans-serif; font-size: 18vw; font-weight: 700; color: rgba(132, 155, 179, 0.08); line-height: 0.8; white-space: nowrap; animation: smoothPanRight 45s linear infinite; transform: translateZ(0);}
+        .eng-typography-bg .word-2 { font-family: 'Playfair Display', serif; font-size: 15vw; font-weight: 900; font-style: italic; color: rgba(132, 155, 179, 0.05); line-height: 0.8; white-space: nowrap; animation: smoothPanLeft 55s linear infinite; transform: translateZ(0);}
+        @keyframes smoothPanRight { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(50%, 0, 0); } }
+        @keyframes smoothPanLeft { 0% { transform: translate3d(50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
+
+        .main-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
+            z-index: 9999; background: rgba(4, 6, 10, 0.95); border-bottom: 1px solid var(--line-color);
+            backdrop-filter: blur(15px);
+        }
+        .main-header .logo { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; text-decoration: none; color: var(--text-cream); display: flex; align-items: center; height: 100%; }
+        .main-header .logo span { color: var(--text-muted); font-weight: 300;}
+        .main-nav ul { display: flex; gap: 40px; list-style: none; }
+        .main-nav ul li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 300; letter-spacing: 4px; opacity: 0.7; transition: 0.3s; text-transform: uppercase;}
+        .main-nav ul li a:hover, .main-nav ul li a.active { opacity: 1; color: #fff;}
+        .header-actions { display: flex; gap: 30px; }
+        .action-link { color: var(--text-cream); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 12px; letter-spacing: 3px; opacity: 0.8; transition: 0.3s;}
+        .action-link:hover { opacity: 1; }
+
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        .cart-overlay.active { opacity: 1; visibility: visible; }
+        .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
+        .cart-drawer.active { transform: translate3d(0, 0, 0); }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 20px; margin-bottom: 20px;}
+        .cart-header h3 { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 6px; color: var(--text-cream); font-weight: 300;}
+        .close-cart { font-size: 24px; color: var(--text-muted); cursor: pointer !important;}
+        .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;}
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 15px; }
+        .cart-item img { border: 1px solid var(--line-color); width: 60px; height: 75px; object-fit: cover;}
+        .cart-footer { border-top: 1px solid var(--line-color); padding-top: 25px; margin-top: 20px;}
+        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream);}
+        .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
+
+        .product-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; min-height: 100vh; padding: 140px 6% 80px 6%; max-width: 1400px; margin: 0 auto; gap: 8%; }
+        
+        .product-info-panel { width: 45%; display: flex; flex-direction: column; }
+        .product-tag { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px;}
+        .product-name { font-family: 'Tajawal', sans-serif; font-size: clamp(32px, 4vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 20px; color: var(--text-cream); }
+        .product-price-box { font-family: 'Oswald', sans-serif; font-size: 30px; color: var(--text-cream); margin-bottom: 25px; letter-spacing: 2px;}
+        .product-price-box .old { font-size: 16px; color: var(--text-muted); text-decoration: line-through; margin-left: 12px;}
+        
+        .meta-specs { display: flex; gap: 30px; border-top: 1px solid var(--line-color); border-bottom: 1px solid var(--line-color); padding: 15px 0; margin-bottom: 30px;}
+        .spec-item { display: flex; flex-direction: column; gap: 5px;}
+        .spec-item .label { font-family: 'Oswald', sans-serif; font-size: 10px; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase;}
+        .spec-item .val { font-family: 'Oswald', sans-serif; font-size: 14px; color: var(--text-cream); font-weight: bold;}
+
+        .product-desc { font-size: 14px; line-height: 2.2; color: var(--text-muted); font-weight: 300; margin-bottom: 30px; }
+
+        .custom-design-card { background: var(--bg-card); border: 1px solid var(--line-color); padding: 20px; margin-bottom: 30px; }
+        .custom-header { display: flex; align-items: center; justify-content: space-between; }
+        .custom-header label { font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 2px; color: var(--text-cream); text-transform: uppercase;}
+        .custom-price-tag { color: var(--accent-blue); font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: bold;}
+        .custom-input-box { margin-top: 15px; display: none; }
+        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 12px; font-family: 'Tajawal', sans-serif; font-size: 13px; outline: none; resize: none; height: 75px;}
+
+        .btn-add-cart { width: 100%; padding: 20px; background: var(--text-cream); color: var(--bg-deep); border: 1px solid var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 6px; text-transform: uppercase; transition: 0.3s; }
+        .btn-add-cart:hover { background: transparent; color: var(--text-cream); }
+
+        .product-gallery-panel { width: 48%; display: flex; flex-direction: column; gap: 15px;}
+        .main-frame { width: 100%; aspect-ratio: 1/1; background: var(--bg-card); border: 1px solid var(--line-color); display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative;}
+        .main-frame img { width: 100%; height: 100%; object-fit: contain; }
+        .gallery-thumbs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;}
+        .thumb-item { width: 70px; height: 70px; border: 1px solid var(--line-color); cursor: pointer !important; overflow: hidden; background: var(--bg-card); opacity: 0.6; transition: 0.3s;}
+        .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
+        .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
+
+        @media (max-width: 992px) {
+            .product-wrapper { flex-direction: column-reverse; padding: 110px 5% 50px; gap: 40px; }
+            .product-info-panel, .product-gallery-panel { width: 100%; }
+            .cursor-wrapper { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-grain"></div>
+    <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
+
+    <div class="eng-typography-bg">
+        <div class="word-1">UNOVERSE</div>
+        <div class="word-2">ACCESSORIES ARCHIVE</div>
+    </div>
+
+    <!-- السلة الجانبية -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3>CART.</h3>
+            <span class="close-cart" id="closeCart">✕</span>
+        </div>
+        <div class="cart-items" id="cartItemsContainer"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>TOTAL</span>
+                <span id="cartTotalPrice">0 EGP</span>
+            </div>
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">CHECKOUT</button>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <a href="index.html" class="logo" dir="ltr">UNO<span>VERSE</span></a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html#collection">ARCHIVE</a></li>
+                <li><a href="accessories.html" class="active">ACCESSORIES</a></li>
+                <li><a href="index.html#support">SUPPORT</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <a href="#" id="openCart" class="action-link">CART [<span id="cartBadge">0</span>]</a>
+        </div>
+    </header>
+
+    <main id="accessoryContent">
+        <div style="text-align: center; padding: 250px 0; font-family: 'Oswald'; letter-spacing: 5px; color: var(--text-muted);">
+            LOADING ARCHIVE ACCESSORY...
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
+            authDomain: "unoverse-5babd.firebaseapp.com",
+            projectId: "unoverse-5babd",
+            storageBucket: "unoverse-5babd.firebasestorage.app",
+            messagingSenderId: "543082257571",
+            appId: "1:543082257571:web:28b1d5931cbc75e6793316"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const cursorWrapper = document.getElementById('cursorWrapper');
+        let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
+        if (!window.matchMedia("(max-width: 992px)").matches) {
+            document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * 0.25; cursorY += (mouseY - cursorY) * 0.25;
+                cursorWrapper.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+        }
+
+        function addHover() { cursorWrapper.classList.add('hovered'); }
+        function removeHover() { cursorWrapper.classList.remove('hovered'); }
+        function attachCursorEffects() {
+            document.querySelectorAll('a, button, input, textarea, label, .thumb-item').forEach(el => {
+                el.removeEventListener('mouseenter', addHover);
+                el.removeEventListener('mouseleave', removeHover);
+                el.addEventListener('mouseenter', addHover);
+                el.addEventListener('mouseleave', removeHover);
+            });
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessoryId = urlParams.get('id');
+        let accessoryData = null;
+        let basePrice = 0;
+        let currentFinalPrice = 0;
+
+        async function fetchAccessory() {
+            const wrapper = document.getElementById('accessoryContent');
+            if (!accessoryId) {
+                wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">NO ACCESSORY SELECTED.</h2>';
+                return;
+            }
+            try {
+                const doc = await db.collection("accessories").doc(accessoryId).get();
+                if (!doc.exists) {
+                    wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">ACCESSORY NOT FOUND.</h2>';
+                    return;
+                }
+                accessoryData = doc.data();
+                accessoryData.id = doc.id;
+                renderAccessory(accessoryData);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderAccessory(item) {
+            const wrapper = document.getElementById('accessoryContent');
+            const price = parseFloat(item.price) || 0;
+            const discount = parseFloat(item.discount) || price;
+            basePrice = discount < price ? discount : price;
+            currentFinalPrice = basePrice;
+
+            const stock = parseInt(item.stock) || 0;
+            const isOutOfStock = stock <= 0;
+
+            let priceDisplay = (discount < price)
+                ? `<span id="dynamicPrice">${discount} EGP</span> <span class="old">${price} EGP</span>`
+                : `<span id="dynamicPrice">${price} EGP</span>`;
+
+            let customDesignHTML = '';
+            if (item.allowCustomDesign) {
+                const extraPrice = parseFloat(item.customDesignPrice) || 0;
+                customDesignHTML = `
+                    <div class="custom-design-card">
+                        <div class="custom-header">
+                            <label style="display:flex; align-items:center; gap:10px;">
+                                <input type="checkbox" id="customCheck" onchange="toggleCustomDesign(${extraPrice})">
+                                <span>طلب نقش / تصميم مخصص (+${extraPrice} EGP)</span>
+                            </label>
+                            <span class="custom-price-tag">+${extraPrice} EGP</span>
+                        </div>
+                        <div class="custom-input-box" id="customInputBox">
+                            <textarea id="customNote" placeholder="اكتب تفاصيل النقش أو التخصيص المطلوب هنا بدقة..."></textarea>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const images = item.gallery && item.gallery.length > 0 ? item.gallery : [item.image];
+            let thumbsHTML = images.map((img, idx) => `
+                <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="setMainImage('${img}', this)">
+                    <img src="${img}" alt="thumbnail">
+                </div>
+            `).join('');
+
+            let btnHTML = isOutOfStock
+                ? `<button class="btn-add-cart" style="opacity:0.3; cursor:not-allowed !important;" disabled>OUT OF STOCK</button>`
+                : `<button class="btn-add-cart" onclick="addAccessoryToCart()">ADD TO CART</button>`;
+
+            wrapper.innerHTML = `
+                <div class="product-wrapper">
+                    <div class="product-info-panel">
+                        <div class="product-tag">ARCHIVE ACCESSORY // SPEC-0${stock}</div>
+                        <h1 class="product-name">${item.name}</h1>
+                        <div class="product-price-box">${priceDisplay}</div>
+
+                        <div class="meta-specs">
+                            <div class="spec-item">
+                                <span class="label">AVAILABILITY</span>
+                                <span class="val" style="color:${isOutOfStock ? '#ff3333' : '#2ecc71'}">${isOutOfStock ? 'SOLD OUT' : `${stock} PIECES`}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">EDITION</span>
+                                <span class="val">LIMITED CRAFT</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">AUTHENTICITY</span>
+                                <span class="val">100% VERIFIED</span>
+                            </div>
+                        </div>
+
+                        <p class="product-desc">${item.description || 'قطعة إكسسوار فريدة مصنعة يدوياً بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.'}</p>
+                        ${customDesignHTML}
+                        ${btnHTML}
+                    </div>
+
+                    <div class="product-gallery-panel">
+                        <div class="main-frame">
+                            <img id="mainDisplayImg" src="${images[0]}" alt="${item.name}">
+                        </div>
+                        ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
+                    </div>
+                </div>
+            `;
+
+            attachCursorEffects();
+        }
+
+        window.setMainImage = function(src, el) {
+            document.getElementById('mainDisplayImg').src = src;
+            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        };
+
+        function toggleCustomDesign(extraPrice) {
+            const check = document.getElementById('customCheck');
+            const box = document.getElementById('customInputBox');
+            const priceEl = document.getElementById('dynamicPrice');
+
+            if (check.checked) {
+                box.style.display = 'block';
+                currentFinalPrice = basePrice + extraPrice;
+            } else {
+                box.style.display = 'none';
+                currentFinalPrice = basePrice;
+            }
+            priceEl.innerText = `${currentFinalPrice} EGP`;
+        }
+
+        function addAccessoryToCart() {
+            if (!accessoryData || accessoryData.stock <= 0) return;
+
+            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+            const isCustom = document.getElementById('customCheck')?.checked || false;
+            const customDetails = isCustom ? document.getElementById('customNote').value.trim() : '';
+
+            const item = {
+                id: accessoryData.id,
+                name: accessoryData.name + (isCustom ? ' (Custom Engraved)' : ''),
+                price: currentFinalPrice,
+                image: accessoryData.image || (accessoryData.gallery ? accessoryData.gallery[0] : ''),
+                size: 'Accessory',
+                customDetails: customDetails,
+                type: 'accessory'
+            };
+
+            cart.push(item);
+            localStorage.setItem('unoCart', JSON.stringify(cart));
+            updateCartUI();
+
+            document.getElementById('cartDrawer').classList.add('active');
+            document.getElementById('cartOverlay').classList.add('active');
+        }
+
+        function updateCartUI() {
+            const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+            const container = document.getElementById('cartItemsContainer');
+            const badge = document.getElementById('cartBadge');
+            
+            if (badge) badge.innerText = cart.length;
+            if (!container) return;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-family:Oswald; letter-spacing:3px; margin-top:50px;">EMPTY CART.</p>';
+            } else {
+                container.innerHTML = cart.map((item, idx) => `
+                    <div class="cart-item">
+                        <img src="${item.image}">
+                        <div style="flex:1; padding:0 15px; text-align:left;">
+                            <h4 style="color:var(--text-cream); font-family:'Oswald'; font-weight:400; font-size:13px;">${item.name}</h4>
+                            <p style="color:var(--text-muted); font-size:12px; margin-top:5px; font-family:'Oswald';">${item.price} EGP</p>
+                        </div>
+                        <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:16px;">✕</button>
+                    </div>
+                `).join('');
+            }
+            const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+            document.getElementById('cartTotalPrice').innerText = total + ' EGP';
+        }
+
+        function removeFromCart(idx) {
+            let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+            cart.splice(idx, 1);
+            localStorage.setItem('unoCart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAccessory();
+            updateCartUI();
+            attachCursorEffects();
+
+            document.getElementById('openCart')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
+            document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+            document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>
