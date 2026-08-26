@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>UnoVerse | ARCHIVE ACCESSORY DETAILS</title>
     
     <link rel="icon" type="image/png" href="icon.png">
@@ -143,29 +143,26 @@
         .product-wrapper { 
             position: relative; 
             z-index: 10; 
-            display: flex; 
-            flex-direction: row;
-            align-items: flex-start; 
-            justify-content: space-between; 
-            min-height: 85vh; 
-            padding: 135px 6% 60px 6%; 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: start; 
+            min-height: 80vh; 
+            padding: 130px 6% 60px; 
             max-width: 1400px; 
             margin: 0 auto; 
             gap: 50px; 
         }
         
         .product-info-panel { 
-            flex: 1 1 50%;
-            width: 50%; 
             display: flex; 
             flex-direction: column; 
             text-align: right;
         }
-        .product-tag { font-family: 'Oswald', sans-serif; font-size: 11.5px; letter-spacing: 4px; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 10px; font-weight: 600;}
-        .product-name { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3.5vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 15px; color: var(--text-cream); letter-spacing: -1px; font-style: italic;}
+        .product-tag { font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 4px; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 10px; font-weight: 600;}
+        .product-name { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; line-height: 1.15; margin-bottom: 15px; color: var(--text-cream); letter-spacing: -1px; font-style: italic;}
         
-        .product-price-box { font-family: 'Oswald', sans-serif; font-size: clamp(24px, 2.5vw, 32px); color: var(--accent-gold); margin-bottom: 20px; letter-spacing: 2px; font-weight: 700;}
-        .product-price-box .old { font-size: 15px; color: var(--text-muted); text-decoration: line-through; margin-left: 10px; opacity: 0.7;}
+        .product-price-box { font-family: 'Oswald', sans-serif; font-size: 30px; color: var(--accent-gold); margin-bottom: 20px; letter-spacing: 2px; font-weight: 700;}
+        .product-price-box .old { font-size: 16px; color: var(--text-muted); text-decoration: line-through; margin-left: 10px; opacity: 0.7;}
         
         .meta-specs { 
             display: grid; 
@@ -173,70 +170,70 @@
             gap: 10px; 
             border-top: 1px solid var(--line-color); 
             border-bottom: 1px solid var(--line-color); 
-            padding: 12px 0; 
-            margin-bottom: 18px;
+            padding: 14px 0; 
+            margin-bottom: 20px;
         }
         .spec-item { display: flex; flex-direction: column; gap: 3px;}
-        .spec-item .label { font-family: 'Oswald', sans-serif; font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase;}
-        .spec-item .val { font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--text-cream); font-weight: 600; letter-spacing: 1px;}
+        .spec-item .label { font-family: 'Oswald', sans-serif; font-size: 9.5px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase;}
+        .spec-item .val { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--text-cream); font-weight: 600; letter-spacing: 1px;}
 
-        .product-desc { font-size: 13.5px; line-height: 1.9; color: #D1D9E0; font-weight: 400; margin-bottom: 20px; }
+        .product-desc { font-size: 14px; line-height: 2; color: #D1D9E0; font-weight: 400; margin-bottom: 20px; }
 
         .product-ticker-container {
             width: 100%; overflow: hidden; background: rgba(107, 154, 196, 0.1); 
-            border: 1px dashed var(--accent-blue); padding: 8px 12px; margin-bottom: 18px;
+            border: 1px dashed var(--accent-blue); padding: 8px 12px; margin-bottom: 20px;
         }
         .product-ticker-text {
-            font-family: 'Oswald', sans-serif; font-size: 10.5px; color: var(--text-cream); 
+            font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--text-cream); 
             letter-spacing: 3px; text-transform: uppercase; white-space: nowrap; animation: productTickerScroll 22s linear infinite; display: inline-block;
         }
         @keyframes productTickerScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        .custom-design-card { background: var(--bg-card); border: 1px solid var(--line-color); padding: 14px; margin-bottom: 18px; }
+        .custom-design-card { background: var(--bg-card); border: 1px solid var(--line-color); padding: 15px; margin-bottom: 20px; }
         .custom-header { display: flex; align-items: center; justify-content: space-between; }
-        .custom-header label { font-family: 'Oswald', sans-serif; font-size: 11.5px; letter-spacing: 1.5px; color: var(--text-cream); text-transform: uppercase; font-weight: 500;}
-        .custom-price-tag { color: var(--accent-gold); font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: bold;}
+        .custom-header label { font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 1.5px; color: var(--text-cream); text-transform: uppercase; font-weight: 500;}
+        .custom-price-tag { color: var(--accent-gold); font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: bold;}
         .custom-input-box { margin-top: 10px; display: none; }
-        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 10px; font-family: 'Tajawal', sans-serif; font-size: 12px; outline: none; resize: none; height: 65px; user-select: text !important;}
+        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 10px; font-family: 'Tajawal', sans-serif; font-size: 13px; outline: none; resize: none; height: 65px; user-select: text !important;}
 
         .archive-perks-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 22px;
         }
         .perk-card {
             background: rgba(8, 12, 20, 0.7);
             border: 1px solid var(--line-color);
-            padding: 10px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
         }
         .perk-card .perk-title {
             font-family: 'Oswald', sans-serif;
-            font-size: 10px;
+            font-size: 11px;
             letter-spacing: 1.5px;
             color: var(--text-cream);
             text-transform: uppercase;
             font-weight: 600;
         }
         .perk-card .perk-sub {
-            font-size: 11px;
+            font-size: 11.5px;
             color: var(--text-muted);
             font-weight: 400;
         }
 
         .btn-add-cart { 
             width: 100%; 
-            padding: 16px; 
+            padding: 18px; 
             background: var(--text-cream); 
             color: var(--bg-deep); 
             border: 1px solid var(--text-cream); 
             font-family: 'Oswald', sans-serif; 
-            font-size: 13px; 
+            font-size: 14px; 
             font-weight: 700; 
-            letter-spacing: 4px; 
+            letter-spacing: 5px; 
             text-transform: uppercase; 
             transition: 0.3s; 
         }
@@ -244,9 +241,6 @@
 
         /* معرض الصور (شمال) - إطار ملائم لحجم الصورة تماماً */
         .product-gallery-panel { 
-            flex: 1 1 50%;
-            width: 50%; 
-            max-width: 580px;
             display: flex; 
             flex-direction: column; 
             gap: 12px;
@@ -283,9 +277,9 @@
         .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
 
-        /* قسم الاستكشاف */
+        /* قسم المقترحات */
         .related-section { 
-            padding: 40px 6% 25px; 
+            padding: 40px 6% 20px; 
             max-width: 1400px; 
             margin: 0 auto; 
             position: relative; 
@@ -316,7 +310,7 @@
             transition: 0.3s;
         }
         .related-card:hover { transform: translateY(-3px); border-color: var(--text-cream);}
-        .related-card img { width: 100%; aspect-ratio: 1/1; object-fit: contain; background: #020408; margin-bottom: 8px;}
+        .related-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #020408; margin-bottom: 8px;}
         .related-card h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
         .related-card p { color: var(--accent-gold); font-family: 'Oswald', sans-serif; font-size: 11px;}
 
@@ -333,11 +327,11 @@
         .social-links a:hover { color: var(--text-cream); padding-right: 5px;}
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 20px; font-family: 'Oswald', sans-serif; font-size: 9.5px; letter-spacing: 4px; text-transform: uppercase;}
 
-        /* ================= تحسين مخصص للهواتف الذكية (Mobile Layout) ================= */
+        /* ================= تحسين الموبايل: الصورة شمال + التفاصيل يمين جنباً إلى جنب ================= */
         @media (max-width: 768px) {
             .product-wrapper { 
                 display: flex !important;
-                flex-direction: row !important; /* الحفاظ على التفاصيل يمين والصورة شمال */
+                flex-direction: row !important; /* التفاصيل باليمين + الصورة باليسار */
                 align-items: flex-start !important;
                 padding: 85px 3% 25px !important; 
                 gap: 8px !important; 
@@ -345,20 +339,21 @@
             
             /* التفاصيل باليمين */
             .product-info-panel { 
-                width: 52% !important; 
-                flex: 0 0 52% !important;
+                width: 54% !important; 
+                flex: 0 0 54% !important;
+                text-align: right !important;
             }
             
             /* الصورة بالشمال */
             .product-gallery-panel { 
-                width: 48% !important; 
-                flex: 0 0 48% !important;
+                width: 46% !important; 
+                flex: 0 0 46% !important;
                 position: sticky !important;
                 top: 85px !important;
                 gap: 6px !important;
             }
             
-            /* ضبط الإطار ليكون على مقاس الصورة تماماً */
+            /* إطار الصورة بدون مساحات زائدة */
             .main-frame {
                 display: inline-flex !important;
                 width: fit-content !important;
@@ -546,7 +541,7 @@
             }, 500);
         })();
 
-        // حركة الماوس المخصص
+        // حركة الماوس
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100;
         let cursorX = -100, cursorY = -100;
