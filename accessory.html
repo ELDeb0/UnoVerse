@@ -61,7 +61,6 @@
             will-change: transform; transform: translateZ(0); 
         }
 
-        /* الماوس المخصص المعدل ليعمل بسلاسة وفورية */
         .cursor-wrapper { 
             position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; 
             will-change: transform; mix-blend-mode: exclusion;
@@ -76,7 +75,6 @@
             background-color: transparent; border: 1.5px solid var(--text-cream); 
         }
 
-        /* الكلام المتحرك بالخلفية */
         .eng-typography-bg { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             pointer-events: none; z-index: 0; overflow: hidden; 
@@ -95,7 +93,7 @@
         @keyframes smoothPanRight { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(50%, 0, 0); } }
         @keyframes smoothPanLeft { 0% { transform: translate3d(50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
 
-        /* الهيدر */
+        /* Header */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
             width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
@@ -126,7 +124,7 @@
         .mobile-nav-links li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 15px; letter-spacing: 4px; text-transform: uppercase; font-weight: 400; transition: 0.3s; display: inline-block; }
         .mobile-nav-footer p { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase; text-align: center; border-top: 1px solid var(--line-color); padding-top: 15px; }
 
-        /* السلة الجانبية */
+        /* Cart Drawer */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
@@ -141,29 +139,118 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream);}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
-        /* ================= التوزيع الجانبي: الصورة يمين - التفاصيل شمال ================= */
+        /* Side-by-Side Product Display Architecture (التفاصيل يمين + الصورة شمال) */
         .product-wrapper { 
             position: relative; 
             z-index: 10; 
             display: flex !important; 
-            flex-direction: row-reverse !important; /* يجعل الصورة في اليمين والتفاصيل في اليسار */
+            flex-direction: row !important;
             align-items: flex-start !important; 
             justify-content: space-between !important; 
             min-height: 85vh; 
             padding: 135px 6% 60px 6% !important; 
             max-width: 1400px; 
             margin: 0 auto; 
-            gap: 60px !important; 
+            gap: 40px !important; 
         }
         
-        /* قسم معرض الصور (يمين الشاشة) */
+        /* قسم التفاصيل والأسعار (يمين) */
+        .product-info-panel { 
+            flex: 1 1 50% !important;
+            width: 50% !important; 
+            display: flex; 
+            flex-direction: column; 
+            text-align: right;
+        }
+        .product-tag { font-family: 'Oswald', sans-serif; font-size: 11.5px; letter-spacing: 4px; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 10px; font-weight: 600;}
+        .product-name { font-family: 'Playfair Display', serif; font-size: clamp(26px, 3.5vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 15px; color: var(--text-cream); letter-spacing: -1px; font-style: italic;}
+        
+        .product-price-box { font-family: 'Oswald', sans-serif; font-size: clamp(24px, 2.5vw, 32px); color: var(--accent-gold); margin-bottom: 20px; letter-spacing: 2px; font-weight: 700;}
+        .product-price-box .old { font-size: 15px; color: var(--text-muted); text-decoration: line-through; margin-left: 10px; opacity: 0.7;}
+        
+        .meta-specs { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+            border-top: 1px solid var(--line-color); 
+            border-bottom: 1px solid var(--line-color); 
+            padding: 12px 0; 
+            margin-bottom: 18px;
+        }
+        .spec-item { display: flex; flex-direction: column; gap: 3px;}
+        .spec-item .label { font-family: 'Oswald', sans-serif; font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase;}
+        .spec-item .val { font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--text-cream); font-weight: 600; letter-spacing: 1px;}
+
+        .product-desc { font-size: 13.5px; line-height: 1.9; color: #D1D9E0; font-weight: 400; margin-bottom: 20px; }
+
+        .product-ticker-container {
+            width: 100%; overflow: hidden; background: rgba(107, 154, 196, 0.1); 
+            border: 1px dashed var(--accent-blue); padding: 8px 12px; margin-bottom: 18px;
+        }
+        .product-ticker-text {
+            font-family: 'Oswald', sans-serif; font-size: 10.5px; color: var(--text-cream); 
+            letter-spacing: 3px; text-transform: uppercase; white-space: nowrap; animation: productTickerScroll 22s linear infinite; display: inline-block;
+        }
+        @keyframes productTickerScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .custom-design-card { background: var(--bg-card); border: 1px solid var(--line-color); padding: 14px; margin-bottom: 18px; }
+        .custom-header { display: flex; align-items: center; justify-content: space-between; }
+        .custom-header label { font-family: 'Oswald', sans-serif; font-size: 11.5px; letter-spacing: 1.5px; color: var(--text-cream); text-transform: uppercase; font-weight: 500;}
+        .custom-price-tag { color: var(--accent-gold); font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: bold;}
+        .custom-input-box { margin-top: 10px; display: none; }
+        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 10px; font-family: 'Tajawal', sans-serif; font-size: 12px; outline: none; resize: none; height: 65px; user-select: text !important;}
+
+        .archive-perks-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .perk-card {
+            background: rgba(8, 12, 20, 0.7);
+            border: 1px solid var(--line-color);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .perk-card .perk-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: var(--text-cream);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .perk-card .perk-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .btn-add-cart { 
+            width: 100%; 
+            padding: 16px; 
+            background: var(--text-cream); 
+            color: var(--bg-deep); 
+            border: 1px solid var(--text-cream); 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 13px; 
+            font-weight: 700; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            transition: 0.3s; 
+        }
+        .btn-add-cart:hover { background: transparent; color: var(--text-cream); }
+
+        /* قسم معرض الصور (شمال) */
         .product-gallery-panel { 
             flex: 1 1 50% !important;
             width: 50% !important; 
             max-width: 580px !important;
             display: flex; 
             flex-direction: column; 
-            gap: 15px;
+            gap: 12px;
             position: sticky;
             top: 110px;
         }
@@ -180,110 +267,21 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .main-frame img { 
-            width: 88%; 
-            height: 88%; 
+            width: 90%; 
+            height: 90%; 
             object-fit: contain; 
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .main-frame:hover img { transform: scale(1.04); }
 
-        .gallery-thumbs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;}
-        .thumb-item { width: 70px; height: 70px; border: 1px solid var(--line-color); cursor: pointer !important; overflow: hidden; background: var(--bg-card); opacity: 0.6; transition: 0.3s; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
+        .gallery-thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px;}
+        .thumb-item { width: 60px; height: 60px; border: 1px solid var(--line-color); cursor: pointer !important; overflow: hidden; background: var(--bg-card); opacity: 0.6; transition: 0.3s; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
         .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
         .thumb-item img { width: 85%; height: 85%; object-fit: contain;}
 
-        /* قسم التفاصيل والأسعار (شمال الشاشة) */
-        .product-info-panel { 
-            flex: 1 1 45% !important;
-            width: 45% !important; 
-            display: flex; 
-            flex-direction: column; 
-            text-align: right;
-        }
-        .product-tag { font-family: 'Oswald', sans-serif; font-size: 11.5px; letter-spacing: 5px; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 12px; font-weight: 600;}
-        .product-name { font-family: 'Playfair Display', serif; font-size: clamp(30px, 3.8vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 18px; color: var(--text-cream); letter-spacing: -1px; font-style: italic;}
-        
-        .product-price-box { font-family: 'Oswald', sans-serif; font-size: 32px; color: var(--accent-gold); margin-bottom: 22px; letter-spacing: 2px; font-weight: 700;}
-        .product-price-box .old { font-size: 16px; color: var(--text-muted); text-decoration: line-through; margin-left: 12px; opacity: 0.7;}
-        
-        .meta-specs { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 12px; 
-            border-top: 1px solid var(--line-color); 
-            border-bottom: 1px solid var(--line-color); 
-            padding: 14px 0; 
-            margin-bottom: 22px;
-        }
-        .spec-item { display: flex; flex-direction: column; gap: 4px;}
-        .spec-item .label { font-family: 'Oswald', sans-serif; font-size: 9.5px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase;}
-        .spec-item .val { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--text-cream); font-weight: 600; letter-spacing: 1px;}
-
-        .product-desc { font-size: 14.5px; line-height: 2.1; color: #D1D9E0; font-weight: 400; margin-bottom: 22px; }
-
-        .product-ticker-container {
-            width: 100%; overflow: hidden; background: rgba(107, 154, 196, 0.1); 
-            border: 1px dashed var(--accent-blue); padding: 9px 14px; margin-bottom: 22px;
-        }
-        .product-ticker-text {
-            font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--text-cream); 
-            letter-spacing: 3px; text-transform: uppercase; white-space: nowrap; animation: productTickerScroll 22s linear infinite; display: inline-block;
-        }
-        @keyframes productTickerScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        .custom-design-card { background: var(--bg-card); border: 1px solid var(--line-color); padding: 18px; margin-bottom: 22px; }
-        .custom-header { display: flex; align-items: center; justify-content: space-between; }
-        .custom-header label { font-family: 'Oswald', sans-serif; font-size: 12.5px; letter-spacing: 2px; color: var(--text-cream); text-transform: uppercase; font-weight: 500;}
-        .custom-price-tag { color: var(--accent-gold); font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: bold;}
-        .custom-input-box { margin-top: 14px; display: none; }
-        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 12px; font-family: 'Tajawal', sans-serif; font-size: 13px; outline: none; resize: none; height: 75px; user-select: text !important;}
-
-        .archive-perks-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-        .perk-card {
-            background: rgba(8, 12, 20, 0.7);
-            border: 1px solid var(--line-color);
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .perk-card .perk-title {
-            font-family: 'Oswald', sans-serif;
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: var(--text-cream);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-        .perk-card .perk-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .btn-add-cart { 
-            width: 100%; 
-            padding: 20px; 
-            background: var(--text-cream); 
-            color: var(--bg-deep); 
-            border: 1px solid var(--text-cream); 
-            font-family: 'Oswald', sans-serif; 
-            font-size: 14px; 
-            font-weight: 700; 
-            letter-spacing: 5px; 
-            text-transform: uppercase; 
-            transition: 0.3s; 
-        }
-        .btn-add-cart:hover { background: transparent; color: var(--text-cream); }
-
-        /* قسم المقترحات */
+        /* قسم الاستكشاف والمقترحات (مضغوط ومناسب جداً للموبايل) */
         .related-section { 
-            padding: 50px 6% 30px; 
+            padding: 35px 5% 25px; 
             max-width: 1400px; 
             margin: 0 auto; 
             position: relative; 
@@ -292,53 +290,79 @@
         }
         .related-title { 
             font-family: 'Oswald', sans-serif; 
-            font-size: 12.5px; 
-            letter-spacing: 4px; 
+            font-size: 11px; 
+            letter-spacing: 3px; 
             color: var(--text-muted); 
-            margin-bottom: 25px; 
+            margin-bottom: 18px; 
             text-transform: uppercase; 
             text-align: center;
         }
         .related-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); 
-            gap: 20px; 
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            gap: 12px; 
         }
         .related-card { 
             background: var(--bg-card); 
             border: 1px solid var(--line-color); 
-            padding: 14px; 
+            padding: 8px; 
             text-decoration: none; 
             display: flex; 
             flex-direction: column; 
             transition: 0.3s;
         }
-        .related-card:hover { transform: translateY(-4px); border-color: var(--text-cream);}
-        .related-card img { width: 100%; aspect-ratio: 1/1; object-fit: contain; background: #020408; margin-bottom: 10px;}
-        .related-card h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;}
-        .related-card p { color: var(--accent-gold); font-family: 'Oswald', sans-serif; font-size: 12.5px;}
+        .related-card:hover { transform: translateY(-3px); border-color: var(--text-cream);}
+        .related-card img { width: 100%; aspect-ratio: 1/1; object-fit: contain; background: #020408; margin-bottom: 8px;}
+        .related-card h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
+        .related-card p { color: var(--accent-gold); font-family: 'Oswald', sans-serif; font-size: 11px;}
 
-        /* الفوتر */
-        .main-footer { padding: 70px 6% 35px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 40px;}
-        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 5px; color: var(--text-cream); margin-bottom: 15px;}
+        /* Footer */
+        .main-footer { padding: 50px 6% 30px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 30px;}
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px; margin-bottom: 30px; }
+        .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 4px; color: var(--text-cream); margin-bottom: 10px;}
         .footer-brand h2 span { color: var(--text-muted); font-weight: 300;}
-        .footer-brand p { color: var(--text-muted); font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 3px; line-height: 2.2; text-transform: uppercase;}
-        .footer-section h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; margin-bottom: 18px; font-weight: 400; border-bottom: 1px solid var(--line-color); padding-bottom: 10px; display: inline-block; letter-spacing: 4px; text-transform: uppercase;}
-        .footer-section p { color: var(--text-muted); font-size: 11.5px; line-height: 2.2; font-weight: 300; margin-bottom: 8px; font-family: 'Tajawal', sans-serif; letter-spacing: 1px;}
-        .social-links { display: flex; flex-direction: column; gap: 12px; }
-        .social-links a { color: var(--text-muted); text-decoration: none; font-size: 11.5px; font-family: 'Oswald', sans-serif; letter-spacing: 3px; transition: 0.3s; text-transform: uppercase;}
+        .footer-brand p { color: var(--text-muted); font-size: 10px; font-family: 'Oswald', sans-serif; letter-spacing: 2px; line-height: 2; text-transform: uppercase;}
+        .footer-section h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 11px; margin-bottom: 12px; font-weight: 400; border-bottom: 1px solid var(--line-color); padding-bottom: 8px; display: inline-block; letter-spacing: 3px; text-transform: uppercase;}
+        .footer-section p { color: var(--text-muted); font-size: 10.5px; line-height: 2; font-weight: 300; margin-bottom: 6px; font-family: 'Tajawal', sans-serif; letter-spacing: 0.5px;}
+        .social-links { display: flex; flex-direction: column; gap: 8px; }
+        .social-links a { color: var(--text-muted); text-decoration: none; font-size: 10.5px; font-family: 'Oswald', sans-serif; letter-spacing: 2px; transition: 0.3s; text-transform: uppercase;}
         .social-links a:hover { color: var(--text-cream); padding-right: 5px;}
-        .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 25px; font-family: 'Oswald', sans-serif; font-size: 10.5px; letter-spacing: 5px; text-transform: uppercase;}
+        .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 20px; font-family: 'Oswald', sans-serif; font-size: 9.5px; letter-spacing: 4px; text-transform: uppercase;}
 
+        /* شاشات الموبايل: ثبات العرض جنباً إلى جنب (التفاصيل يمين + الصورة شمال) */
         @media (max-width: 900px) {
             .product-wrapper { 
-                flex-direction: column-reverse !important; 
-                padding: 95px 5% 40px !important; 
-                gap: 25px !important; 
+                flex-direction: row !important; 
+                padding: 95px 3% 30px !important; 
+                gap: 12px !important; 
             }
-            .product-gallery-panel, .product-info-panel { width: 100% !important; max-width: 100% !important; position: static !important; }
-            .meta-specs { grid-template-columns: 1fr 1fr; }
+            .product-info-panel { 
+                width: 52% !important; 
+                flex: 1 1 52% !important;
+            }
+            .product-gallery-panel { 
+                width: 48% !important; 
+                flex: 1 1 48% !important;
+                position: sticky !important;
+                top: 95px !important;
+            }
+            .product-name { font-size: 18px !important; margin-bottom: 8px !important; }
+            .product-tag { font-size: 9px !important; letter-spacing: 2px !important; }
+            .product-price-box { font-size: 18px !important; margin-bottom: 12px !important; }
+            .product-price-box .old { font-size: 12px !important; }
+            .meta-specs { grid-template-columns: 1fr 1fr; gap: 6px !important; padding: 8px 0 !important; }
+            .spec-item .label { font-size: 8px !important; }
+            .spec-item .val { font-size: 10px !important; }
+            .product-desc { font-size: 11px !important; line-height: 1.6 !important; margin-bottom: 12px !important; }
+            .archive-perks-grid { grid-template-columns: 1fr; gap: 6px !important; margin-bottom: 12px !important; }
+            .perk-card { padding: 6px !important; }
+            .perk-card .perk-title { font-size: 9px !important; }
+            .perk-card .perk-sub { font-size: 9.5px !important; }
+            .custom-design-card { padding: 10px !important; margin-bottom: 12px !important; }
+            .custom-header label { font-size: 10px !important; }
+            .btn-add-cart { padding: 12px !important; font-size: 11px !important; letter-spacing: 2px !important; }
+            .gallery-thumbs .thumb-item { width: 45px !important; height: 45px !important; }
+            .related-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
             .main-nav { display: none; }
             .mobile-menu-btn { display: flex !important; }
             .cursor-wrapper { display: none !important; }
@@ -415,6 +439,7 @@
         </div>
     </main>
 
+    <!-- قسم المقترحات المطور والمناسب لحجم الموبايل -->
     <section class="related-section">
         <h3 class="related-title">// EXPLORE MORE ARCHIVES</h3>
         <div class="related-grid" id="relatedGrid"></div>
@@ -566,7 +591,7 @@
                     customDesignHTML = `
                         <div class="custom-design-card">
                             <div class="custom-header">
-                                <label style="display:flex; align-items:center; gap:10px;">
+                                <label style="display:flex; align-items:center; gap:8px;">
                                     <input type="checkbox" id="customCheck" onchange="_0xtoggleCustom(${extraPrice})">
                                     <span>طلب نقش / تصميم مخصص (+${extraPrice} EGP)</span>
                                 </label>
@@ -592,15 +617,7 @@
 
                 wrapper.innerHTML = `
                     <div class="product-wrapper">
-                        <!-- معرض الصور (يمين الشاشة) -->
-                        <div class="product-gallery-panel">
-                            <div class="main-frame">
-                                <img id="mainDisplayImg" src="${images[0]}" alt="${item.name}">
-                            </div>
-                            ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
-                        </div>
-
-                        <!-- تفاصيل القطعة (شمال الشاشة) -->
+                        <!-- تفاصيل القطعة (يمين) -->
                         <div class="product-info-panel">
                             <div class="product-tag">ARCHIVE ACCESSORY // SPEC-0${stock}</div>
                             <h1 class="product-name">${item.name}</h1>
@@ -630,17 +647,25 @@
                             
                             <div class="archive-perks-grid">
                                 <div class="perk-card">
-                                    <span class="perk-title">✦ ARCHIVE PACKAGING</span>
-                                    <span class="perk-sub">صندوق فاخر مخصص لحفظ القطعة</span>
+                                    <span class="perk-title">✦ ARCHIVE BOX</span>
+                                    <span class="perk-sub">صندوق فاخر مخصص</span>
                                 </div>
                                 <div class="perk-card">
                                     <span class="perk-title">✦ EXPRESS TRANSIT</span>
-                                    <span class="perk-sub">توصيل مؤمن خلال ٢-٤ أيام</span>
+                                    <span class="perk-sub">توصيل خلال ٢-٤ أيام</span>
                                 </div>
                             </div>
 
                             ${customDesignHTML}
                             ${btnHTML}
+                        </div>
+
+                        <!-- معرض الصور (شمال) -->
+                        <div class="product-gallery-panel">
+                            <div class="main-frame">
+                                <img id="mainDisplayImg" src="${images[0]}" alt="${item.name}">
+                            </div>
+                            ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
                         </div>
                     </div>
                 `;
@@ -695,7 +720,7 @@
             };
 
             function _0xloadRelated(currentId) {
-                _0xdb.collection("accessories").limit(5).get().then(snapshot => {
+                _0xdb.collection("accessories").limit(4).get().then(snapshot => {
                     const grid = document.getElementById('relatedGrid');
                     if (!grid) return;
                     grid.innerHTML = '';
