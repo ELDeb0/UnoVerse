@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UnoVerse</title>
+    <title>UnoVerse | SECURE CHECKOUT</title>
     
     <link rel="icon" type="image/png" href="icon.png">
     
@@ -49,12 +49,12 @@
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
 
-        /* ================= النسيج السينمائي (بدون لاج) ================= */
+        /* ================= النسيج السينمائي ================= */
         .cinematic-grain { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             pointer-events: none; z-index: 99998; opacity: 0.05; 
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
-            will-change: transform; transform: translateZ(0); /* تسريع الأداء */
+            will-change: transform; transform: translateZ(0); 
         }
 
         /* ================= الماوس المخصص ================= */
@@ -115,7 +115,7 @@
             position: relative; z-index: 10; display: flex; gap: 5%; padding: 130px 6% 80px; max-width: 1400px; margin: 0 auto; min-height: 100vh;
         }
 
-        /* ----- اللوحة اليمين (بيانات الشحن) ----- */
+        /* اللوحة اليمين (بيانات الشحن والدفع) */
         .checkout-form-section { flex: 1.2; }
         .section-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 300; color: var(--text-cream); margin-bottom: 10px; letter-spacing: 4px; text-transform: uppercase;}
         .section-subtitle { font-family: 'Tajawal', sans-serif; font-size: 14px; color: var(--text-muted); margin-bottom: 40px; font-weight: 300;}
@@ -130,22 +130,16 @@
             color: var(--text-cream); font-family: 'Tajawal', sans-serif; font-size: 14px; transition: 0.3s; outline: none;
         }
         .form-group input:focus, .form-group textarea:focus { border-color: var(--text-cream); background: var(--bg-deep);}
-        .form-group input:invalid:focus { border-color: #ff3333; }
         .form-group textarea { height: 100px; resize: none; }
 
-        /* ----- إخفاء طرق الدفع مؤقتاً ----- */
-        .payment-section-wrapper {
-            display: none; 
+        /* بطاقة طريقة الدفع: الدفع عند الاستلام فقط */
+        .payment-cod-box {
+            background: var(--bg-card); border: 1px solid var(--line-color);
+            padding: 18px 20px; display: flex; align-items: center; justify-content: space-between;
+            margin-top: 5px;
         }
-        
-        .payment-methods { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap;}
-        .payment-option { flex: 1; min-width: 120px; background: var(--bg-card); border: 1px solid var(--line-color); text-align: center; transition: 0.3s; position: relative;}
-        .payment-option input { position: absolute; opacity: 0; }
-        .payment-option span { display: block; padding: 15px; font-family: 'Tajawal', sans-serif; font-weight: 400; color: var(--text-muted); transition: 0.3s; font-size: 13px;}
-        .payment-option:hover { border-color: var(--text-cream); }
-        .payment-option input:checked + span { background: var(--text-cream); color: var(--bg-deep); font-weight: 700;}
-        
-        .payment-instructions { background: var(--bg-deep); border: 1px dashed var(--line-color); padding: 20px; margin-top: 15px; display: none; font-size: 13px; line-height: 2; color: var(--text-muted);}
+        .payment-cod-box span { font-family: 'Tajawal', sans-serif; font-size: 14px; color: var(--text-cream); font-weight: 500;}
+        .payment-cod-box .badge { font-family: 'Oswald', sans-serif; font-size: 11px; padding: 4px 10px; background: rgba(230, 225, 214, 0.08); color: var(--text-cream); border: 1px solid var(--line-color); letter-spacing: 2px;}
 
         .submit-order-btn {
             width: 100%; padding: 22px; background: var(--text-cream); color: var(--bg-deep); border: 1px solid var(--text-cream); 
@@ -155,7 +149,7 @@
         .submit-order-btn:hover { background: transparent; color: var(--text-cream); }
         .submit-order-btn:disabled { background: var(--line-color); border-color: transparent; color: var(--text-muted); }
 
-        /* ----- اللوحة الشمال (ملخص الطلب) ----- */
+        /* اللوحة الشمال (ملخص الطلب) */
         .order-summary-section { flex: 1; background: var(--bg-card); border: 1px solid var(--line-color); padding: 40px; height: fit-content; position: sticky; top: 120px;}
         .summary-title { font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--text-cream); letter-spacing: 4px; margin-bottom: 30px; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; text-transform: uppercase;}
         
@@ -180,8 +174,6 @@
             .checkout-wrapper { flex-direction: column-reverse; gap: 40px; padding: 100px 5% 50px; }
             .order-summary-section { position: relative; top: 0; padding: 25px; }
             .form-grid { grid-template-columns: 1fr; gap: 15px; }
-            .payment-methods { flex-direction: column; }
-            /* إخفاء الماوس المخصص نهائياً في الموبايل */
             .cursor-wrapper { display: none !important; }
         }
     </style>
@@ -227,22 +219,22 @@
                     
                     <div class="form-group">
                         <label>رقم الهاتف // PHONE NUMBER</label>
-                        <input type="tel" id="custPhone" required pattern="^01[0125][0-9]{8}$" maxlength="11" placeholder="01xxxxxxxxx" title="برجاء إدخال رقم مصري صحيح">
+                        <input type="tel" id="custPhone" required pattern="^01[0125][0-9]{8}$" maxlength="11" placeholder="01xxxxxxxxx" title="برجاء إدخال رقم مصري صحيح" dir="ltr">
                     </div>
                     
                     <div class="form-group">
                         <label>رقم هاتف بديل // ALT PHONE (اختياري)</label>
-                        <input type="tel" id="custAltPhone" pattern="^01[0125][0-9]{8}$" maxlength="11" placeholder="01xxxxxxxxx" title="برجاء إدخال رقم مصري صحيح">
+                        <input type="tel" id="custAltPhone" pattern="^01[0125][0-9]{8}$" maxlength="11" placeholder="01xxxxxxxxx" title="برجاء إدخال رقم مصري صحيح" dir="ltr">
                     </div>
 
                     <div class="form-group">
                         <label>المحافظة // GOVERNORATE</label>
-                        <input type="text" id="custGov" required placeholder="مثال: القاهرة، الجيزة، طنطا...">
+                        <input type="text" id="custGov" required placeholder="مثال: كفر الشيخ، القاهرة، الجيزة...">
                     </div>
 
                     <div class="form-group">
                         <label>المدينة أو المنطقة // CITY / REGION</label>
-                        <input type="text" id="custCity" required placeholder="مثال: مدينة نصر، الشيخ زايد...">
+                        <input type="text" id="custCity" required placeholder="مثال: دسوق، مدينة نصر...">
                     </div>
 
                     <div class="form-group full-width">
@@ -250,39 +242,12 @@
                         <textarea id="custAddress" required placeholder="اسم الشارع، رقم العمارة، رقم الشقة، وأي علامة مميزة..."></textarea>
                     </div>
 
-                    <!-- ================= قسم طرق الدفع (مخفي مؤقتاً) ================= -->
-                    <div class="payment-section-wrapper">
-                        <div class="form-group full-width" style="margin-top: 10px;">
-                            <label style="font-size: 12px; border-bottom: 1px solid var(--line-color); padding-bottom: 10px;">طريقة الدفع // PAYMENT METHOD</label>
-                            
-                            <div class="payment-methods">
-                                <label class="payment-option">
-                                    <input type="radio" name="paymentMethod" value="Cash on Delivery" checked onchange="togglePaymentInfo()">
-                                    <span>الدفع عند الاستلام</span>
-                                </label>
-                                <label class="payment-option">
-                                    <input type="radio" name="paymentMethod" value="Vodafone Cash" onchange="togglePaymentInfo()">
-                                    <span>فودافون كاش</span>
-                                </label>
-                                <label class="payment-option">
-                                    <input type="radio" name="paymentMethod" value="Fawry" onchange="togglePaymentInfo()">
-                                    <span>فوري (Fawry)</span>
-                                </label>
-                            </div>
-
-                            <div id="vfCashInfo" class="payment-instructions">
-                                <p>✦ يرجى تحويل مبلغ الطلب إلى محفظة فودافون كاش على الرقم: <strong style="color:var(--text-cream); letter-spacing:2px; font-size:14px;">01031348479</strong></p>
-                                <p style="color:var(--text-muted); font-size:11px; margin-top:5px;">بعد التحويل، يرجى كتابة الرقم الذي قمت بالتحويل منه لتأكيد الدفع.</p>
-                                <input type="tel" id="vfCashTxID" placeholder="رقم الموبايل المحول منه" style="width:100%; padding:12px; background:var(--bg-card); border:1px solid var(--line-color); color:var(--text-cream); margin-top:10px; font-family:'Tajawal', sans-serif;">
-                            </div>
-
-                            <div id="fawryInfo" class="payment-instructions">
-                                <p style="margin-bottom: 10px;">✦ <strong>للدفع عبر ماكينات فوري:</strong> قم بعمل إيداع في محفظة فوري على رقم الموبايل: <strong style="color:var(--text-cream); letter-spacing:2px;">01553960609</strong></p>
-                                <p>✦ <strong>للدفع عبر InstaPay:</strong> قم بالتحويل إلى بطاقة ميزة (رقم الكارت): <strong style="color:var(--text-cream); letter-spacing:2px;">5078 0867 1945 3958</strong></p>
-                                
-                                <p style="color:var(--text-muted); font-size:11px; margin-top:15px; border-top: 1px dashed var(--line-color); padding-top: 10px;">بعد إتمام الدفع بأي من الطريقتين، يرجى كتابة رقم الإيصال أو الرقم المحول منه لتأكيد طلبك.</p>
-                                <input type="text" id="fawryTxID" placeholder="رقم الإيصال أو الرقم المحول منه" style="width:100%; padding:12px; background:var(--bg-card); border:1px solid var(--line-color); color:var(--text-cream); margin-top:10px; font-family:'Tajawal', sans-serif;">
-                            </div>
+                    <!-- طريقة الدفع الحصرية: الدفع عند الاستلام -->
+                    <div class="form-group full-width" style="margin-top: 10px;">
+                        <label style="font-size: 11px;">طريقة الدفع // PAYMENT METHOD</label>
+                        <div class="payment-cod-box">
+                            <span>✦ الدفع عند الاستلام (CASH ON DELIVERY)</span>
+                            <span class="badge">COD</span>
                         </div>
                     </div>
                 </div>
@@ -346,7 +311,6 @@
         }
         animateCursor();
 
-        // تأثير الماوس على العناصر (يعود للوضع المفرغ)
         function addHover() { cursorWrapper.classList.add('hovered'); }
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
 
@@ -390,7 +354,8 @@
                     <img src="${item.image}" alt="${item.name}">
                     <div class="summary-item-info">
                         <h4>${item.name}</h4>
-                        <p>SIZE: ${item.size}</p>
+                        <p>SIZE: ${item.size || 'Free'}</p>
+                        ${item.customDetails ? `<p style="color:#2ecc71; font-size:10px; margin-top:3px;">CUSTOM: ${item.customDetails}</p>` : ''}
                     </div>
                     <div class="summary-item-price">${item.price} EGP</div>
                 </div>
@@ -399,27 +364,6 @@
             orderTotal = currentCart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
             document.getElementById('subtotalPrice').innerText = orderTotal + ' EGP';
             document.getElementById('finalTotalPrice').innerText = orderTotal + ' EGP';
-        }
-
-        function togglePaymentInfo() {
-            const method = document.querySelector('input[name="paymentMethod"]:checked').value;
-            const vfCashInfo = document.getElementById('vfCashInfo');
-            const fawryInfo = document.getElementById('fawryInfo');
-            const vfCashTxID = document.getElementById('vfCashTxID');
-            const fawryTxID = document.getElementById('fawryTxID');
-
-            vfCashInfo.style.display = 'none';
-            fawryInfo.style.display = 'none';
-            vfCashTxID.removeAttribute('required');
-            fawryTxID.removeAttribute('required');
-
-            if (method === 'Vodafone Cash') {
-                vfCashInfo.style.display = 'block';
-                vfCashTxID.setAttribute('required', 'true');
-            } else if (method === 'Fawry') {
-                fawryInfo.style.display = 'block';
-                fawryTxID.setAttribute('required', 'true');
-            }
         }
 
         async function submitOrder(e) {
@@ -439,51 +383,72 @@
                 return;
             }
 
-            // بما إن القسم مخفي، الدفع الافتراضي هو "الدفع عند الاستلام"
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            let transactionID = "";
-            
-            if (paymentMethod === 'Vodafone Cash') {
-                transactionID = document.getElementById('vfCashTxID').value.trim();
-                if (!transactionID) { alert('برجاء إدخال الرقم المحول منه.'); return; }
-            } else if (paymentMethod === 'Fawry') {
-                transactionID = document.getElementById('fawryTxID').value.trim();
-                if (!transactionID) { alert('برجاء إدخال رقم إيصال فوري.'); return; }
-            }
-
             const btn = document.getElementById('submitOrderBtn');
             btn.innerText = "PROCESSING...";
             btn.disabled = true;
+
+            // تنظيف بيانات السلة وتجهيزها بدون أي قيمة غير معروفة
+            const sanitizedCart = currentCart.map(item => ({
+                id: item.id || "N/A",
+                name: item.name || "Archive Piece",
+                price: parseFloat(item.price) || 0,
+                image: item.image || "",
+                size: item.size || "Free",
+                customDetails: item.customDetails || "",
+                type: item.type || (item.size === 'Accessory' ? 'accessory' : 'clothing')
+            }));
 
             const orderData = {
                 customerInfo: {
                     name: document.getElementById('custName').value.trim(),
                     phone: phone,
-                    altPhone: altPhone,
+                    altPhone: altPhone || '',
                     governorate: document.getElementById('custGov').value.trim(),
                     city: document.getElementById('custCity').value.trim(),
                     address: document.getElementById('custAddress').value.trim()
                 },
                 paymentInfo: {
-                    method: paymentMethod,
-                    transactionID: transactionID
+                    method: 'الدفع عند الاستلام',
+                    transactionID: ''
                 },
-                items: currentCart,
+                paymentStatus: 'غير مدفوع',
+                items: sanitizedCart,
                 totalAmount: orderTotal,
                 status: "قيد المراجعة", 
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             try {
+                // 1. تسجيل الطلب في Firestore
                 const docRef = await db.collection("orders").add(orderData);
                 
-                const batch = db.batch();
-                currentCart.forEach(item => {
-                    const productRef = db.collection("products").doc(item.id);
-                    batch.update(productRef, { status: "out" });
-                });
-                await batch.commit();
+                // 2. تحديث حالة القطع/المخزون حسب النوع
+                for (const item of sanitizedCart) {
+                    if (item.id && item.id !== "N/A") {
+                        try {
+                            if (item.type === 'accessory') {
+                                const accRef = db.collection("accessories").doc(item.id);
+                                await db.runTransaction(async (transaction) => {
+                                    const accDoc = await transaction.get(accRef);
+                                    if (accDoc.exists) {
+                                        const curStock = parseInt(accDoc.data().stock) || 0;
+                                        transaction.update(accRef, { stock: Math.max(0, curStock - 1) });
+                                    }
+                                });
+                            } else {
+                                const prodRef = db.collection("products").doc(item.id);
+                                const prodDoc = await prodRef.get();
+                                if (prodDoc.exists) {
+                                    await prodRef.update({ status: "out" });
+                                }
+                            }
+                        } catch (itemErr) {
+                            console.warn("Stock update skipped for item:", item.id);
+                        }
+                    }
+                }
 
+                // 3. مسح السلة والتحويل الفوري لصفحة التتبع
                 localStorage.removeItem('unoCart');
                 window.location.href = "track.html?id=" + docRef.id; 
                 

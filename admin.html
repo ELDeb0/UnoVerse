@@ -314,7 +314,7 @@
             </div>
         </div>
 
-        <!-- ================= إدارة الإكسسوارات (مع التعديل ورفع الصور) ================= -->
+        <!-- ================= إدارة الإكسسوارات ================= -->
         <div id="accessoriesTab" class="tab-content">
             <form id="addAccessoryForm" onsubmit="saveAccessory(event)">
                 <div class="form-group">
@@ -635,21 +635,23 @@
                     }
 
                     let itemsHtml = `<div style="display:flex; flex-direction:column; gap:8px;">`;
-                    order.items.forEach(item => {
-                        itemsHtml += `
-                            <div style="display:flex; align-items:center; gap:10px; background:#111; padding:8px; border:1px solid #222; border-radius:4px;">
-                                <img src="${item.image}" style="width:40px; height:50px; object-fit:cover; border:1px solid #333; border-radius:2px;">
-                                <div style="text-align:right; font-size:12px; line-height:1.4;">
-                                    <strong style="color:var(--accent-yellow); font-family:'Oswald', sans-serif; font-size:14px;">${item.name}</strong><br>
-                                    مقاس/نوع: ${item.size || 'N/A'}
-                                    ${item.customDetails ? `<br><small style="color:#2ecc71;">تخصيص: ${item.customDetails}</small>` : ''}
-                                </div>
-                            </div>`;
-                    });
+                    if (order.items && Array.isArray(order.items)) {
+                        order.items.forEach(item => {
+                            itemsHtml += `
+                                <div style="display:flex; align-items:center; gap:10px; background:#111; padding:8px; border:1px solid #222; border-radius:4px;">
+                                    <img src="${item.image || ''}" style="width:40px; height:50px; object-fit:cover; border:1px solid #333; border-radius:2px;">
+                                    <div style="text-align:right; font-size:12px; line-height:1.4;">
+                                        <strong style="color:var(--accent-yellow); font-family:'Oswald', sans-serif; font-size:14px;">${item.name || 'Piece'}</strong><br>
+                                        مقاس/نوع: ${item.size || 'N/A'}
+                                        ${item.customDetails ? `<br><small style="color:#2ecc71;">تخصيص: ${item.customDetails}</small>` : ''}
+                                    </div>
+                                </div>`;
+                        });
+                    }
                     itemsHtml += `</div>`;
 
-                    let phonesHtml = order.customerInfo.phone;
-                    if(order.customerInfo.altPhone) {
+                    let phonesHtml = order.customerInfo ? order.customerInfo.phone : '';
+                    if(order.customerInfo && order.customerInfo.altPhone) {
                         phonesHtml += `<br><small style="color:#aaa;">بديل: ${order.customerInfo.altPhone}</small>`;
                     }
 
@@ -675,12 +677,12 @@
                                 <span style="font-family:'Tajawal', sans-serif;">${orderDate}</span>
                             </td>
                             <td>
-                                <strong style="color:#fff; font-size:15px;">${order.customerInfo.name}</strong><br>
+                                <strong style="color:#fff; font-size:15px;">${order.customerInfo ? order.customerInfo.name : ''}</strong><br>
                                 <div style="margin-top:5px; direction:ltr; text-align:right; font-family:'Oswald', sans-serif;">${phonesHtml}</div>
                             </td>
                             <td style="font-size:13px; line-height:1.6;">
-                                <strong style="color:#fff;">${order.customerInfo.governorate}</strong> - ${order.customerInfo.city}<br>
-                                <span style="color:#888;">${order.customerInfo.address}</span>
+                                <strong style="color:#fff;">${order.customerInfo ? order.customerInfo.governorate : ''}</strong> - ${order.customerInfo ? order.customerInfo.city : ''}<br>
+                                <span style="color:#888;">${order.customerInfo ? order.customerInfo.address : ''}</span>
                             </td>
                             <td style="min-width: 200px;">${itemsHtml}</td>
                             <td style="text-align:center;">${financeHtml}</td>
@@ -719,9 +721,11 @@
             if(!order) return;
 
             let itemsHtml = '';
-            order.items.forEach(item => {
-                itemsHtml += `<tr><td>${item.name} ${item.customDetails ? `(${item.customDetails})` : ''}</td><td>${item.size || 'Accessory'}</td><td>${item.price} ج.م</td></tr>`;
-            });
+            if (order.items && Array.isArray(order.items)) {
+                order.items.forEach(item => {
+                    itemsHtml += `<tr><td>${item.name} ${item.customDetails ? `(${item.customDetails})` : ''}</td><td>${item.size || 'Accessory'}</td><td>${item.price} ج.م</td></tr>`;
+                });
+            }
 
             let paymentStatus = order.paymentStatus || 'غير مدفوع';
             let collectAmountHtml = (paymentStatus === 'مدفوع')
@@ -754,10 +758,10 @@
                             <p style="font-weight:bold; font-size:16px;">رقم الطلب: ${orderId.slice(-6).toUpperCase()}</p>
                         </div>
                         <div class="details">
-                            <strong>الاسم:</strong> ${order.customerInfo.name}<br>
-                            <strong>رقم الهاتف:</strong> <span dir="ltr">${order.customerInfo.phone}</span> ${order.customerInfo.altPhone ? ' / <span dir="ltr">' + order.customerInfo.altPhone + '</span>' : ''}<br>
-                            <strong>المحافظة:</strong> ${order.customerInfo.governorate}<br>
-                            <strong>العنوان بالتفصيل:</strong> ${order.customerInfo.city} - ${order.customerInfo.address}
+                            <strong>الاسم:</strong> ${order.customerInfo ? order.customerInfo.name : ''}<br>
+                            <strong>رقم الهاتف:</strong> <span dir="ltr">${order.customerInfo ? order.customerInfo.phone : ''}</span> ${order.customerInfo && order.customerInfo.altPhone ? ' / <span dir="ltr">' + order.customerInfo.altPhone + '</span>' : ''}<br>
+                            <strong>المحافظة:</strong> ${order.customerInfo ? order.customerInfo.governorate : ''}<br>
+                            <strong>العنوان بالتفصيل:</strong> ${order.customerInfo ? order.customerInfo.city : ''} - ${order.customerInfo ? order.customerInfo.address : ''}
                         </div>
                         <table class="items-table">
                             <tr><th>القطعة</th><th>المقاس</th><th>السعر</th></tr>
@@ -789,6 +793,46 @@
             }
         }
 
+        // ================= ضاغط الصور الذكي التلقائي لمنع تجاوز حجم 1MB =================
+        function compressImage(file, maxWidth = 1000, maxHeight = 1000, quality = 0.75) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // التحويل لـ JPEG عالي الجودة وخفيف جداً (أقل من 150KB)
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                        resolve(compressedBase64);
+                    };
+                    img.onerror = (err) => reject(err);
+                };
+                reader.onerror = (err) => reject(err);
+            });
+        }
+
         // ================= إدارة الصور والمعارض =================
         let currentProdImages = [];
         let currentAccImages = [];
@@ -807,16 +851,19 @@
             }
         }
 
-        function addFromFile(e, type) {
+        async function addFromFile(e, type) {
             const file = e.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    if (type === 'products') { currentProdImages.push(evt.target.result); renderGallery('products'); }
-                    else if (type === 'accessories') { currentAccImages.push(evt.target.result); renderGallery('accessories'); }
-                    else { dropImage = evt.target.result; renderGallery('drop'); }
-                };
-                reader.readAsDataURL(file);
+                try {
+                    // ضغط الصورة تلقائياً قبل إضافتها
+                    const compressed = await compressImage(file);
+                    if (type === 'products') { currentProdImages.push(compressed); renderGallery('products'); }
+                    else if (type === 'accessories') { currentAccImages.push(compressed); renderGallery('accessories'); }
+                    else { dropImage = compressed; renderGallery('drop'); }
+                } catch (err) {
+                    console.error("فشل ضغط الصورة:", err);
+                    alert("حدث خطأ أثناء معالجة الصورة، يرجى المحاولة مرة أخرى.");
+                }
                 e.target.value = '';
             }
         }
@@ -844,43 +891,60 @@
             }
         }
 
-        // ================= إدارة الإكسسوارات (إضافة وتعديل وحذف) =================
+        // ================= إدارة الإكسسوارات بدون أخطاء حجم =================
         let loadedAccessories = [];
         let editingAccessoryId = null;
 
         async function saveAccessory(e) {
             e.preventDefault();
-            if (currentAccImages.length === 0) { alert("يجب إضافة صورة واحدة على الأقل للإكسسوار!"); return; }
+            if (currentAccImages.length === 0) { 
+                alert("يجب إضافة صورة واحدة على الأقل للإكسسوار!"); 
+                return; 
+            }
 
-            const btn = document.getElementById('accSubmitBtn'); btn.disabled = true;
-
-            const accData = {
-                name: document.getElementById('accName').value.trim(),
-                price: parseFloat(document.getElementById('accPrice').value),
-                discount: document.getElementById('accDiscount').value ? parseFloat(document.getElementById('accDiscount').value) : parseFloat(document.getElementById('accPrice').value),
-                stock: parseInt(document.getElementById('accStock').value) || 0,
-                allowCustomDesign: document.getElementById('accAllowCustom').checked,
-                customDesignPrice: parseFloat(document.getElementById('accCustomPrice').value) || 0,
-                image: currentAccImages[0],
-                gallery: currentAccImages,
-                description: document.getElementById('accDesc').value.trim(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
+            const btn = document.getElementById('accSubmitBtn'); 
+            btn.disabled = true;
+            btn.innerText = "جاري المعالجة والحفظ...";
 
             try {
+                const nameVal = document.getElementById('accName').value.trim();
+                const priceVal = parseFloat(document.getElementById('accPrice').value) || 0;
+                const discountInput = document.getElementById('accDiscount').value;
+                const discountVal = discountInput ? (parseFloat(discountInput) || priceVal) : priceVal;
+                const stockVal = parseInt(document.getElementById('accStock').value) || 0;
+                const allowCustom = document.getElementById('accAllowCustom').checked;
+                const customPriceVal = allowCustom ? (parseFloat(document.getElementById('accCustomPrice').value) || 0) : 0;
+                const descVal = document.getElementById('accDesc').value.trim();
+
+                const accData = {
+                    name: nameVal,
+                    price: priceVal,
+                    discount: discountVal,
+                    stock: stockVal,
+                    allowCustomDesign: allowCustom,
+                    customDesignPrice: customPriceVal,
+                    image: currentAccImages[0],
+                    gallery: currentAccImages,
+                    description: descVal || "قطعة إكسسوار حصرية من أرشيف UnoVerse.",
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
                 if (editingAccessoryId) {
                     await db.collection("accessories").doc(editingAccessoryId).update(accData);
-                    alert("تم تعديل قطعة الإكسسوار بنجاح!");
+                    alert("تم تعديل قطعة الإكسسوار بنجاح! ✦");
                 } else {
                     accData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection("accessories").add(accData);
-                    alert("تمت إضافة قطعة الإكسسوار بنجاح!");
+                    alert("تمت إضافة قطعة الإكسسوار بنجاح! ✦");
                 }
+
                 cancelAccEdit();
             } catch (err) {
-                alert("حدث خطأ أثناء الحفظ!");
+                console.error("Firestore Save Error:", err);
+                alert("حدث خطأ أثناء الحفظ: " + (err.message || "تأكد من سلامة البيانات"));
             } finally {
                 btn.disabled = false;
+                btn.innerText = editingAccessoryId ? "تحديث بيانات الإكسسوار" : "إضافة قطعة الإكسسوار";
             }
         }
 
@@ -891,8 +955,7 @@
                 let accCount = 0;
                 if (snapshot.empty) {
                     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888;">لا توجد إكسسوارات مسجلة.</td></tr>';
-                    document.getElementById('statAccessories').innerText = 0;
-                    return;
+                    document.getElementById('statAccessories').innerText = 0; return;
                 }
                 snapshot.forEach(doc => {
                     accCount++;
@@ -907,12 +970,12 @@
                             <td>${acc.allowCustomDesign ? `+${acc.customDesignPrice} ج.م` : 'غير مفعل'}</td>
                             <td>
                                 <button class="action-btn edit-btn" onclick="editAccessory('${acc.id}')">تعديل</button>
-                                <button class="action-btn delete-btn" onclick="deleteAccessory('${doc.id}')">حذف</button>
+                                <button class="action-btn delete-btn" onclick="deleteAccessory('${acc.id}')">حذف</button>
                             </td>
                         </tr>
                     `;
                 });
-                document.getElementById('statAccessories').innerText = accCount;
+                document.getElementById('statAccessories').innerText = loadedAccessories.length;
             });
         }
 
@@ -954,60 +1017,21 @@
             }
         }
 
-        // ================= باقي العمليات =================
-        async function loadAboutData() {
-            try {
-                const doc = await db.collection("settings").doc("about").get();
-                if (doc.exists && doc.data().text) document.getElementById('aboutInput').value = doc.data().text;
-            } catch (error) { console.error(error); }
-        }
-        async function saveAboutUs() {
-            const btn = document.getElementById('aboutBtn'); btn.innerText = "جاري الحفظ..."; btn.disabled = true;
-            try {
-                await db.collection("settings").doc("about").set({ text: document.getElementById('aboutInput').value }, { merge: true });
-                alert("تم التحديث بنجاح!");
-            } catch (error) { alert("خطأ!"); } finally { btn.innerText = "حفظ وتحديث النص"; btn.disabled = false; }
-        }
-
-        async function loadDropData() {
-            try {
-                const doc = await db.collection("settings").doc("drop").get();
-                if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('dropActiveToggle').checked = data.active || false;
-                    document.getElementById('dropTitleInput').value = data.title || "";
-                    document.getElementById('dropTimeInput').value = data.time || "";
-                    if(data.image) { dropImage = data.image; renderGallery('drop'); }
-                }
-            } catch (error) { console.error(error); }
-        }
-
-        async function saveDropData() {
-            const btn = document.getElementById('dropSaveBtn'); btn.disabled = true;
-            try {
-                await db.collection("settings").doc("drop").set({
-                    active: document.getElementById('dropActiveToggle').checked,
-                    title: document.getElementById('dropTitleInput').value,
-                    time: document.getElementById('dropTimeInput').value,
-                    image: dropImage
-                });
-                alert("تم تحديث إعدادات الإطلاق! 🚀");
-            } catch (error) { alert("حدث خطأ!"); } finally { btn.innerText = "حفظ إعدادات الإطلاق"; btn.disabled = false; }
-        }
+        // ================= إدارة الملابس =================
+        let loadedProducts = [], editingProductId = null;
 
         async function saveProduct(e) {
             e.preventDefault();
-            if(currentProdImages.length === 0) { alert("يجب إضافة صورة!"); return; }
-            const sizeCheckboxes = document.querySelectorAll('input[name="prodSizes"]:checked');
-            let selectedSizes = Array.from(sizeCheckboxes).map(cb => cb.value);
-            if(selectedSizes.length === 0) { alert("يجب اختيار مقاس!"); return; }
+            if (currentProdImages.length === 0) { alert("يجب إضافة صورة!"); return; }
+            const sizes = Array.from(document.querySelectorAll('input[name="prodSizes"]:checked')).map(cb => cb.value);
+            if (sizes.length === 0) { alert("يجب اختيار مقاس!"); return; }
 
             const productData = {
                 name: document.getElementById('prodName').value,
                 price: parseFloat(document.getElementById('prodPrice').value),
                 discount: document.getElementById('prodDiscount').value ? parseFloat(document.getElementById('prodDiscount').value) : parseFloat(document.getElementById('prodPrice').value),
                 status: document.getElementById('prodStatus').value,
-                sizes: selectedSizes,
+                sizes: sizes,
                 description: document.getElementById('prodDescription').value,
                 tickerText: document.getElementById('prodTickerText').value,
                 image: currentProdImages[0], gallery: currentProdImages,
@@ -1019,10 +1043,9 @@
                 if (editingProductId) { await db.collection("products").doc(editingProductId).update(productData); } 
                 else { productData.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection("products").add(productData); }
                 alert("تم الحفظ بنجاح!"); cancelEdit();
-            } catch (error) { alert("حدث خطأ!"); } finally { submitBtn.disabled = false; }
+            } catch (error) { alert("خطأ أثناء الحفظ!"); } finally { submitBtn.disabled = false; }
         }
 
-        let loadedProducts = [], editingProductId = null;
         function listenToInventory() {
             const tbody = document.getElementById('inventoryBody');
             db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
@@ -1068,6 +1091,48 @@
         function cancelEdit() {
             editingProductId = null; document.getElementById('addProductForm').reset(); currentProdImages = []; renderGallery('products');
             document.getElementById('submitBtn').innerText = "إضافة القطعة"; document.getElementById('cancelEditBtn').style.display = "none";
+        }
+
+        // Drop & About
+        async function loadDropData() {
+            try {
+                const doc = await db.collection("settings").doc("drop").get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('dropActiveToggle').checked = data.active || false;
+                    document.getElementById('dropTitleInput').value = data.title || "";
+                    document.getElementById('dropTimeInput').value = data.time || "";
+                    if(data.image) { dropImage = data.image; renderGallery('drop'); }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function saveDropData() {
+            const btn = document.getElementById('dropSaveBtn'); btn.disabled = true;
+            try {
+                await db.collection("settings").doc("drop").set({
+                    active: document.getElementById('dropActiveToggle').checked,
+                    title: document.getElementById('dropTitleInput').value,
+                    time: document.getElementById('dropTimeInput').value,
+                    image: dropImage
+                });
+                alert("تم تحديث إعدادات الإطلاق! 🚀");
+            } catch (e) { alert("حدث خطأ!"); } finally { btn.innerText = "حفظ إعدادات الإطلاق"; btn.disabled = false; }
+        }
+
+        async function loadAboutData() {
+            try {
+                const doc = await db.collection("settings").doc("about").get();
+                if (doc.exists && doc.data().text) document.getElementById('aboutInput').value = doc.data().text;
+            } catch (error) { console.error(error); }
+        }
+
+        async function saveAboutUs() {
+            const btn = document.getElementById('aboutBtn'); btn.innerText = "جاري الحفظ..."; btn.disabled = true;
+            try {
+                await db.collection("settings").doc("about").set({ text: document.getElementById('aboutInput').value }, { merge: true });
+                alert("تم التحديث بنجاح!");
+            } catch (error) { alert("خطأ!"); } finally { btn.innerText = "حفظ وتحديث النص"; btn.disabled = false; }
         }
     </script>
 </body>

@@ -68,7 +68,7 @@
         }
         .cursor-wrapper.hovered .cursor-dot { 
             transform: translate(-50%, -50%) scale(4); 
-            background-color: transparent; border: 1px solid var(--text-cream); box-shadow: none; 
+            background-color: transparent; border: 1px solid var(--text-cream); 
         }
 
         .eng-typography-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 5vh; }
@@ -106,7 +106,7 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream);}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
-        .product-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; min-height: 100vh; padding: 140px 6% 80px 6%; max-width: 1400px; margin: 0 auto; gap: 8%; }
+        .product-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; min-height: 85vh; padding: 140px 6% 60px 6%; max-width: 1400px; margin: 0 auto; gap: 8%; }
         
         .product-info-panel { width: 45%; display: flex; flex-direction: column; }
         .product-tag { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px;}
@@ -138,6 +138,29 @@
         .thumb-item { width: 70px; height: 70px; border: 1px solid var(--line-color); cursor: pointer !important; overflow: hidden; background: var(--bg-card); opacity: 0.6; transition: 0.3s;}
         .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
+
+        /* قسم القطع المقترحة */
+        .related-section { padding: 80px 6%; max-width: 1400px; margin: 0 auto; position: relative; z-index: 10; border-top: 1px solid var(--line-color); }
+        .related-title { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 5px; color: var(--text-cream); margin-bottom: 40px; text-transform: uppercase; text-align: center;}
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
+        .related-card { background: var(--bg-card); border: 1px solid var(--line-color); padding: 18px; text-decoration: none; display: flex; flex-direction: column; transition: 0.4s;}
+        .related-card:hover { transform: translateY(-6px); border-color: var(--text-cream);}
+        .related-card img { width: 100%; aspect-ratio: 1/1; object-fit: contain; background: #020408; margin-bottom: 15px;}
+        .related-card h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;}
+        .related-card p { color: var(--text-muted); font-family: 'Oswald', sans-serif; font-size: 13px;}
+
+        /* الفوتر وقسم الحقوق */
+        .main-footer { padding: 90px 6% 40px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 60px;}
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; margin-bottom: 60px; }
+        .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; color: var(--text-cream); margin-bottom: 20px;}
+        .footer-brand h2 span { color: var(--text-muted); font-weight: 300;}
+        .footer-brand p { color: var(--text-muted); font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 4px; line-height: 2.5; text-transform: uppercase;}
+        .footer-section h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; margin-bottom: 25px; font-weight: 400; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; display: inline-block; letter-spacing: 5px; text-transform: uppercase;}
+        .footer-section p { color: var(--text-muted); font-size: 11px; line-height: 2.5; font-weight: 300; margin-bottom: 10px; font-family: 'Tajawal', sans-serif; letter-spacing: 1px;}
+        .social-links { display: flex; flex-direction: column; gap: 15px; }
+        .social-links a { color: var(--text-muted); text-decoration: none; font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 4px; transition: 0.3s; text-transform: uppercase;}
+        .social-links a:hover { color: var(--text-cream); padding-right: 5px;}
+        .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 30px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 6px; text-transform: uppercase;}
 
         @media (max-width: 992px) {
             .product-wrapper { flex-direction: column-reverse; padding: 110px 5% 50px; gap: 40px; }
@@ -193,6 +216,44 @@
         </div>
     </main>
 
+    <!-- قسم القطع المقترحة -->
+    <section class="related-section">
+        <h3 class="related-title">EXPLORE MORE ARCHIVES //</h3>
+        <div class="related-grid" id="relatedGrid"></div>
+    </section>
+
+    <!-- الفوتر وحقوق الملكية -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2><span dir="ltr">UNO<span>VERSE</span></span></h2>
+                <p>WE DON'T MAKE CLOTHES.<br>WE MAKE ARCHIVE PIECES.<br>1 OF 1 ONLY.</p>
+            </div>
+            <div class="footer-section">
+                <h4>SHIPPING.</h4>
+                <p>Delivered in custom archive boxes.</p>
+                <p>2-4 business days nationwide.</p>
+                <p>Fully insured transit.</p>
+            </div>
+            <div class="footer-section">
+                <h4>AUTHENTICITY.</h4>
+                <p>No returns on 1/1 pieces unless defective.</p>
+                <p>Each piece includes an authenticity token.</p>
+            </div>
+            <div class="footer-social">
+                <h4>CONNECT.</h4>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/unoverse.eg">INSTAGRAM</a>
+                    <a href="#">TIKTOK</a>
+                    <a href="mailto:unoverse.eg@gmail.com">EMAIL US</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 UNOVERSE ARCHIVE. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
     <script>
         document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -222,7 +283,7 @@
         function addHover() { cursorWrapper.classList.add('hovered'); }
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
         function attachCursorEffects() {
-            document.querySelectorAll('a, button, input, textarea, label, .thumb-item').forEach(el => {
+            document.querySelectorAll('a, button, input, textarea, label, .thumb-item, .related-card').forEach(el => {
                 el.removeEventListener('mouseenter', addHover);
                 el.removeEventListener('mouseleave', removeHover);
                 el.addEventListener('mouseenter', addHover);
@@ -251,6 +312,7 @@
                 accessoryData = doc.data();
                 accessoryData.id = doc.id;
                 renderAccessory(accessoryData);
+                loadRelatedAccessories(accessoryId);
             } catch (err) {
                 console.error(err);
             }
@@ -383,6 +445,30 @@
 
             document.getElementById('cartDrawer').classList.add('active');
             document.getElementById('cartOverlay').classList.add('active');
+        }
+
+        // جلب القطع المقترحة
+        function loadRelatedAccessories(currentId) {
+            db.collection("accessories").limit(5).get().then(snapshot => {
+                const grid = document.getElementById('relatedGrid');
+                if (!grid) return;
+                grid.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    if (doc.id !== currentId) {
+                        const d = doc.data();
+                        const p = d.discount || d.price;
+                        grid.innerHTML += `
+                            <a href="accessory.html?id=${doc.id}" class="related-card">
+                                <img src="${d.image || (d.gallery ? d.gallery[0] : '')}" alt="${d.name}">
+                                <h4>${d.name}</h4>
+                                <p>${p} EGP</p>
+                            </a>
+                        `;
+                    }
+                });
+                attachCursorEffects();
+            });
         }
 
         function updateCartUI() {
