@@ -145,6 +145,7 @@
             <button class="tab-btn" onclick="switchTab('ordersTab', this)">الطلبات الواردة</button>
             <button class="tab-btn" onclick="switchTab('productsTab', this)">إدارة الملابس (Archive)</button>
             <button class="tab-btn" onclick="switchTab('accessoriesTab', this)">إدارة الإكسسوارات (Accessories)</button>
+            <button class="tab-btn" onclick="switchTab('bannerTab', this)">بنر الإكسسوارات (Banner)</button>
             <button class="tab-btn" onclick="switchTab('dropTab', this)">إعدادات الإطلاق (Drop)</button>
             <button class="tab-btn" onclick="switchTab('aboutTab', this)">إعدادات (من نحن)</button>
         </div>
@@ -350,6 +351,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label>شريط الأخبار المخصص للإكسسوار (Ticker Text)</label>
+                    <input type="text" id="accTickerText" placeholder="مثال: نحت يدوي خالص عالي الجودة...">
+                </div>
+
+                <div class="form-group">
                     <label>معرض صور الإكسسوار (من الجهاز أو عبر رابط)</label>
                     <div class="image-inputs">
                         <input type="file" id="accFileInput" accept="image/*" onchange="addFromFile(event, 'accessories')">
@@ -379,6 +385,24 @@
                     </table>
                 </div>
             </div>
+        </div>
+
+        <!-- ================= تعديل بنر صفحة الإكسسوارات ================= -->
+        <div id="bannerTab" class="tab-content">
+            <h2 style="font-family: 'Oswald', sans-serif; color: var(--accent-yellow); margin-bottom: 20px;">التحكم في بنر صفحة الإكسسوارات (Accessories Header Banner)</h2>
+            <div class="form-group"><label>الوسم الصغير (Banner Tag)</label><input type="text" id="bannerTagInput" placeholder="SCULPTED OBJECTS /// EDITION"></div>
+            <div class="form-group"><label>العنوان الرئيسي (Main Title)</label><input type="text" id="bannerTitleInput" placeholder="The Artifacts."></div>
+            <div class="form-group"><label>النص الفرعي (Subtitle)</label><input type="text" id="bannerSubtitleInput" placeholder="TIMELESS OBJECTS TO COMPLETE THE PIECE"></div>
+            <div class="form-group">
+                <label>صورة خلفية البنر (من الجهاز أو عبر رابط)</label>
+                <div class="image-inputs">
+                    <input type="file" id="bannerFileInput" accept="image/*" onchange="addFromFile(event, 'banner')">
+                    <input type="text" id="bannerUrlInput" placeholder="أو أدخل رابط صورة">
+                    <button type="button" class="add-img-btn" onclick="addFromUrl('banner')">إضافة الرابط</button>
+                </div>
+                <div id="bannerImageGallery" class="gallery-container"></div>
+            </div>
+            <button type="button" class="submit-btn" style="width: auto; padding: 12px 30px;" onclick="saveAccessoriesBanner()" id="bannerSaveBtn">حفظ إعدادات البنر ✦</button>
         </div>
 
         <!-- ================= إعدادات الإطلاق (Drop) ================= -->
@@ -435,7 +459,7 @@
             if(e.ctrlKey && e.keyCode == 80) { e.preventDefault(); return false; }
         });
 
-        // حماية الـ IP
+        // حماية الـ IP[cite: 7]
         const ALLOWED_IP = "41.235.196.152"; 
 
         async function verifyConnection() {
@@ -460,7 +484,7 @@
         }
         window.onload = verifyConnection;
 
-        // إعدادات Firebase
+        // إعدادات Firebase[cite: 7]
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -498,6 +522,7 @@
             listenToAccessories();
             loadAboutData(); 
             loadDropData();
+            loadAccessoriesBanner();
             startOnlineUsersSimulation();
         }
 
@@ -838,6 +863,7 @@
         let currentProdImages = [];
         let currentAccImages = [];
         let dropImage = "";
+        let bannerImage = "";
 
         function addFromUrl(type) {
             if (type === 'products') {
@@ -846,6 +872,9 @@
             } else if (type === 'accessories') {
                 const url = document.getElementById('accUrlInput').value.trim();
                 if (url) { currentAccImages.push(url); document.getElementById('accUrlInput').value = ''; renderGallery('accessories'); }
+            } else if (type === 'banner') {
+                const url = document.getElementById('bannerUrlInput').value.trim();
+                if (url) { bannerImage = url; document.getElementById('bannerUrlInput').value = ''; renderGallery('banner'); }
             } else {
                 const url = document.getElementById('dropUrlInput').value.trim();
                 if (url) { dropImage = url; document.getElementById('dropUrlInput').value = ''; renderGallery('drop'); }
@@ -856,10 +885,10 @@
             const file = e.target.files[0];
             if (file) {
                 try {
-                    // ضغط الصورة تلقائياً قبل إضافتها
                     const compressed = await compressImage(file);
                     if (type === 'products') { currentProdImages.push(compressed); renderGallery('products'); }
                     else if (type === 'accessories') { currentAccImages.push(compressed); renderGallery('accessories'); }
+                    else if (type === 'banner') { bannerImage = compressed; renderGallery('banner'); }
                     else { dropImage = compressed; renderGallery('drop'); }
                 } catch (err) {
                     console.error("فشل ضغط الصورة:", err);
@@ -872,6 +901,7 @@
         function removeGalleryImage(idx, type) {
             if (type === 'products') { currentProdImages.splice(idx, 1); renderGallery('products'); }
             else if (type === 'accessories') { currentAccImages.splice(idx, 1); renderGallery('accessories'); }
+            else if (type === 'banner') { bannerImage = ""; renderGallery('banner'); }
             else { dropImage = ""; renderGallery('drop'); }
         }
 
@@ -886,10 +916,40 @@
                 currentAccImages.forEach((src, i) => {
                     box.innerHTML += `<div class="preview-container"><img src="${src}" class="preview-img"><button type="button" class="remove-img" onclick="removeGalleryImage(${i}, 'accessories')">✕</button></div>`;
                 });
+            } else if (type === 'banner') {
+                const box = document.getElementById('bannerImageGallery'); box.innerHTML = '';
+                if (bannerImage) box.innerHTML = `<div class="preview-container"><img src="${bannerImage}" class="preview-img"><button type="button" class="remove-img" onclick="removeGalleryImage(0, 'banner')">✕</button></div>`;
             } else {
                 const box = document.getElementById('dropImageGallery'); box.innerHTML = '';
                 if (dropImage) box.innerHTML = `<div class="preview-container"><img src="${dropImage}" class="preview-img"><button type="button" class="remove-img" onclick="removeGalleryImage(0, 'drop')">✕</button></div>`;
             }
+        }
+
+        // ================= بنر الإكسسوارات =================
+        async function loadAccessoriesBanner() {
+            try {
+                const doc = await db.collection("settings").doc("accessoriesBanner").get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('bannerTagInput').value = data.tag || "";
+                    document.getElementById('bannerTitleInput').value = data.title || "";
+                    document.getElementById('bannerSubtitleInput').value = data.subtitle || "";
+                    if (data.image) { bannerImage = data.image; renderGallery('banner'); }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function saveAccessoriesBanner() {
+            const btn = document.getElementById('bannerSaveBtn'); btn.disabled = true;
+            try {
+                await db.collection("settings").doc("accessoriesBanner").set({
+                    tag: document.getElementById('bannerTagInput').value.trim() || "SCULPTED OBJECTS /// EDITION",
+                    title: document.getElementById('bannerTitleInput').value.trim() || "The Artifacts.",
+                    subtitle: document.getElementById('bannerSubtitleInput').value.trim() || "TIMELESS OBJECTS TO COMPLETE THE PIECE",
+                    image: bannerImage || "image_28480a.jpg"
+                });
+                alert("تم تحديث بنر صفحة الإكسسوارات بنجاح! 🚀");
+            } catch (e) { alert("حدث خطأ أثناء الحفظ!"); } finally { btn.disabled = false; }
         }
 
         // ================= إدارة الإكسسوارات بدون أخطاء حجم =================
@@ -915,6 +975,7 @@
                 const stockVal = parseInt(document.getElementById('accStock').value) || 0;
                 const allowCustom = document.getElementById('accAllowCustom').checked;
                 const customPriceVal = allowCustom ? (parseFloat(document.getElementById('accCustomPrice').value) || 0) : 0;
+                const tickerTextVal = document.getElementById('accTickerText').value.trim();
                 const descVal = document.getElementById('accDesc').value.trim();
 
                 const accData = {
@@ -924,6 +985,7 @@
                     stock: stockVal,
                     allowCustomDesign: allowCustom,
                     customDesignPrice: customPriceVal,
+                    tickerText: tickerTextVal,
                     image: currentAccImages[0],
                     gallery: currentAccImages,
                     description: descVal || "قطعة إكسسوار حصرية من أرشيف UnoVerse.",
@@ -992,6 +1054,7 @@
             document.getElementById('accAllowCustom').checked = acc.allowCustomDesign || false;
             document.getElementById('customPriceGroup').style.display = acc.allowCustomDesign ? 'block' : 'none';
             document.getElementById('accCustomPrice').value = acc.customDesignPrice || '';
+            document.getElementById('accTickerText').value = acc.tickerText || '';
             document.getElementById('accDesc').value = acc.description || '';
 
             currentAccImages = acc.gallery && acc.gallery.length > 0 ? [...acc.gallery] : (acc.image ? [acc.image] : []);

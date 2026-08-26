@@ -25,7 +25,7 @@
             --line-color: rgba(230, 225, 214, 0.08); 
         }
 
-        /* إخفاء الماوس الأصلي ومنع التحديد بشكل قاطع */
+        /* إخفاء الماوس الأصلي وحماية المحتوى */
         html, body, *, *::before, *::after, *:hover, *:active, *:focus, a, button, input, textarea, select, label { 
             cursor: none !important; 
             -webkit-user-select: none !important;
@@ -76,6 +76,7 @@
             background-color: transparent; border: 1px solid var(--text-cream); box-shadow: none; 
         }
 
+        /* الهيدر */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
             width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
@@ -87,10 +88,57 @@
         .main-nav ul { display: flex; gap: 40px; list-style: none; }
         .main-nav ul li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 300; letter-spacing: 4px; transition: 0.3s; opacity: 0.7; text-transform: uppercase;}
         .main-nav ul li a:hover, .main-nav ul li a.active { opacity: 1; color: #fff;}
-        .header-actions { display: flex; gap: 30px; }
+        .header-actions { display: flex; gap: 30px; align-items: center; }
         .action-link { color: var(--text-cream); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 12px; letter-spacing: 3px; opacity: 0.8; transition: 0.3s;}
         .action-link:hover { opacity: 1; }
 
+        /* زر وقائمة الموبايل */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer !important;
+            z-index: 10000;
+        }
+        .mobile-menu-btn span {
+            display: block;
+            width: 100%;
+            height: 1px;
+            background-color: var(--text-cream);
+            transition: 0.3s ease;
+        }
+
+        .mobile-nav-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(4, 6, 10, 0.92); backdrop-filter: blur(10px);
+            z-index: 999998; opacity: 0; visibility: hidden; transition: 0.4s ease;
+        }
+        .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+
+        .mobile-nav-drawer {
+            position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw; height: 100vh;
+            background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 999999;
+            padding: 35px 25px; display: flex; flex-direction: column; justify-content: space-between;
+            transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-nav-drawer.active { right: 0; }
+
+        .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; }
+        .mobile-nav-logo { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 4px; color: var(--text-cream); }
+        .mobile-nav-logo span { color: var(--text-muted); font-weight: 300; }
+        .close-mobile-nav { font-size: 22px; color: var(--text-muted); cursor: pointer !important; transition: 0.3s; }
+        .close-mobile-nav:hover { color: var(--text-cream); }
+
+        .mobile-nav-links { list-style: none; display: flex; flex-direction: column; gap: 25px; margin-top: 40px; }
+        .mobile-nav-links li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 15px; letter-spacing: 4px; text-transform: uppercase; font-weight: 400; transition: 0.3s; display: inline-block; }
+        .mobile-nav-links li a:hover { color: var(--accent-blue); transform: translateX(-5px); }
+
+        .mobile-nav-footer p { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase; text-align: center; border-top: 1px solid var(--line-color); padding-top: 15px; }
+
+        /* السلة الجانبية */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
@@ -105,42 +153,108 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream);}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
-        .catalog-container { padding: 140px 6% 100px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 10;}
-        .page-header { text-align: center; margin-bottom: 60px; }
-        .page-header h1 { font-family: 'Oswald', sans-serif; font-size: clamp(35px, 5vw, 65px); font-weight: 700; letter-spacing: 5px; color: var(--text-cream); text-transform: uppercase; margin-bottom: 15px;}
-        .page-header p { font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--text-muted); letter-spacing: 8px; text-transform: uppercase;}
+        /* بنر وسكشن بداية الصفحة السينمائي */
+        .catalog-container { padding: 110px 6% 100px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 10;}
+        
+        .accessories-hero-banner {
+            width: 100%;
+            height: 280px;
+            border: 1px solid var(--line-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, rgba(8,12,20,0.9), rgba(4,6,10,0.95));
+        }
+        .banner-bg-img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.8) contrast(1.15) brightness(0.4);
+            transition: transform 0.8s ease;
+        }
+        .accessories-hero-banner:hover .banner-bg-img {
+            transform: scale(1.03);
+        }
+        .banner-overlay-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .banner-tag {
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            letter-spacing: 6px;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .banner-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 5vw, 56px);
+            font-style: italic;
+            font-weight: 900;
+            color: var(--text-cream);
+            line-height: 1.1;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        .banner-subtitle {
+            font-family: 'Oswald', sans-serif;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
 
+        /* شبكة الإكسسوارات */
         .accessories-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 40px; width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); 
+            gap: 30px;
+            width: 100%;
         }
         .accessory-card {
             display: flex; flex-direction: column; text-decoration: none;
             background: var(--bg-card); border: 1px solid var(--line-color);
-            padding: 20px; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
+            padding: 16px; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
         }
-        .accessory-card:hover { transform: translateY(-8px); border-color: var(--text-cream); }
-        .accessory-img-box { width: 100%; aspect-ratio: 1/1; overflow: hidden; position: relative; margin-bottom: 20px; background: #04060A; display: flex; align-items: center; justify-content: center;}
-        .accessory-img-box img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s ease;}
-        .accessory-card:hover .accessory-img-box img { transform: scale(1.05); }
+        .accessory-card:hover { 
+            transform: translateY(-6px); 
+            border-color: rgba(230, 225, 214, 0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .accessory-img-box { 
+            width: 100%; aspect-ratio: 1/1; overflow: hidden; position: relative; 
+            margin-bottom: 15px; background: #020408; display: flex; 
+            align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        .accessory-img-box img { width: 90%; height: 90%; object-fit: contain; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);}
+        .accessory-card:hover .accessory-img-box img { transform: scale(1.08) rotate(-1deg); }
 
         .overlay-badge { 
-            position: absolute; top: 12px; left: 12px; font-family: 'Oswald', sans-serif; 
-            font-size: 9px; padding: 5px 12px; font-weight: 700; z-index: 4; 
+            position: absolute; top: 10px; left: 10px; font-family: 'Oswald', sans-serif; 
+            font-size: 8px; padding: 4px 10px; font-weight: 700; z-index: 4; 
             text-transform: uppercase; letter-spacing: 2px; 
         }
         .overlay-badge.available { background: rgba(4, 6, 10, 0.85); color: var(--text-cream); border: 1px solid var(--text-cream); backdrop-filter: blur(4px);}
         .overlay-badge.sold-out { background: rgba(255, 51, 51, 0.85); color: #fff; border: 1px solid #ff3333; backdrop-filter: blur(4px);}
 
-        .acc-info { display: flex; flex-direction: column; gap: 10px; }
-        .acc-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--line-color); padding-bottom: 12px;}
-        .acc-top h3 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 16px; text-transform: uppercase; font-weight: 400; letter-spacing: 2px;}
-        .acc-top .price { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 1px;}
-        .acc-top .price .old { text-decoration: line-through; color: var(--text-muted); font-size: 11px; margin-left: 8px;}
+        .acc-info { display: flex; flex-direction: column; gap: 8px; }
+        .acc-top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--line-color); padding-bottom: 10px;}
+        .acc-top h3 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 14px; text-transform: uppercase; font-weight: 400; letter-spacing: 1.5px; line-height: 1.3;}
+        .acc-top .price { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 1px; white-space: nowrap; margin-right: 8px;}
+        .acc-top .price .old { text-decoration: line-through; color: var(--text-muted); font-size: 10px; margin-left: 6px; opacity: 0.6;}
         
-        .acc-bottom { display: flex; justify-content: space-between; align-items: center; }
-        .acc-bottom span { font-size: 10px; color: var(--text-muted); font-family: 'Oswald', sans-serif; letter-spacing: 2px;}
-        .acc-bottom .view-btn { font-size: 10px; color: var(--text-cream); font-family: 'Oswald', sans-serif; letter-spacing: 2px; border-bottom: 1px solid var(--text-cream); padding-bottom: 2px;}
+        .acc-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2px;}
+        .acc-bottom span { font-size: 9px; color: var(--text-muted); font-family: 'Oswald', sans-serif; letter-spacing: 2px;}
+        .acc-bottom .view-btn { font-size: 9px; color: var(--text-cream); font-family: 'Oswald', sans-serif; letter-spacing: 2px; border-bottom: 1px solid var(--text-cream); padding-bottom: 1px; text-transform: uppercase;}
 
         .main-footer { padding: 80px 6% 40px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 80px;}
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; margin-bottom: 60px; }
@@ -149,19 +263,89 @@
         .footer-brand p { color: var(--text-muted); font-size: 11px; font-family: 'Oswald', sans-serif; letter-spacing: 4px; line-height: 2.5; text-transform: uppercase;}
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 30px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 6px; text-transform: uppercase;}
 
-        @media (max-width: 768px) {
+        /* تجاوب الشاشات الصغيرة (Mobile Grid - منتجان بجوار بعضهما بدقة وبراعة) */
+        @media (max-width: 950px) {
             .main-nav { display: none; }
-            .catalog-container { padding-top: 110px; }
+            .mobile-menu-btn { display: flex !important; }
+            .header-actions { gap: 15px; }
             .cursor-wrapper { display: none !important; }
         }
+
+        @media (max-width: 768px) {
+            .catalog-container { padding: 95px 3.5% 60px; }
+            
+            .accessories-hero-banner {
+                height: 190px;
+                margin-bottom: 25px;
+            }
+            .banner-title { font-size: 28px; }
+            .banner-subtitle { letter-spacing: 4px; font-size: 10px; }
+            
+            /* عرض منتجين بجانب بعضهما في الموبايل */
+            .accessories-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+            .accessory-card {
+                padding: 10px !important;
+            }
+            .accessory-img-box {
+                margin-bottom: 10px !important;
+            }
+            .overlay-badge {
+                font-size: 7px !important;
+                padding: 3px 6px !important;
+                letter-spacing: 1px !important;
+                top: 6px !important;
+                left: 6px !important;
+            }
+            .acc-top {
+                flex-direction: column;
+                gap: 4px;
+                padding-bottom: 6px !important;
+            }
+            .acc-top h3 {
+                font-size: 12px !important;
+                letter-spacing: 1px !important;
+            }
+            .acc-top .price {
+                font-size: 11px !important;
+            }
+            .acc-bottom span {
+                font-size: 8px !important;
+                letter-spacing: 1px !important;
+            }
+            .acc-bottom .view-btn {
+                font-size: 8px !important;
+                letter-spacing: 1px !important;
+            }
+        }
     </style>
-    
 </head>
 <body>
 
     <div class="cinematic-grain"></div>
     <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
+    <!-- قائمة الموبايل المنسدلة -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-logo" dir="ltr">UNO<span>VERSE</span></span>
+            <span class="close-mobile-nav" id="closeMobileNav">✕</span>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html#about" class="mobile-nav-link">ABOUT US</a></li>
+            <li><a href="index.html#collection" class="mobile-nav-link">ARCHIVE</a></li>
+            <li><a href="accessories.html" class="mobile-nav-link">ACCESSORIES</a></li>
+            <li><a href="index.html#support" class="mobile-nav-link">SUPPORT</a></li>
+        </ul>
+        <div class="mobile-nav-footer">
+            <p>1 / 1 EXCLUSIVE ARCHIVE</p>
+        </div>
+    </div>
+
+    <!-- السلة الجانبية -->
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -189,13 +373,22 @@
         </nav>
         <div class="header-actions">
             <a href="#" id="openCart" class="action-link">CART [<span id="cartBadge">0</span>]</a>
+            <div class="mobile-menu-btn" id="openMobileNav">
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </header>
 
     <main class="catalog-container">
-        <div class="page-header">
-            <h1>ACCESSORIES //</h1>
-            <p>TIMELESS OBJECTS TO COMPLETE THE PIECE</p>
+        <!-- بنر ديناميكي قابل للتعديل من لوحة التحكم -->
+        <div class="accessories-hero-banner" id="accHeroBanner">
+            <img src="image_28480a.jpg" id="bannerImgEl" alt="Accessories Archive" class="banner-bg-img">
+            <div class="banner-overlay-content">
+                <div class="banner-tag" id="bannerTagEl">SCULPTED OBJECTS /// EDITION</div>
+                <h1 class="banner-title" id="bannerTitleEl">The Artifacts.</h1>
+                <p class="banner-subtitle" id="bannerSubtitleEl">TIMELESS OBJECTS TO COMPLETE THE PIECE</p>
+            </div>
         </div>
 
         <div class="accessories-grid" id="accessoriesGrid">
@@ -220,29 +413,23 @@
     <!-- سكربت الحماية المتقدمة والتشفير -->
     <script>
         (function(_0xGuard){
-            // حظر قائمة الفحص والنقر الأيمن
             document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
-            
-            // حظر اختصارات لوحة المفاتيح المتقدمة
             document.addEventListener('keydown', function(e){
-                if(e.keyCode === 123) { e.preventDefault(); return false; } // F12
-                if(e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) { e.preventDefault(); return false; } // Ctrl+Shift+I/J/C
-                if(e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 88 || e.keyCode === 80)) { e.preventDefault(); return false; } // Ctrl+U/S/C/X/P
-                if(e.metaKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67)) { e.preventDefault(); return false; } // MacOS Command keys
+                if(e.keyCode === 123) { e.preventDefault(); return false; }
+                if(e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) { e.preventDefault(); return false; }
+                if(e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 88 || e.keyCode === 80)) { e.preventDefault(); return false; }
+                if(e.metaKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67)) { e.preventDefault(); return false; }
             });
-
-            // حظر النسخ والسحب
             document.addEventListener('copy', function(e){ e.preventDefault(); });
             document.addEventListener('cut', function(e){ e.preventDefault(); });
             document.addEventListener('dragstart', function(e){ e.preventDefault(); });
 
-            // تشويش أدوات المطورين
             setInterval(function(){
                 (function(){ return false; }['constructor']('debugger')());
             }, 500);
         })();
 
-        // المنطق المشفر للصفحة
+        // منطق تحميل البيانات وإدارة السلة وجلب إعدادات البنر
         const _0xInit = (function(){
             const _0xcfg = {
                 apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
@@ -257,7 +444,7 @@
 
             const _0xcur = document.getElementById('cursorWrapper');
             let _0xmx = -100, _0xmy = -100, _0xcx = -100, _0xcy = -100;
-            if (!window.matchMedia("(max-width: 768px)").matches) {
+            if (!window.matchMedia("(max-width: 950px)").matches) {
                 document.addEventListener('mousemove', e => { _0xmx = e.clientX; _0xmy = e.clientY; });
                 function _0xanim() {
                     _0xcx += (_0xmx - _0xcx) * 0.25; _0xcy += (_0xmy - _0xcy) * 0.25;
@@ -275,6 +462,19 @@
                     el.removeEventListener('mouseleave', _0xunhov);
                     el.addEventListener('mouseenter', _0xhov);
                     el.addEventListener('mouseleave', _0xunhov);
+                });
+            }
+
+            // جلب إعدادات البنر من Firebase
+            function _0xloadBanner() {
+                _0xdb.collection("settings").doc("accessoriesBanner").onSnapshot(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.image) document.getElementById('bannerImgEl').src = data.image;
+                        if (data.tag) document.getElementById('bannerTagEl').innerText = data.tag;
+                        if (data.title) document.getElementById('bannerTitleEl').innerText = data.title;
+                        if (data.subtitle) document.getElementById('bannerSubtitleEl').innerText = data.subtitle;
+                    }
                 });
             }
 
@@ -310,7 +510,7 @@
                                     </div>
                                     <div class="acc-bottom">
                                         <span>${isOut ? 'ARCHIVED' : `STOCK // ${stock} PCS`}</span>
-                                        <span class="view-btn">VIEW DETAILS</span>
+                                        <span class="view-btn">VIEW</span>
                                     </div>
                                 </div>
                             </a>
@@ -353,9 +553,33 @@
             };
 
             document.addEventListener('DOMContentLoaded', () => {
+                _0xloadBanner();
                 _0xload();
                 _0xcartUI();
                 _0xbind();
+
+                // تشغيل القائمة المنسدلة للشاشات الصغيرة
+                const openMobileNavBtn = document.getElementById('openMobileNav');
+                const closeMobileNavBtn = document.getElementById('closeMobileNav');
+                const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+                const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+                function toggleMobileMenu(isOpen) {
+                    if (isOpen) {
+                        mobileNavDrawer?.classList.add('active');
+                        mobileNavOverlay?.classList.add('active');
+                    } else {
+                        mobileNavDrawer?.classList.remove('active');
+                        mobileNavOverlay?.classList.remove('active');
+                    }
+                }
+
+                openMobileNavBtn?.addEventListener('click', () => toggleMobileMenu(true));
+                closeMobileNavBtn?.addEventListener('click', () => toggleMobileMenu(false));
+                mobileNavOverlay?.addEventListener('click', () => toggleMobileMenu(false));
+                document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                    link.addEventListener('click', () => toggleMobileMenu(false));
+                });
 
                 document.getElementById('openCart')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
                 document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
