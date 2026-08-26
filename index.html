@@ -112,17 +112,63 @@
         .main-header .main-nav ul li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 300; text-transform: uppercase; letter-spacing: 4px; transition: 0.3s; opacity: 0.7;}
         .main-header .main-nav ul li a:hover { opacity: 1; color: #fff;}
         
-        .main-header .header-actions { display: flex; gap: 40px; }
+        .main-header .header-actions { display: flex; gap: 30px; align-items: center; }
         .main-header .login-btn { color: var(--text-cream); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 12px; font-weight: 300; text-transform: uppercase; letter-spacing: 4px; transition: 0.3s; opacity: 0.8;}
         .main-header .login-btn:hover { opacity: 1; color: #fff;}
+
+        /* ================= زر وقائمة الموبايل المنسدلة ================= */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer !important;
+            z-index: 10000;
+        }
+        .mobile-menu-btn span {
+            display: block;
+            width: 100%;
+            height: 1px;
+            background-color: var(--text-cream);
+            transition: 0.3s ease;
+        }
+
+        .mobile-nav-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(4, 6, 10, 0.92); backdrop-filter: blur(10px);
+            z-index: 999998; opacity: 0; visibility: hidden; transition: 0.4s ease;
+        }
+        .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+
+        .mobile-nav-drawer {
+            position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw; height: 100vh;
+            background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 999999;
+            padding: 35px 25px; display: flex; flex-direction: column; justify-content: space-between;
+            transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-nav-drawer.active { right: 0; }
+
+        .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; }
+        .mobile-nav-logo { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 4px; color: var(--text-cream); }
+        .mobile-nav-logo span { color: var(--text-muted); font-weight: 300; }
+        .close-mobile-nav { font-size: 22px; color: var(--text-muted); cursor: pointer !important; transition: 0.3s; }
+        .close-mobile-nav:hover { color: var(--text-cream); }
+
+        .mobile-nav-links { list-style: none; display: flex; flex-direction: column; gap: 25px; margin-top: 40px; }
+        .mobile-nav-links li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 15px; letter-spacing: 4px; text-transform: uppercase; font-weight: 400; transition: 0.3s; display: inline-block; }
+        .mobile-nav-links li a:hover { color: var(--accent-blue); transform: translateX(-5px); }
+
+        .mobile-nav-footer p { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase; text-align: center; border-top: 1px solid var(--line-color); padding-top: 15px; }
 
         @media (max-width: 950px) {
             .main-header { flex-direction: row; height: 70px; padding: 0 5%; background: rgba(4, 6, 10, 0.98); border-bottom: 1px solid var(--line-color);}
             .main-header.scrolled { height: 60px; }
             .main-header .logo { font-size: 20px; letter-spacing: 4px;}
-            .main-header.scrolled .logo { font-size: 18px; }
             .main-header .main-nav { display: none; } 
-            .main-header .header-actions { gap: 20px; }
+            .mobile-menu-btn { display: flex !important; }
+            .main-header .header-actions { gap: 15px; }
             .main-header .login-btn { font-size: 11px; letter-spacing: 1px;}
             .cursor-wrapper { display: none !important; }
         }
@@ -386,6 +432,24 @@
 
     <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
+    <!-- قائمة الموبايل المنسدلة (Mobile Nav Drawer) -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-logo" dir="ltr">UNO<span>VERSE</span></span>
+            <span class="close-mobile-nav" id="closeMobileNav">✕</span>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="#about" class="mobile-nav-link">ABOUT US</a></li>
+            <li><a href="#collection" class="mobile-nav-link">ARCHIVE</a></li>
+            <li><a href="accessories.html" class="mobile-nav-link">ACCESSORIES</a></li>
+            <li><a href="#support" class="mobile-nav-link">SUPPORT</a></li>
+        </ul>
+        <div class="mobile-nav-footer">
+            <p>1 / 1 EXCLUSIVE ARCHIVE</p>
+        </div>
+    </div>
+
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -415,9 +479,15 @@
                 <li><a href="#support">SUPPORT</a></li>
             </ul>
         </nav>
+
         <div class="header-actions">
             <a href="#" id="openLogin" class="login-btn">ACCESS</a>
             <a href="#" id="openCart" class="login-btn">CART [<span id="cartBadge">0</span>]</a>
+            <!-- زر فتح القائمة للشاشات الصغيرة -->
+            <div class="mobile-menu-btn" id="openMobileNav">
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </header>
 
@@ -1003,6 +1073,31 @@
             loadAccessoriesFromCloud();
             updateCartUI();
             attachCursorEffects();
+
+            // ================= تشغيل القائمة المنسدلة للشاشات الصغيرة =================
+            const openMobileNavBtn = document.getElementById('openMobileNav');
+            const closeMobileNavBtn = document.getElementById('closeMobileNav');
+            const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+            function toggleMobileMenu(isOpen) {
+                if (isOpen) {
+                    mobileNavDrawer?.classList.add('active');
+                    mobileNavOverlay?.classList.add('active');
+                } else {
+                    mobileNavDrawer?.classList.remove('active');
+                    mobileNavOverlay?.classList.remove('active');
+                }
+            }
+
+            openMobileNavBtn?.addEventListener('click', () => toggleMobileMenu(true));
+            closeMobileNavBtn?.addEventListener('click', () => toggleMobileMenu(false));
+            mobileNavOverlay?.addEventListener('click', () => toggleMobileMenu(false));
+
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => toggleMobileMenu(false));
+            });
+
             document.getElementById('openCart')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
             document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
             document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
