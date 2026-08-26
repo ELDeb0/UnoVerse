@@ -139,7 +139,7 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream);}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
-        /* Desktop Layout (التفاصيل يمين + الصورة شمال) */
+        /* Desktop Layout */
         .product-wrapper { 
             position: relative; 
             z-index: 10; 
@@ -239,7 +239,6 @@
         }
         .btn-add-cart:hover { background: transparent; color: var(--text-cream); }
 
-        /* معرض الصور (شمال) - إطار ملائم لحجم الصورة تماماً */
         .product-gallery-panel { 
             display: flex; 
             flex-direction: column; 
@@ -327,85 +326,90 @@
         .social-links a:hover { color: var(--text-cream); padding-right: 5px;}
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 20px; font-family: 'Oswald', sans-serif; font-size: 9.5px; letter-spacing: 4px; text-transform: uppercase;}
 
-        /* ================= تحسين الموبايل: الصورة شمال + التفاصيل يمين جنباً إلى جنب ================= */
+        /* ================= تجاوب الموبايل وإلغاء المساحة الفارغة ================= */
         @media (max-width: 768px) {
             .product-wrapper { 
                 display: flex !important;
-                flex-direction: row !important; /* التفاصيل باليمين + الصورة باليسار */
-                align-items: flex-start !important;
-                padding: 85px 3% 25px !important; 
-                gap: 8px !important; 
+                flex-direction: row !important;
+                align-items: stretch !important;
+                min-height: auto !important;
+                padding: 95px 3% 15px !important; 
+                gap: 10px !important; 
             }
             
-            /* التفاصيل باليمين */
+            /* التفاصيل باليمين ممتدة لملء المساحة */
             .product-info-panel { 
                 width: 54% !important; 
-                flex: 0 0 54% !important;
+                flex: 1 1 54% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
                 text-align: right !important;
             }
             
             /* الصورة بالشمال */
             .product-gallery-panel { 
                 width: 46% !important; 
-                flex: 0 0 46% !important;
-                position: sticky !important;
-                top: 85px !important;
-                gap: 6px !important;
+                flex: 1 1 46% !important;
+                position: static !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: flex-start !important;
+                gap: 8px !important;
             }
             
-            /* إطار الصورة بدون مساحات زائدة */
             .main-frame {
-                display: inline-flex !important;
-                width: fit-content !important;
-                max-width: 100% !important;
-                height: auto !important;
+                display: flex !important;
+                width: 100% !important;
+                height: 100% !important;
+                min-height: 220px !important;
+                max-height: 480px !important;
                 border: 1px solid var(--line-color) !important;
                 padding: 0 !important;
-                margin: 0 auto !important;
+                margin: 0 !important;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.6) !important;
             }
             
             .main-frame img {
                 width: 100% !important;
-                max-width: 100% !important;
-                height: auto !important;
-                max-height: 40vh !important;
+                height: 100% !important;
+                max-height: none !important;
                 object-fit: cover !important;
             }
 
-            .product-name { font-size: 16px !important; margin-bottom: 6px !important; }
-            .product-tag { font-size: 8px !important; letter-spacing: 1.5px !important; margin-bottom: 4px !important; }
-            .product-price-box { font-size: 16px !important; margin-bottom: 8px !important; }
+            .product-name { font-size: 17px !important; margin-bottom: 6px !important; }
+            .product-tag { font-size: 8.5px !important; letter-spacing: 1.5px !important; margin-bottom: 4px !important; }
+            .product-price-box { font-size: 17px !important; margin-bottom: 8px !important; }
             .product-price-box .old { font-size: 11px !important; }
             
             .meta-specs { 
                 grid-template-columns: 1fr 1fr !important; 
-                gap: 4px !important; 
+                gap: 6px !important; 
                 padding: 6px 0 !important; 
                 margin-bottom: 8px !important;
             }
             .spec-item .label { font-size: 7.5px !important; letter-spacing: 0.5px !important; }
             .spec-item .val { font-size: 9.5px !important; }
             
-            .product-desc { font-size: 10.5px !important; line-height: 1.5 !important; margin-bottom: 8px !important; }
+            .product-desc { font-size: 11px !important; line-height: 1.6 !important; margin-bottom: 8px !important; }
             .product-ticker-container { padding: 4px 6px !important; margin-bottom: 8px !important; }
             .product-ticker-text { font-size: 8.5px !important; letter-spacing: 1.5px !important; }
             
             .archive-perks-grid { grid-template-columns: 1fr !important; gap: 4px !important; margin-bottom: 8px !important; }
-            .perk-card { padding: 4px 6px !important; }
-            .perk-card .perk-title { font-size: 8px !important; }
-            .perk-card .perk-sub { font-size: 8.5px !important; }
+            .perk-card { padding: 5px 6px !important; }
+            .perk-card .perk-title { font-size: 8.5px !important; }
+            .perk-card .perk-sub { font-size: 9px !important; }
             
             .custom-design-card { padding: 8px !important; margin-bottom: 8px !important; }
             .custom-header label { font-size: 9px !important; }
             .custom-price-tag { font-size: 9.5px !important; }
             .custom-input-box textarea { height: 50px !important; font-size: 10.5px !important; }
             
-            .btn-add-cart { padding: 10px !important; font-size: 10px !important; letter-spacing: 1.5px !important; }
+            .btn-add-cart { padding: 12px !important; font-size: 11px !important; letter-spacing: 2px !important; margin-top: 4px !important; }
             .gallery-thumbs .thumb-item { width: 35px !important; height: 35px !important; }
             
-            .related-section { padding: 25px 3% 15px !important; }
-            .related-title { font-size: 9.5px !important; letter-spacing: 2px !important; margin-bottom: 12px !important; }
+            .related-section { padding: 20px 3% 15px !important; }
+            .related-title { font-size: 9.5px !important; letter-spacing: 2px !important; margin-bottom: 10px !important; }
             .related-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
             .related-card { padding: 6px !important; }
             .related-card h4 { font-size: 10px !important; }
@@ -665,44 +669,46 @@
                     <div class="product-wrapper">
                         <!-- تفاصيل القطعة (يمين) -->
                         <div class="product-info-panel">
-                            <div class="product-tag">ARCHIVE ACCESSORY // SPEC-0${stock}</div>
-                            <h1 class="product-name">${item.name}</h1>
-                            <div class="product-price-box">${priceDisplay}</div>
+                            <div>
+                                <div class="product-tag">ARCHIVE ACCESSORY // SPEC-0${stock}</div>
+                                <h1 class="product-name">${item.name}</h1>
+                                <div class="product-price-box">${priceDisplay}</div>
 
-                            <div class="meta-specs">
-                                <div class="spec-item">
-                                    <span class="label">AVAILABILITY</span>
-                                    <span class="val" style="color:${isOutOfStock ? '#ff3333' : '#2ecc71'}">${isOutOfStock ? 'SOLD OUT' : `${stock} PIECES`}</span>
+                                <div class="meta-specs">
+                                    <div class="spec-item">
+                                        <span class="label">AVAILABILITY</span>
+                                        <span class="val" style="color:${isOutOfStock ? '#ff3333' : '#2ecc71'}">${isOutOfStock ? 'SOLD OUT' : `${stock} PIECES`}</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="label">EDITION</span>
+                                        <span class="val">LIMITED CRAFT</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="label">AUTHENTICITY</span>
+                                        <span class="val">100% VERIFIED</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="label">MATERIAL</span>
+                                        <span class="val">ARCHIVE SPEC</span>
+                                    </div>
                                 </div>
-                                <div class="spec-item">
-                                    <span class="label">EDITION</span>
-                                    <span class="val">LIMITED CRAFT</span>
+
+                                ${tickerHTML}
+                                <p class="product-desc">${item.description || 'قطعة إكسسوار فريدة مصنعة يدوياً بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.'}</p>
+                                
+                                <div class="archive-perks-grid">
+                                    <div class="perk-card">
+                                        <span class="perk-title">✦ ARCHIVE BOX</span>
+                                        <span class="perk-sub">صندوق فاخر مخصص</span>
+                                    </div>
+                                    <div class="perk-card">
+                                        <span class="perk-title">✦ EXPRESS TRANSIT</span>
+                                        <span class="perk-sub">توصيل خلال ٢-٤ أيام</span>
+                                    </div>
                                 </div>
-                                <div class="spec-item">
-                                    <span class="label">AUTHENTICITY</span>
-                                    <span class="val">100% VERIFIED</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="label">MATERIAL</span>
-                                    <span class="val">ARCHIVE SPEC</span>
-                                </div>
+
+                                ${customDesignHTML}
                             </div>
-
-                            ${tickerHTML}
-                            <p class="product-desc">${item.description || 'قطعة إكسسوار فريدة مصنعة يدوياً بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.'}</p>
-                            
-                            <div class="archive-perks-grid">
-                                <div class="perk-card">
-                                    <span class="perk-title">✦ ARCHIVE BOX</span>
-                                    <span class="perk-sub">صندوق فاخر مخصص</span>
-                                </div>
-                                <div class="perk-card">
-                                    <span class="perk-title">✦ EXPRESS TRANSIT</span>
-                                    <span class="perk-sub">توصيل خلال ٢-٤ أيام</span>
-                                </div>
-                            </div>
-
-                            ${customDesignHTML}
                             ${btnHTML}
                         </div>
 
