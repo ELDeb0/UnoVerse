@@ -139,7 +139,7 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream);}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
-        /* Desktop Layout */
+        /* Desktop Layout (جانب لجنب) */
         .product-wrapper { 
             position: relative; 
             z-index: 10; 
@@ -153,6 +153,40 @@
             gap: 50px; 
         }
         
+        .product-gallery-panel { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px;
+            position: sticky;
+            top: 100px;
+            align-items: center;
+        }
+        .main-frame { 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1/1;
+            background: #020408;
+            border: 1px solid var(--line-color); 
+            overflow: hidden; 
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .main-frame img { 
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .main-frame:hover img { transform: scale(1.03); }
+
+        .gallery-thumbs { display: flex; gap: 10px; overflow-x: auto; width: 100%; justify-content: center; padding-bottom: 5px;}
+        .thumb-item { width: 65px; height: 65px; border: 1px solid var(--line-color); cursor: pointer !important; overflow: hidden; background: var(--bg-card); opacity: 0.6; transition: 0.3s; flex-shrink: 0;}
+        .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
+        .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
+
         .product-info-panel { 
             display: flex; 
             flex-direction: column; 
@@ -239,43 +273,6 @@
         }
         .btn-add-cart:hover { background: transparent; color: var(--text-cream); }
 
-        .product-gallery-panel { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px;
-            position: sticky;
-            top: 110px;
-            align-items: center;
-        }
-        .main-frame { 
-            display: inline-flex;
-            width: fit-content;
-            max-width: 100%;
-            height: auto;
-            background: transparent; 
-            border: 1px solid var(--line-color); 
-            overflow: hidden; 
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            padding: 0;
-            line-height: 0;
-        }
-        .main-frame img { 
-            display: block;
-            width: auto;
-            max-width: 100%;
-            height: auto;
-            max-height: 70vh;
-            object-fit: contain; 
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .main-frame:hover img { transform: scale(1.03); }
-
-        .gallery-thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; width: 100%; justify-content: center;}
-        .thumb-item { width: 60px; height: 60px; border: 1px solid var(--line-color); cursor: pointer !important; overflow: hidden; background: var(--bg-card); opacity: 0.6; transition: 0.3s; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
-        .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
-        .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
-
         /* قسم المقترحات */
         .related-section { 
             padding: 40px 6% 20px; 
@@ -326,94 +323,100 @@
         .social-links a:hover { color: var(--text-cream); padding-right: 5px;}
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 20px; font-family: 'Oswald', sans-serif; font-size: 9.5px; letter-spacing: 4px; text-transform: uppercase;}
 
-        /* ================= تجاوب الموبايل وإلغاء المساحة الفارغة ================= */
+        /* ================= تجاوب الموبايل: الصورة بعرض الشاشة بالأعلى ومتصلة بالتفاصيل ================= */
         @media (max-width: 768px) {
             .product-wrapper { 
                 display: flex !important;
-                flex-direction: row !important;
-                align-items: stretch !important;
+                flex-direction: column !important;
+                padding: 80px 0 30px 0 !important;
+                gap: 0 !important;
                 min-height: auto !important;
-                padding: 95px 3% 15px !important; 
-                gap: 10px !important; 
             }
             
-            /* التفاصيل باليمين ممتدة لملء المساحة */
-            .product-info-panel { 
-                width: 54% !important; 
-                flex: 1 1 54% !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
-                text-align: right !important;
-            }
-            
-            /* الصورة بالشمال */
+            /* الصورة بالأعلى بعرض كامل الشاشة */
             .product-gallery-panel { 
-                width: 46% !important; 
-                flex: 1 1 46% !important;
+                width: 100% !important; 
+                max-width: 100% !important;
                 position: static !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: flex-start !important;
-                gap: 8px !important;
+                gap: 0 !important;
+                padding: 0 !important;
             }
             
             .main-frame {
-                display: flex !important;
-                width: 100% !important;
-                height: 100% !important;
-                min-height: 220px !important;
-                max-height: 480px !important;
-                border: 1px solid var(--line-color) !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.6) !important;
+                width: 100vw !important;
+                max-width: 100vw !important;
+                height: 65vh !important;
+                aspect-ratio: auto !important;
+                border: none !important;
+                border-bottom: 1px solid var(--line-color) !important;
+                box-shadow: none !important;
+                background: #020408 !important;
             }
             
             .main-frame img {
                 width: 100% !important;
                 height: 100% !important;
-                max-height: none !important;
                 object-fit: cover !important;
             }
 
-            .product-name { font-size: 17px !important; margin-bottom: 6px !important; }
-            .product-tag { font-size: 8.5px !important; letter-spacing: 1.5px !important; margin-bottom: 4px !important; }
-            .product-price-box { font-size: 17px !important; margin-bottom: 8px !important; }
-            .product-price-box .old { font-size: 11px !important; }
+            .gallery-thumbs {
+                padding: 12px 5% 0 !important;
+                justify-content: flex-start !important;
+                gap: 10px !important;
+            }
+
+            .gallery-thumbs .thumb-item {
+                width: 55px !important;
+                height: 55px !important;
+                border: 1px solid var(--line-color) !important;
+            }
+
+            /* بطاقة التفاصيل المتصلة أسفل الصورة */
+            .product-info-panel { 
+                width: 100% !important; 
+                padding: 25px 5% 15px !important;
+                background: var(--bg-deep) !important;
+                border-top: 1px solid var(--line-color) !important;
+                margin-top: 15px !important;
+                box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.5) !important;
+            }
+            
+            .product-name { font-size: 26px !important; margin-bottom: 10px !important; }
+            .product-tag { font-size: 10px !important; letter-spacing: 2.5px !important; margin-bottom: 6px !important; }
+            .product-price-box { font-size: 24px !important; margin-bottom: 15px !important; }
+            .product-price-box .old { font-size: 14px !important; }
             
             .meta-specs { 
-                grid-template-columns: 1fr 1fr !important; 
-                gap: 6px !important; 
-                padding: 6px 0 !important; 
-                margin-bottom: 8px !important;
+                grid-template-columns: repeat(2, 1fr) !important; 
+                gap: 10px !important; 
+                padding: 12px 0 !important; 
+                margin-bottom: 15px !important;
             }
-            .spec-item .label { font-size: 7.5px !important; letter-spacing: 0.5px !important; }
-            .spec-item .val { font-size: 9.5px !important; }
+            .spec-item .label { font-size: 9px !important; letter-spacing: 1px !important; }
+            .spec-item .val { font-size: 12px !important; }
             
-            .product-desc { font-size: 11px !important; line-height: 1.6 !important; margin-bottom: 8px !important; }
-            .product-ticker-container { padding: 4px 6px !important; margin-bottom: 8px !important; }
-            .product-ticker-text { font-size: 8.5px !important; letter-spacing: 1.5px !important; }
+            .product-desc { font-size: 13px !important; line-height: 1.8 !important; margin-bottom: 15px !important; }
+            .product-ticker-container { padding: 6px 10px !important; margin-bottom: 15px !important; }
+            .product-ticker-text { font-size: 10px !important; letter-spacing: 2px !important; }
             
-            .archive-perks-grid { grid-template-columns: 1fr !important; gap: 4px !important; margin-bottom: 8px !important; }
-            .perk-card { padding: 5px 6px !important; }
-            .perk-card .perk-title { font-size: 8.5px !important; }
-            .perk-card .perk-sub { font-size: 9px !important; }
+            .archive-perks-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; margin-bottom: 15px !important; }
+            .perk-card { padding: 10px !important; }
+            .perk-card .perk-title { font-size: 9.5px !important; }
+            .perk-card .perk-sub { font-size: 10px !important; }
             
-            .custom-design-card { padding: 8px !important; margin-bottom: 8px !important; }
-            .custom-header label { font-size: 9px !important; }
-            .custom-price-tag { font-size: 9.5px !important; }
-            .custom-input-box textarea { height: 50px !important; font-size: 10.5px !important; }
+            .custom-design-card { padding: 12px !important; margin-bottom: 15px !important; }
+            .custom-header label { font-size: 11px !important; }
+            .custom-price-tag { font-size: 12px !important; }
+            .custom-input-box textarea { height: 60px !important; font-size: 12px !important; }
             
-            .btn-add-cart { padding: 12px !important; font-size: 11px !important; letter-spacing: 2px !important; margin-top: 4px !important; }
-            .gallery-thumbs .thumb-item { width: 35px !important; height: 35px !important; }
+            .btn-add-cart { padding: 16px !important; font-size: 13px !important; letter-spacing: 3px !important; }
             
-            .related-section { padding: 20px 3% 15px !important; }
-            .related-title { font-size: 9.5px !important; letter-spacing: 2px !important; margin-bottom: 10px !important; }
-            .related-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
-            .related-card { padding: 6px !important; }
-            .related-card h4 { font-size: 10px !important; }
-            .related-card p { font-size: 9.5px !important; }
+            .related-section { padding: 30px 5% 15px !important; }
+            .related-title { font-size: 11px !important; letter-spacing: 2px !important; margin-bottom: 15px !important; }
+            .related-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            .related-card { padding: 8px !important; }
+            .related-card h4 { font-size: 11px !important; }
+            .related-card p { font-size: 11px !important; }
             
             .main-nav { display: none; }
             .mobile-menu-btn { display: flex !important; }
@@ -667,7 +670,15 @@
 
                 wrapper.innerHTML = `
                     <div class="product-wrapper">
-                        <!-- تفاصيل القطعة (يمين) -->
+                        <!-- معرض الصور (بالأعلى في الموبايل) -->
+                        <div class="product-gallery-panel">
+                            <div class="main-frame">
+                                <img id="mainDisplayImg" src="${images[0]}" alt="${item.name}">
+                            </div>
+                            ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
+                        </div>
+
+                        <!-- تفاصيل القطعة (متصلة بالأسفل في الموبايل) -->
                         <div class="product-info-panel">
                             <div>
                                 <div class="product-tag">ARCHIVE ACCESSORY // SPEC-0${stock}</div>
@@ -710,14 +721,6 @@
                                 ${customDesignHTML}
                             </div>
                             ${btnHTML}
-                        </div>
-
-                        <!-- معرض الصور (شمال) بإطار ملائم للصورة تماماً -->
-                        <div class="product-gallery-panel">
-                            <div class="main-frame">
-                                <img id="mainDisplayImg" src="${images[0]}" alt="${item.name}">
-                            </div>
-                            ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
                         </div>
                     </div>
                 `;

@@ -1,7 +1,17 @@
 /* =========================================================
-   UNOVERSE UNIFIED FLUID SCALING ENGINE
-   يحافظ على نفس التصميم والهيكل مع تحجيم ذكي للعناصر
+   UNOVERSE UNIFIED FLUID SCALING & HIGH CONTRAST ENGINE
    ========================================================= */
+
+:root {
+    /* ترقية لوحة الألوان لأعلى تباين ووضوح مع الحفاظ على الهوية الداكنة */
+    --bg-deep: #04060A;       
+    --bg-card: #080C14;       
+    --text-cream: #FFFFFF !important;    /* أبيض ناصع وواضح تماماً */
+    --text-muted: #B8C5D3 !important;    /* رمادي فاتح مقروء بوضوح */
+    --accent-blue: #7EADDB !important;   /* أزرق سماوي واضح */
+    --accent-gold: #FFD700 !important;   /* ذهبي بارز للأسعار */
+    --line-color: rgba(255, 255, 255, 0.15) !important;
+}
 
 /* منع الخروج الأفقي وضبط التناسق العام */
 *, *::before, *::after {
@@ -15,13 +25,18 @@ html, body {
     font-size: clamp(13px, 1.1vw, 16px);
 }
 
+body, p, span, h1, h2, h3, h4, a, label, input, textarea {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
 img, svg, canvas {
     max-width: 100%;
     height: auto;
     object-fit: contain;
 }
 
-/* 1. التحجيم النسبي للهيدر */
+/* ================= 1. الهيدر والقوائم ================= */
 .main-header {
     height: clamp(65px, 8vh, 95px) !important;
     padding: 0 clamp(15px, 4vw, 6%) !important;
@@ -30,6 +45,7 @@ img, svg, canvas {
 .main-header .logo {
     font-size: clamp(18px, 2.2vw, 26px) !important;
     letter-spacing: clamp(3px, 0.5vw, 6px) !important;
+    color: #FFFFFF !important;
 }
 
 .main-nav ul {
@@ -38,12 +54,17 @@ img, svg, canvas {
 
 .main-nav ul li a, 
 .header-actions .action-link, 
-.header-actions .login-btn {
+.header-actions .login-btn,
+.mobile-nav-links li a {
     font-size: clamp(10px, 0.9vw, 13px) !important;
     letter-spacing: clamp(2px, 0.3vw, 4px) !important;
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+    font-weight: 500 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-/* 2. التحجيم النسبي لصفحات عرض المنتجات والإكسسوارات (Product & Accessory Pages) */
+/* ================= 2. صفحات عرض المنتجات والإكسسوارات ================= */
 .product-wrapper {
     padding: clamp(90px, 12vh, 140px) clamp(15px, 4vw, 6%) clamp(40px, 6vh, 70px) !important;
     gap: clamp(20px, 4vw, 8%) !important;
@@ -55,25 +76,39 @@ img, svg, canvas {
     min-width: 0;
 }
 
-.product-tag {
+.product-tag,
+.spec-item .label,
+.perk-card .perk-title {
     font-size: clamp(9px, 0.8vw, 11px) !important;
     letter-spacing: clamp(3px, 0.4vw, 5px) !important;
     margin-bottom: clamp(8px, 1.2vh, 15px) !important;
+    color: var(--accent-blue) !important;
+    font-weight: 600 !important;
 }
 
 .product-name {
     font-size: clamp(24px, 3.2vw, 50px) !important;
     margin-bottom: clamp(10px, 1.8vh, 20px) !important;
     line-height: 1.15 !important;
+    color: #FFFFFF !important;
 }
 
-.product-price-box {
+.product-price-box,
+.acc-top .price,
+.acc-stage-header .price {
     font-size: clamp(20px, 2.4vw, 32px) !important;
     margin-bottom: clamp(12px, 2vh, 25px) !important;
+    color: var(--accent-gold) !important;
+    font-weight: 700 !important;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.25);
 }
 
-.product-price-box .old {
+.product-price-box .old,
+.acc-top .price .old,
+.acc-stage-header .price .old {
     font-size: clamp(12px, 1.2vw, 16px) !important;
+    color: #94A3B8 !important;
+    opacity: 0.85 !important;
 }
 
 .meta-specs {
@@ -82,22 +117,17 @@ img, svg, canvas {
     margin-bottom: clamp(15px, 2vh, 25px) !important;
 }
 
-.spec-item .label {
-    font-size: clamp(8px, 0.75vw, 10px) !important;
-    letter-spacing: clamp(1.5px, 0.2vw, 3px) !important;
-}
-
-.spec-item .val {
-    font-size: clamp(11px, 1vw, 14px) !important;
-}
-
-.product-desc {
+.spec-item .val,
+.product-desc,
+.ed-text,
+.perk-card .perk-sub {
     font-size: clamp(11px, 0.95vw, 14px) !important;
     line-height: 1.8 !important;
-    margin-bottom: clamp(15px, 2vh, 25px) !important;
+    color: #E2E8F0 !important;
+    font-weight: 400 !important;
 }
 
-.btn-add-cart, .checkout-btn, .submit-order-btn {
+.btn-add-cart, .checkout-btn, .submit-order-btn, .submit-btn {
     padding: clamp(12px, 1.8vh, 20px) clamp(15px, 2vw, 25px) !important;
     font-size: clamp(11px, 1vw, 14px) !important;
     letter-spacing: clamp(3px, 0.4vw, 6px) !important;
@@ -119,7 +149,7 @@ img, svg, canvas {
     height: clamp(50px, 6vw, 75px) !important;
 }
 
-/* 3. التحجيم النسبي لصفحة كتالوج الإكسسوارات (Accessories Catalog) */
+/* ================= 3. كتالوج الإكسسوارات وكروت الأرشيف ================= */
 .catalog-container {
     padding: clamp(85px, 10vh, 120px) clamp(12px, 3.5vw, 6%) clamp(40px, 5vh, 80px) !important;
 }
@@ -131,11 +161,13 @@ img, svg, canvas {
 
 .banner-title {
     font-size: clamp(22px, 3.8vw, 54px) !important;
+    color: #FFFFFF !important;
 }
 
 .banner-subtitle {
     font-size: clamp(9px, 0.9vw, 12px) !important;
     letter-spacing: clamp(3px, 0.6vw, 8px) !important;
+    color: #CBD5E1 !important;
 }
 
 .accessories-grid {
@@ -147,12 +179,20 @@ img, svg, canvas {
     padding: clamp(10px, 1.2vw, 18px) !important;
 }
 
-.acc-top h3 {
+.album-info .info-top h3,
+.acc-top h3,
+.acc-stage-header h3,
+.related-card h4 {
     font-size: clamp(11px, 1.1vw, 15px) !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
 }
 
-.acc-top .price {
-    font-size: clamp(11px, 1vw, 14px) !important;
+.album-info .sizes-display,
+.acc-bottom span,
+.acc-stage-stock {
+    color: #CBD5E1 !important;
+    font-weight: 400 !important;
 }
 
 .overlay-badge {
@@ -160,7 +200,7 @@ img, svg, canvas {
     padding: clamp(2px, 0.4vh, 4px) clamp(6px, 0.8vw, 10px) !important;
 }
 
-/* 4. التحجيم النسبي لصفحة الدفع (Checkout) */
+/* ================= 4. حقول الإدخال وصفحة الدفع ================= */
 .checkout-wrapper, 
 .checkout-container {
     padding: clamp(85px, 10vh, 130px) clamp(12px, 3.5vw, 5%) clamp(40px, 5vh, 70px) !important;
@@ -170,35 +210,54 @@ img, svg, canvas {
 .section-title {
     font-size: clamp(14px, 1.6vw, 24px) !important;
     margin-bottom: clamp(12px, 2vh, 25px) !important;
+    color: #FFFFFF !important;
 }
 
-.form-group label {
+.form-group label,
+.custom-header label {
     font-size: clamp(9px, 0.8vw, 11px) !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
 }
 
 .form-group input, 
 .form-group textarea, 
 .input-group input, 
-.input-group select {
+.input-group select,
+.custom-input-box textarea {
     padding: clamp(9px, 1.3vh, 15px) clamp(10px, 1.2vw, 15px) !important;
     font-size: clamp(11px, 0.95vw, 13.5px) !important;
+    color: #FFFFFF !important;
+    background: #0B111A !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #8395A7 !important;
 }
 
 .summary-title {
     font-size: clamp(13px, 1.2vw, 16px) !important;
+    color: #FFFFFF !important;
 }
 
 .total-row.final, .total-row {
     font-size: clamp(14px, 1.4vw, 20px) !important;
+    color: var(--accent-gold) !important;
 }
 
-/* 5. التحجيم النسبي للفوتر */
+/* ================= 5. الفوتر ================= */
 .main-footer {
     padding: clamp(40px, 6vh, 80px) clamp(15px, 4vw, 6%) clamp(20px, 3vh, 35px) !important;
 }
 
-.footer-brand h2 {
+.footer-brand h2,
+.footer-section h4,
+.footer-social h4 {
     font-size: clamp(18px, 1.8vw, 24px) !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
 }
 
 .footer-brand p, 
@@ -206,13 +265,21 @@ img, svg, canvas {
 .social-links a {
     font-size: clamp(9.5px, 0.8vw, 11.5px) !important;
     line-height: 2 !important;
+    color: #A0AEC0 !important;
+    font-weight: 400 !important;
+    opacity: 1 !important;
+}
+
+.social-links a:hover {
+    color: #FFFFFF !important;
 }
 
 .footer-bottom {
     font-size: clamp(8.5px, 0.75vw, 10.5px) !important;
+    color: #8395A7 !important;
 }
 
-/* 6. تحجيم شاشات اللمس والموبايل */
+/* ================= 6. تحجيم الشاشات الصغيرة ================= */
 @media screen and (max-width: 950px) {
     .cursor-wrapper {
         display: none !important;
