@@ -317,8 +317,6 @@
             border: 1px solid var(--line-color);
             padding: 14px 18px;
             margin-bottom: 20px;
-            visibility: visible !important;
-            opacity: 1 !important;
         }
         .quantity-controller-wrapper .qty-label {
             font-family: 'Oswald', sans-serif;
@@ -429,6 +427,7 @@
             opacity: 0.7;
         }
 
+        /* معرض الصور وتأثير الزوم المحسن */
         .product-gallery-panel { 
             display: flex; 
             flex-direction: column; 
@@ -449,6 +448,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             padding: 0;
             line-height: 0;
+            touch-action: pan-y;
         }
         .main-frame img { 
             display: block;
@@ -457,11 +457,15 @@
             height: auto;
             max-height: 70vh;
             object-fit: contain; 
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             transform-origin: center center;
+            will-change: transform;
         }
         .main-frame:hover img { 
             transform: scale(1.35); 
+        }
+        .main-frame.mobile-zoomed img {
+            transform: scale(2.0) !important;
         }
 
         .gallery-thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; width: 100%; justify-content: center;}
@@ -469,43 +473,114 @@
         .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
 
-        /* قسم المقترحات */
+        /* ================= تصميم قسم المقترحات الفاخر والأنيق ================= */
         .related-section { 
-            padding: 40px 6% 20px; 
+            padding: 50px 6% 35px; 
             max-width: 1400px; 
             margin: 0 auto; 
             position: relative; 
             z-index: 10; 
             border-top: 1px solid var(--line-color); 
         }
+        .related-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
         .related-title { 
             font-family: 'Oswald', sans-serif; 
-            font-size: 13px; 
+            font-size: 14px; 
             letter-spacing: 3px; 
-            color: var(--text-muted); 
-            margin-bottom: 18px; 
+            color: var(--text-cream); 
             text-transform: uppercase; 
-            text-align: center;
-            font-weight: 500;
+            font-weight: 600;
+        }
+        .related-view-all {
+            font-family: 'Oswald', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: 0.3s ease;
+            text-transform: uppercase;
+        }
+        .related-view-all:hover {
+            color: #FFFFFF;
         }
         .related-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
-            gap: 15px; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px; 
         }
         .related-card { 
-            background: var(--bg-card); 
+            background: linear-gradient(180deg, rgba(8, 12, 20, 0.8), rgba(4, 6, 10, 0.95));
             border: 1px solid var(--line-color); 
-            padding: 10px; 
+            padding: 12px; 
             text-decoration: none; 
             display: flex; 
             flex-direction: column; 
-            transition: 0.3s;
+            transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
-        .related-card:hover { transform: translateY(-3px); border-color: var(--text-cream);}
-        .related-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #020408; margin-bottom: 8px;}
-        .related-card h4 { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 500;}
-        .related-card p { color: var(--text-muted); font-family: 'Oswald', sans-serif; font-size: 12.5px; font-weight: 500;}
+        .related-card:hover { 
+            transform: translateY(-5px); 
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+        .related-card .img-wrap {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #020408;
+            overflow: hidden;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .related-card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+        }
+        .related-card:hover img {
+            transform: scale(1.05);
+        }
+        .related-card .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: right;
+        }
+        .related-card h4 { 
+            color: var(--text-cream); 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 13.5px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .related-card .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+        }
+        .related-card .price { 
+            color: #FFFFFF; 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 13px; 
+            font-weight: 600;
+        }
+        .related-card .tag {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            color: var(--accent-blue);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
         /* Footer */
         .main-footer { padding: 50px 6% 30px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 30px;}
@@ -626,12 +701,9 @@
             
             .btn-add-cart { padding: 16px !important; font-size: 13px !important; letter-spacing: 3px !important; }
             
-            .related-section { padding: 30px 5% 15px !important; }
-            .related-title { font-size: 12px !important; letter-spacing: 2px !important; margin-bottom: 15px !important; }
+            .related-section { padding: 35px 4% 20px !important; }
             .related-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            .related-card { padding: 8px !important; }
-            .related-card h4 { font-size: 11.5px !important; }
-            .related-card p { font-size: 11.5px !important; }
+            .related-card { padding: 10px !important; }
             
             .main-nav { display: none; }
             .mobile-menu-btn { display: flex !important; }
@@ -706,8 +778,12 @@
         </div>
     </main>
 
+    <!-- قسم المقترحات المحدث -->
     <section class="related-section">
-        <h3 class="related-title">// EXPLORE MORE ACCESSORIES</h3>
+        <div class="related-header">
+            <h3 class="related-title">EXPLORE MORE ACCESSORIES //</h3>
+            <a href="accessories.html" class="related-view-all">SEE ALL ↗</a>
+        </div>
         <div class="related-grid" id="relatedGrid"></div>
     </section>
 
@@ -760,7 +836,7 @@
             }, 500);
         })();
 
-        // حركة الماوس
+        // حركة الماوس للديسكتوب
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100;
         let cursorX = -100, cursorY = -100;
@@ -790,11 +866,13 @@
             });
         }
 
-        function setupImageZoom() {
+        // تحسين الزوم للموبايل والكمبيوتر
+        function setupAdvancedImageZoom() {
             const frame = document.querySelector('.main-frame');
             const img = document.getElementById('mainDisplayImg');
             if (!frame || !img) return;
 
+            // 1. زوم الكمبيوتر عبر تحريك الماوس
             frame.addEventListener('mousemove', (e) => {
                 const rect = frame.getBoundingClientRect();
                 const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -804,6 +882,28 @@
 
             frame.addEventListener('mouseleave', () => {
                 img.style.transformOrigin = 'center center';
+            });
+
+            // 2. زوم اللمس المريح للموبايل (Double Tap / Single Tap toggle)
+            let lastTap = 0;
+            frame.addEventListener('touchend', function (e) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                if (tapLength < 350 && tapLength > 0) {
+                    // Double Tap Zoom
+                    e.preventDefault();
+                    frame.classList.toggle('mobile-zoomed');
+                    if (frame.classList.contains('mobile-zoomed')) {
+                        const touch = e.changedTouches[0];
+                        const rect = frame.getBoundingClientRect();
+                        const x = ((touch.clientX - rect.left) / rect.width) * 100;
+                        const y = ((touch.clientY - rect.top) / rect.height) * 100;
+                        img.style.transformOrigin = `${x}% ${y}%`;
+                    } else {
+                        img.style.transformOrigin = 'center center';
+                    }
+                }
+                lastTap = currentTime;
             });
         }
 
@@ -845,7 +945,7 @@
                     accessoryData = doc.data();
                     accessoryData.id = doc.id;
                     _0xrender(accessoryData);
-                    _0xloadRelated(accessoryId);
+                    _0xloadRandomRelated(accessoryId);
                 } catch (err) {
                     console.error(err);
                 }
@@ -877,7 +977,7 @@
                     </div>
                 ` : '';
 
-                // معالجة صور الألوان المتعددة
+                // معالجة الألوان
                 let colorsHTML = '';
                 const colorsList = item.colors || [];
                 if (colorsList.length > 0) {
@@ -936,7 +1036,6 @@
                     </div>
                 `).join('');
 
-                // محدد كمية القطع
                 let quantityHTML = '';
                 if (!isOutOfStock) {
                     quantityHTML = `
@@ -951,7 +1050,6 @@
                     `;
                 }
 
-                // منطق زر الإضافة إلى السلة
                 let btnHTML = '';
                 if (isOutOfStock) {
                     btnHTML = `<button class="btn-add-cart" id="mainAddCartBtn" disabled>OUT OF STOCK</button>`;
@@ -1017,11 +1115,10 @@
                 `;
 
                 attachCursorEffects();
-                setupImageZoom();
+                setupAdvancedImageZoom();
                 _0xupdateQtyButtons();
             }
 
-            // تبديل اللون وتغيير الصورة الرئيسية فورياً
             window._0xselectColor = function(colorName, colorImg, btnEl) {
                 selectedColor = colorName;
                 selectedImage = colorImg;
@@ -1081,7 +1178,6 @@
 
                 let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
                 
-                // فحص دقيق لمنع تكرار إضافة المنتج نهائياً
                 if (cart.some(item => item.id === accessoryData.id)) {
                     const addBtn = document.getElementById('mainAddCartBtn');
                     if (addBtn) {
@@ -1120,24 +1216,47 @@
                 document.getElementById('cartOverlay').classList.add('active');
             };
 
-            function _0xloadRelated(currentId) {
-                _0xdb.collection("accessories").limit(4).get().then(snapshot => {
+            // جلب 4 منتجات عشوائية لقسم المقترحات في كل زيارة
+            function _0xloadRandomRelated(currentId) {
+                _0xdb.collection("accessories").get().then(snapshot => {
                     const grid = document.getElementById('relatedGrid');
                     if (!grid) return;
                     grid.innerHTML = '';
                     
+                    let items = [];
                     snapshot.forEach(doc => {
                         if (doc.id !== currentId) {
                             const d = doc.data();
-                            const p = d.discount || d.price;
-                            grid.innerHTML += `
-                                <a href="accessory.html?id=${doc.id}" class="related-card">
-                                    <img src="${d.image || (d.gallery ? d.gallery[0] : '')}" alt="${d.name}">
-                                    <h4>${d.name}</h4>
-                                    <p>${p} EGP</p>
-                                </a>
-                            `;
+                            d.id = doc.id;
+                            items.push(d);
                         }
+                    });
+
+                    // خوارزمية Fisher-Yates للخلط العشوائي
+                    for (let i = items.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [items[i], items[j]] = [items[j], items[i]];
+                    }
+
+                    // أخذ 4 قطع عشوائية
+                    const selectedItems = items.slice(0, 4);
+
+                    selectedItems.forEach(d => {
+                        const p = d.discount || d.price;
+                        grid.innerHTML += `
+                            <a href="accessory.html?id=${d.id}" class="related-card">
+                                <div class="img-wrap">
+                                    <img src="${d.image || (d.gallery ? d.gallery[0] : '')}" alt="${d.name}">
+                                </div>
+                                <div class="card-info">
+                                    <span class="tag">ACCESSORY</span>
+                                    <h4>${d.name}</h4>
+                                    <div class="price-row">
+                                        <span class="price">${p} EGP</span>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
                     });
                     attachCursorEffects();
                 });

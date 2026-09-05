@@ -8,10 +8,15 @@
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="stylesheet" href="responsive.css">
     
+    <!-- تسريع الاتصال بالخوادم الخارجية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com">
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Tajawal:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         /* ================= الهوية البصرية الأرشيفية ================= */
@@ -58,7 +63,7 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
         }
 
-        /* ================= شاشة التحميل ================= */
+        /* ================= شاشة التحميل التفاعلية المحدثة ================= */
         #loader-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: var(--bg-deep); z-index: 9999999; display: flex; flex-direction: column; 
@@ -67,18 +72,39 @@
         }
         .loader-logo { 
             font-family: 'Oswald', sans-serif; font-size: 50px; color: var(--text-cream); 
-            letter-spacing: 12px; margin-bottom: 10px; font-weight: 700; direction: ltr;
+            letter-spacing: 12px; margin-bottom: 8px; font-weight: 700; direction: ltr;
         }
         .loader-logo span { color: var(--text-muted); }
         .loader-subtitle {
             font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--text-muted);
-            letter-spacing: 8px; text-transform: uppercase; margin-bottom: 40px; font-weight: 300;
+            letter-spacing: 8px; text-transform: uppercase; margin-bottom: 30px; font-weight: 300;
         }
-        .loader-line-container { width: 150px; height: 1px; background: rgba(255,255,255,0.1); overflow: hidden; position: relative;}
+        .loader-line-container { width: 220px; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; position: relative;}
         #loader-line { 
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%); 
-            width: 0%; height: 100%; background: var(--text-cream); 
-            transition: width 1s cubic-bezier(0.25, 1, 0.5, 1); 
+            position: absolute; top: 0; left: 0; 
+            width: 15%; height: 100%; background: var(--text-cream); 
+            transition: width 0.35s ease-out; 
+        }
+        .loader-notice-box {
+            margin-top: 25px;
+            max-width: 320px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .loader-status-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #7EADDB;
+            text-transform: uppercase;
+        }
+        .loader-hint-text {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 11.5px;
+            color: #8899A6;
+            line-height: 1.6;
         }
         body.loaded #loader-overlay { transform: translateY(-100%); opacity: 0; pointer-events: none; }
 
@@ -116,51 +142,98 @@
         .main-header .login-btn { color: var(--text-cream); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 12px; font-weight: 300; text-transform: uppercase; letter-spacing: 4px; transition: 0.3s; opacity: 0.8;}
         .main-header .login-btn:hover { opacity: 1; color: #fff;}
 
-        /* ================= زر وقائمة الموبايل المنسدلة ================= */
+        /* ================= قائمة الموبايل الجانبية المحسنة ================= */
         .mobile-menu-btn {
             display: none;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
             gap: 6px;
-            width: 30px;
-            height: 30px;
+            width: 44px;
+            height: 44px;
             cursor: pointer !important;
             z-index: 10000;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            transition: 0.3s ease;
+        }
+        .mobile-menu-btn:active {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(0.95);
         }
         .mobile-menu-btn span {
             display: block;
-            width: 100%;
-            height: 1px;
+            width: 20px;
+            height: 1.5px;
             background-color: var(--text-cream);
             transition: 0.3s ease;
         }
 
         .mobile-nav-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(4, 6, 10, 0.92); backdrop-filter: blur(10px);
+            background: rgba(4, 6, 10, 0.85); backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             z-index: 999998; opacity: 0; visibility: hidden; transition: 0.4s ease;
         }
         .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
 
         .mobile-nav-drawer {
-            position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw; height: 100vh;
-            background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 999999;
-            padding: 35px 25px; display: flex; flex-direction: column; justify-content: space-between;
+            position: fixed; top: 0; right: -360px; width: 320px; max-width: 86vw; height: 100vh;
+            background: linear-gradient(180deg, #090E17 0%, #04060A 100%);
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: -15px 0 35px rgba(0, 0, 0, 0.8);
+            z-index: 999999;
+            padding: 35px 28px; display: flex; flex-direction: column; justify-content: space-between;
             transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .mobile-nav-drawer.active { right: 0; }
 
-        .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; }
-        .mobile-nav-logo { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 4px; color: var(--text-cream); }
+        .mobile-nav-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+            padding-bottom: 20px; 
+        }
+        .mobile-nav-logo { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 5px; color: #FFFFFF; }
         .mobile-nav-logo span { color: var(--text-muted); font-weight: 300; }
-        .close-mobile-nav { font-size: 22px; color: var(--text-muted); cursor: pointer !important; transition: 0.3s; }
-        .close-mobile-nav:hover { color: var(--text-cream); }
+        .close-mobile-nav { 
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: var(--text-muted); cursor: pointer !important; 
+            border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.02);
+            transition: 0.3s; 
+        }
+        .close-mobile-nav:hover, .close-mobile-nav:active { 
+            color: #FFFFFF; border-color: rgba(255, 255, 255, 0.3); transform: rotate(90deg); 
+        }
 
-        .mobile-nav-links { list-style: none; display: flex; flex-direction: column; gap: 25px; margin-top: 40px; }
-        .mobile-nav-links li a { text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 15px; letter-spacing: 4px; text-transform: uppercase; font-weight: 400; transition: 0.3s; display: inline-block; }
-        .mobile-nav-links li a:hover { color: var(--accent-blue); transform: translateX(-5px); }
+        .mobile-nav-links { 
+            list-style: none; display: flex; flex-direction: column; 
+            gap: 12px; margin-top: 35px; flex: 1;
+        }
+        .mobile-nav-links li a { 
+            text-decoration: none; color: #E2E8F0; font-family: 'Oswald', sans-serif; 
+            font-size: 19px !important; letter-spacing: 3px; text-transform: uppercase; 
+            font-weight: 500; transition: 0.3s; display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; border: 1px solid transparent; background: transparent;
+        }
+        .mobile-nav-links li a::after {
+            content: '↗'; font-size: 14px; opacity: 0; transform: translateX(5px); transition: 0.3s; color: var(--accent-blue);
+        }
+        .mobile-nav-links li a:hover, .mobile-nav-links li a:active { 
+            color: #FFFFFF; background: rgba(255, 255, 255, 0.04); 
+            border-color: rgba(255, 255, 255, 0.1); transform: translateX(-6px);
+        }
+        .mobile-nav-links li a:hover::after, .mobile-nav-links li a:active::after {
+            opacity: 1; transform: translateX(0);
+        }
 
-        .mobile-nav-footer p { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase; text-align: center; border-top: 1px solid var(--line-color); padding-top: 15px; }
+        .mobile-nav-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;
+        }
+        .mobile-nav-footer p { 
+            font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 3px; 
+            color: var(--text-muted); text-transform: uppercase; text-align: center; font-weight: 400;
+        }
 
         @media (max-width: 950px) {
             .main-header { flex-direction: row; height: 70px; padding: 0 5%; background: rgba(4, 6, 10, 0.98); border-bottom: 1px solid var(--line-color);}
@@ -204,7 +277,6 @@
         .section-fade { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .section-fade.visible { opacity: 1; transform: translateY(0); }
 
-        /* الهيرو */
         .hero-section {
             display: flex; align-items: center; justify-content: center;
             height: 100vh; padding: 0 5%; position: relative; overflow: hidden;
@@ -328,6 +400,39 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(230, 225, 214, 0.05);
         }
 
+        .acc-stage-card.see-all-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(126, 173, 219, 0.08), rgba(4, 6, 10, 0.95));
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+        }
+        .see-all-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 40px 10px;
+        }
+        .see-all-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #FFFFFF;
+            transition: 0.4s ease;
+        }
+        .acc-stage-card.see-all-card:hover .see-all-icon {
+            transform: scale(1.15) rotate(45deg);
+            border-color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .acc-stage-imgbox {
             width: 100%; aspect-ratio: 1/1; background: #020408;
             border: 1px solid rgba(255,255,255,0.03); overflow: hidden; position: relative;
@@ -359,7 +464,6 @@
         .stage-nav-btn:hover { border-color: var(--text-cream); background: rgba(230, 225, 214, 0.05); }
         .stage-counter { font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--text-muted); letter-spacing: 4px;}
 
-        /* Drop Section / About / Support */
         .editorial-section { padding: 150px 8%; text-align: center; border-bottom: 1px solid var(--line-color); position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; height: auto;}
         .ed-title { font-family: 'Playfair Display', serif; font-size: clamp(40px, 8vw, 100px); color: var(--text-cream); line-height: 1; margin-bottom: 30px; font-style: italic;}
         .ed-text { font-family: 'Oswald', sans-serif; font-size: 14px; color: var(--text-muted); letter-spacing: 8px; line-height: 2.5; font-weight: 300; text-transform: uppercase; max-width: 800px; margin: 0 auto; width: 100%; height: auto; word-wrap: break-word;}
@@ -369,7 +473,6 @@
         .time-box span { font-family: 'Playfair Display', serif; font-size: 50px; font-weight: 700; color: var(--text-cream); line-height: 1;}
         .time-box p { font-family: 'Oswald', sans-serif; font-size: 10px; color: var(--text-muted); margin-top: 15px; text-transform: uppercase; letter-spacing: 4px;}
 
-        /* Support Form Minimal */
         .support-form { width: 100%; max-width: 500px; margin: 60px auto 0; display: flex; flex-direction: column; gap: 30px; }
         .support-form input, .support-form textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--line-color); color: var(--text-cream); padding: 15px 0; font-family: 'Oswald', sans-serif; font-size: 12px; outline: none; transition: 0.4s; letter-spacing: 3px; text-transform: uppercase; text-align: center;}
         .support-form input:focus, .support-form textarea:focus { border-bottom-color: var(--text-cream); }
@@ -385,7 +488,6 @@
             .album-card { width: 260px; }
         }
 
-        /* الفوتر */
         .main-footer { padding: 100px 6% 40px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color);}
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; margin-bottom: 80px; }
         .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 6px; color: var(--text-cream); margin-bottom: 20px; display: flex; align-items: center;}
@@ -398,7 +500,6 @@
         .social-links a:hover { color: var(--text-cream); padding-right: 5px;}
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 40px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 6px; text-transform: uppercase;}
 
-        /* تسجيل الدخول */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999; display: flex; justify-content: center; align-items: center; visibility: hidden; }
         .login-overlay.active { visibility: visible; }
         .close-login { position: absolute; top: -40px; right: 20px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 300; color: var(--text-muted); background: transparent; border: none; transition: 0.3s; text-transform: uppercase; letter-spacing: 4px; z-index: 999999; cursor: pointer !important; }
@@ -422,27 +523,32 @@
 
     <div class="cinematic-grain"></div>
 
+    <!-- شاشة التحميل التفاعلية المزودة بنص التنبيه والتقدم -->
     <div id="loader-overlay">
         <div class="loader-logo"><span dir="ltr">UNO<span>VERSE</span></span></div>
         <div class="loader-subtitle">ONE OF ONE ARCHIVE</div>
         <div class="loader-line-container">
             <div id="loader-line"></div>
         </div>
+        <div class="loader-notice-box">
+            <span class="loader-status-text" id="loaderStatusText">SYNCHRONIZING ARCHIVE...</span>
+            <p class="loader-hint-text">قد يستغرق التحميل بضع ثوانٍ لضمان مزامنة القطع والبيانات الحصرية بالكامل.</p>
+        </div>
     </div>
 
     <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
-    <!-- قائمة الموبايل المنسدلة (Mobile Nav Drawer) -->
+    <!-- قائمة الموبايل الجانبية -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
     <div class="mobile-nav-drawer" id="mobileNavDrawer">
         <div class="mobile-nav-header">
             <span class="mobile-nav-logo" dir="ltr">UNO<span>VERSE</span></span>
-            <span class="close-mobile-nav" id="closeMobileNav">✕</span>
+            <div class="close-mobile-nav" id="closeMobileNav">✕</div>
         </div>
         <ul class="mobile-nav-links">
             <li><a href="#about" class="mobile-nav-link">ABOUT US</a></li>
             <li><a href="#collection" class="mobile-nav-link">ARCHIVE</a></li>
-            <li><a href="accessories.html" class="mobile-nav-link">ACCESSORIES</a></li>
+            <li><a href="#accessoriesSection" class="mobile-nav-link">ACCESSORIES</a></li>
             <li><a href="#support" class="mobile-nav-link">SUPPORT</a></li>
         </ul>
         <div class="mobile-nav-footer">
@@ -483,7 +589,6 @@
         <div class="header-actions">
             <a href="#" id="openLogin" class="login-btn">ACCESS</a>
             <a href="#" id="openCart" class="login-btn">CART [<span id="cartBadge">0</span>]</a>
-            <!-- زر فتح القائمة للشاشات الصغيرة -->
             <div class="mobile-menu-btn" id="openMobileNav">
                 <span></span>
                 <span></span>
@@ -543,7 +648,7 @@
         </div>
     </section>
 
-    <!-- سكشن الإكسسوارات المطور بنظام المسرح ثلاثي الأبعاد -->
+    <!-- سكشن الإكسسوارات المطور: يعرض 6 منتجات عشوائية ثم بطاقة SEE ALL -->
     <section id="accessoriesSection" class="archive-section section-fade" style="border-top: 1px solid var(--line-color);">
         <div class="section-header">
             <h2>ACCESSORIES ARCHIVE.</h2>
@@ -568,7 +673,7 @@
         <div class="ed-text">WE ARE HERE TO HELP. EVERY DETAIL MATTERS.</div>
         
         <form class="support-form" id="supportForm" onsubmit="sendSupportEmail(event)">
-            <input type="text" id="supportName" required placeholder="FULL NAME.">
+            <input type="text" id="supportName" required placeholder="FULL NAME (8 CHARS MIN)." minlength="8">
             <input type="email" id="supportEmail" required placeholder="EMAIL ADDRESS.">
             <textarea id="supportMessage" required placeholder="YOUR MESSAGE."></textarea>
             <button type="submit" class="submit-btn">SEND PROTOCOL</button>
@@ -663,6 +768,9 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // تفعيل ميزة التخزين المؤقت في المتصفح لتقليل وقت الجلب اللاحق للصفر
+        db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100;
         let cursorX = -100, cursorY = -100;
@@ -691,13 +799,92 @@
         function addHover() { cursorWrapper.classList.add('hovered'); }
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
 
-        window.addEventListener('load', () => {
+        // محرك مراقبة تحميل الصور بالكامل مع مهلة أمان قصوى
+        function preloadImages(urls) {
+            return Promise.all(urls.map(url => {
+                return new Promise((resolve) => {
+                    if (!url) return resolve();
+                    const img = new Image();
+                    img.src = url;
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve();
+                    setTimeout(resolve, 2000); // عدم التعليق على أي صورة بطيئة
+                });
+            }));
+        }
+
+        function updateLoader(percent, statusText) {
             const line = document.getElementById('loader-line');
-            if (line) line.style.width = '100%';
-            setTimeout(() => { document.body.classList.add('loaded'); }, 1200); 
-            
-            loadAboutUs();
-            loadDropCountdown();
+            const txt = document.getElementById('loaderStatusText');
+            if (line) line.style.width = percent + '%';
+            if (txt && statusText) txt.innerText = statusText;
+        }
+
+        function hideLoader() {
+            updateLoader(100, "ARCHIVE LOADED // OPENING");
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 250);
+        }
+
+        // تشغيل التحميل السريع المتزامن
+        async function runRealApplicationLoader() {
+            updateLoader(25, "CONNECTING DATABASE...");
+
+            // إطلاق جميع طلبات Firebase بالتوازي فوراً
+            const fetchTasks = Promise.all([
+                loadAboutUs(),
+                loadDropCountdown(),
+                loadProductsFromCloud(),
+                loadAccessoriesFromCloud()
+            ]);
+
+            // حد أمان زمني إجمالي 3.5 ثانية لفتح الصفحة حتماً حتى مع بطء الإنترنت
+            const timeoutFallback = new Promise((resolve) => setTimeout(resolve, 3500));
+
+            await Promise.race([fetchTasks, timeoutFallback]);
+            updateLoader(75, "RENDERING VISUALS...");
+
+            const displayedImages = Array.from(document.querySelectorAll('.album-portrait img, .acc-stage-imgbox img, .hero-image-wrapper img'))
+                                        .map(img => img.src)
+                                        .filter(Boolean);
+
+            await Promise.race([preloadImages(displayedImages), new Promise(res => setTimeout(res, 1200))]);
+            hideLoader();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCartUI();
+            attachCursorEffects();
+            runRealApplicationLoader();
+
+            // قائمة الموبايل
+            const openMobileNavBtn = document.getElementById('openMobileNav');
+            const closeMobileNavBtn = document.getElementById('closeMobileNav');
+            const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+            function toggleMobileMenu(isOpen) {
+                if (isOpen) {
+                    mobileNavDrawer?.classList.add('active');
+                    mobileNavOverlay?.classList.add('active');
+                } else {
+                    mobileNavDrawer?.classList.remove('active');
+                    mobileNavOverlay?.classList.remove('active');
+                }
+            }
+
+            openMobileNavBtn?.addEventListener('click', () => toggleMobileMenu(true));
+            closeMobileNavBtn?.addEventListener('click', () => toggleMobileMenu(false));
+            mobileNavOverlay?.addEventListener('click', () => toggleMobileMenu(false));
+
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => toggleMobileMenu(false));
+            });
+
+            document.getElementById('openCart')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
+            document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
+            document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
         });
 
         async function loadAboutUs() {
@@ -707,7 +894,7 @@
                 if (doc.exists && doc.data().text) { 
                     contentDiv.innerHTML = doc.data().text.replace(/\n/g, "<br>"); 
                 } 
-            } catch (e) { console.log(e); }
+            } catch (e) { console.error(e); }
         }
 
         let countdownInterval;
@@ -729,7 +916,7 @@
                 } else {
                     dropSection.style.display = 'none';
                 }
-            } catch (e) { console.log("خطأ في جلب العداد", e); }
+            } catch (e) { console.error("خطأ في جلب العداد", e); }
         }
 
         function startCountdown(targetDateStr) {
@@ -842,8 +1029,10 @@
             else if (diffX < -40) prevCard(); 
         });
 
-        function loadProductsFromCloud() {
-            db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+        async function loadProductsFromCloud() {
+            try {
+                // استعلام سريع محدد بأحدث 10 قطع لتسريع الفتح
+                const snapshot = await db.collection("products").orderBy("createdAt", "desc").limit(10).get();
                 carouselWrapper.innerHTML = '';
                 if (snapshot.empty) { 
                     carouselWrapper.innerHTML = '<p class="empty-msg" style="width:100%;">EMPTY ARCHIVE.</p>'; 
@@ -891,15 +1080,19 @@
                 currentCardIndex = 0; 
                 updateCarouselCards();
                 attachCursorEffects(); 
-            });
+            } catch (err) {
+                console.error(err);
+            }
         }
 
-        /* ================= نظام مسرح الإكسسوارات ثلاثي الأبعاد ================= */
+        /* ================= مسرح الإكسسوارات السريع ================= */
         let totalAccessoriesCount = 0;
         let currentAccFocusIndex = 0;
 
-        function loadAccessoriesFromCloud() {
-            db.collection("accessories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+        async function loadAccessoriesFromCloud() {
+            try {
+                // جلب خفيف محدد بـ 15 قطعة فقط للمزج السريع
+                const snapshot = await db.collection("accessories").limit(15).get();
                 const container = document.getElementById('accessoriesContainer');
                 if (!container) return;
                 container.innerHTML = '';
@@ -910,11 +1103,25 @@
                     return;
                 }
 
-                totalAccessoriesCount = snapshot.size;
+                let items = [];
+                snapshot.forEach(doc => {
+                    const acc = doc.data();
+                    acc.id = doc.id;
+                    items.push(acc);
+                });
+
+                // خلط عشوائي خوارزمي
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+
+                const selectedItems = items.slice(0, 6);
+                totalAccessoriesCount = selectedItems.length + 1;
+
                 let cardsHtml = '';
 
-                snapshot.forEach((doc, index) => {
-                    const acc = doc.data();
+                selectedItems.forEach((acc, index) => {
                     const price = parseFloat(acc.price) || 0;
                     const discount = parseFloat(acc.discount) || price;
                     const stock = parseInt(acc.stock) || 0;
@@ -927,7 +1134,7 @@
                     let mainImage = acc.image || (acc.gallery ? acc.gallery[0] : '');
 
                     cardsHtml += `
-                        <a href="accessory.html?id=${doc.id}" class="acc-stage-card ${index === 0 ? 'is-focused' : ''}" data-index="${index}" dir="ltr">
+                        <a href="accessory.html?id=${acc.id}" class="acc-stage-card ${index === 0 ? 'is-focused' : ''}" data-index="${index}" dir="ltr">
                             <div class="acc-stage-imgbox">
                                 <img src="${mainImage}" alt="${acc.name}">
                                 <div class="overlay-badge ${isOut ? 'sold-out' : 'available'}">${isOut ? 'ARCHIVED' : 'IN STOCK'}</div>
@@ -946,11 +1153,24 @@
                     `;
                 });
 
+                // بطاقة SEE ALL
+                cardsHtml += `
+                    <a href="accessories.html" class="acc-stage-card see-all-card" data-index="${selectedItems.length}" dir="ltr">
+                        <div class="see-all-content">
+                            <div class="see-all-icon">↗</div>
+                            <h3 style="font-family:'Oswald', sans-serif; font-size:22px; color:#FFFFFF; letter-spacing:3px; margin:0; text-transform:uppercase;">EXPLORE ALL</h3>
+                            <p style="font-family:'Oswald', sans-serif; font-size:11px; color:var(--text-muted); letter-spacing:2px; margin:0; text-transform:uppercase;">FULL ACCESSORIES CATALOG</p>
+                        </div>
+                    </a>
+                `;
+
                 container.innerHTML = cardsHtml;
                 updateStageCounter(0);
                 setupStageObservers();
                 attachCursorEffects();
-            });
+            } catch (err) {
+                console.error("Accessories Loading Error:", err);
+            }
         }
 
         function updateStageCounter(idx) {
@@ -1048,10 +1268,15 @@
 
         function sendSupportEmail(e) {
             e.preventDefault();
-            const name = document.getElementById('supportName').value;
-            const email = document.getElementById('supportEmail').value;
-            const message = document.getElementById('supportMessage').value;
+            const name = document.getElementById('supportName').value.trim();
+            const email = document.getElementById('supportEmail').value.trim();
+            const message = document.getElementById('supportMessage').value.trim();
             
+            if (name.length < 8) {
+                alert("يرجى كتابة الاسم بالكامل (8 أحرف على الأقل).");
+                return;
+            }
+
             const subject = encodeURIComponent('UnoVerse Client Support');
             const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
 
@@ -1067,41 +1292,6 @@
                 btn.innerText = originalText;
             }, 1000);
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProductsFromCloud();
-            loadAccessoriesFromCloud();
-            updateCartUI();
-            attachCursorEffects();
-
-            // ================= تشغيل القائمة المنسدلة للشاشات الصغيرة =================
-            const openMobileNavBtn = document.getElementById('openMobileNav');
-            const closeMobileNavBtn = document.getElementById('closeMobileNav');
-            const mobileNavDrawer = document.getElementById('mobileNavDrawer');
-            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
-
-            function toggleMobileMenu(isOpen) {
-                if (isOpen) {
-                    mobileNavDrawer?.classList.add('active');
-                    mobileNavOverlay?.classList.add('active');
-                } else {
-                    mobileNavDrawer?.classList.remove('active');
-                    mobileNavOverlay?.classList.remove('active');
-                }
-            }
-
-            openMobileNavBtn?.addEventListener('click', () => toggleMobileMenu(true));
-            closeMobileNavBtn?.addEventListener('click', () => toggleMobileMenu(false));
-            mobileNavOverlay?.addEventListener('click', () => toggleMobileMenu(false));
-
-            document.querySelectorAll('.mobile-nav-link').forEach(link => {
-                link.addEventListener('click', () => toggleMobileMenu(false));
-            });
-
-            document.getElementById('openCart')?.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); });
-            document.getElementById('closeCart')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
-            document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
-        });
     </script>
     <script src="developer-credit.js"></script>
 </body>
