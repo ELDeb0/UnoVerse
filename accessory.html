@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <!-- UnoVerse Unified Minimal Typography -->
+    <!-- UnoVerse Minimal Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -310,13 +310,15 @@
 
         /* وحدة اختيار كمية القطع */
         .quantity-controller-wrapper {
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: space-between;
             background: var(--bg-card);
             border: 1px solid var(--line-color);
-            padding: 12px 18px;
+            padding: 14px 18px;
             margin-bottom: 20px;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         .quantity-controller-wrapper .qty-label {
             font-family: 'Oswald', sans-serif;
@@ -602,7 +604,12 @@
             .product-ticker-text { font-size: 10.5px !important; letter-spacing: 2px !important; }
             
             .color-selector-wrapper { padding: 12px 14px !important; margin-bottom: 15px !important; }
-            .quantity-controller-wrapper { padding: 10px 14px !important; margin-bottom: 15px !important; }
+            
+            .quantity-controller-wrapper { 
+                display: flex !important;
+                padding: 12px 14px !important; 
+                margin-bottom: 15px !important; 
+            }
             .quantity-controller-wrapper .qty-label { font-size: 12px !important; }
             .quantity-selector button { width: 34px !important; height: 34px !important; }
             .quantity-selector input { width: 40px !important; height: 34px !important; font-size: 14px !important; }
@@ -642,7 +649,6 @@
         <div class="word-2">ACCESSORIES ARCHIVE</div>
     </div>
 
-    <!-- Mobile Drawer -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
     <div class="mobile-nav-drawer" id="mobileNavDrawer">
         <div class="mobile-nav-header">
@@ -660,7 +666,6 @@
         </div>
     </div>
 
-    <!-- Cart Drawer -->
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -737,7 +742,6 @@
         </div>
     </footer>
 
-    <!-- سكربت الحماية المتقدمة والتشفير -->
     <script>
         (function(_0xGuard){
             document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
@@ -786,7 +790,6 @@
             });
         }
 
-        // تفاعلية الزوم البصري لمركز تركيز الماوس على الصورة
         function setupImageZoom() {
             const frame = document.querySelector('.main-frame');
             const img = document.getElementById('mainDisplayImg');
@@ -933,6 +936,7 @@
                     </div>
                 `).join('');
 
+                // محدد كمية القطع
                 let quantityHTML = '';
                 if (!isOutOfStock) {
                     quantityHTML = `
@@ -947,6 +951,7 @@
                     `;
                 }
 
+                // منطق زر الإضافة إلى السلة
                 let btnHTML = '';
                 if (isOutOfStock) {
                     btnHTML = `<button class="btn-add-cart" id="mainAddCartBtn" disabled>OUT OF STOCK</button>`;
@@ -1076,6 +1081,7 @@
 
                 let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
                 
+                // فحص دقيق لمنع تكرار إضافة المنتج نهائياً
                 if (cart.some(item => item.id === accessoryData.id)) {
                     const addBtn = document.getElementById('mainAddCartBtn');
                     if (addBtn) {
