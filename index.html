@@ -8,9 +8,6 @@
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="stylesheet" href="responsive.css">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
@@ -73,32 +70,15 @@
             font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--text-muted);
             letter-spacing: 8px; text-transform: uppercase; margin-bottom: 30px; font-weight: 300;
         }
-        .loader-line-container { width: 220px; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; position: relative;}
+        .loader-line-container { width: 200px; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; position: relative;}
         #loader-line { 
             position: absolute; top: 0; left: 0; 
-            width: 20%; height: 100%; background: var(--text-cream); 
-            transition: width 0.35s ease-out; 
+            width: 100%; height: 100%; background: var(--text-cream); 
+            animation: lineAnim 1.5s infinite;
         }
-        .loader-notice-box {
-            margin-top: 25px;
-            max-width: 320px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .loader-status-text {
-            font-family: 'Oswald', sans-serif;
-            font-size: 11px;
-            letter-spacing: 3px;
-            color: #7EADDB;
-            text-transform: uppercase;
-        }
-        .loader-hint-text {
-            font-family: 'Tajawal', sans-serif;
-            font-size: 11.5px;
-            color: #8899A6;
-            line-height: 1.6;
+        @keyframes lineAnim {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         body.loaded #loader-overlay { transform: translateY(-100%); opacity: 0; pointer-events: none; }
 
@@ -134,14 +114,14 @@
         .main-header .login-btn { color: var(--text-cream); font-family: 'Oswald', sans-serif; text-decoration: none; font-size: 12px; font-weight: 300; text-transform: uppercase; letter-spacing: 4px; transition: 0.3s; opacity: 0.8;}
         .main-header .login-btn:hover { opacity: 1; color: #fff;}
 
+        /* القائمة الجانبية للموبايل */
         .mobile-menu-btn {
             display: none; flex-direction: column; justify-content: center; align-items: center;
             gap: 6px; width: 44px; height: 44px; cursor: pointer !important; z-index: 10000;
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 4px; transition: 0.3s ease;
+            border-radius: 4px;
         }
-        .mobile-menu-btn:active { background: rgba(255, 255, 255, 0.08); transform: scale(0.95); }
-        .mobile-menu-btn span { display: block; width: 20px; height: 1.5px; background-color: var(--text-cream); transition: 0.3s ease; }
+        .mobile-menu-btn span { display: block; width: 20px; height: 1.5px; background-color: var(--text-cream); }
 
         .mobile-nav-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -155,51 +135,23 @@
             position: fixed; top: 0; right: -360px; width: 320px; max-width: 86vw; height: 100vh;
             background: linear-gradient(180deg, #090E17 0%, #04060A 100%);
             border-left: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: -15px 0 35px rgba(0, 0, 0, 0.8);
-            z-index: 999999;
-            padding: 35px 28px; display: flex; flex-direction: column; justify-content: space-between;
+            z-index: 999999; padding: 35px 28px; display: flex; flex-direction: column; justify-content: space-between;
             transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .mobile-nav-drawer.active { right: 0; }
-
-        .mobile-nav-header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; 
-        }
+        .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; }
         .mobile-nav-logo { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 5px; color: #FFFFFF; }
         .mobile-nav-logo span { color: var(--text-muted); font-weight: 300; }
-        .close-mobile-nav { 
-            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: var(--text-muted); cursor: pointer !important; 
-            border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.02);
-            transition: 0.3s; 
-        }
-        .close-mobile-nav:hover, .close-mobile-nav:active { 
-            color: #FFFFFF; border-color: rgba(255, 255, 255, 0.3); transform: rotate(90deg); 
-        }
+        .close-mobile-nav { font-size: 20px; color: var(--text-muted); cursor: pointer !important; }
 
-        .mobile-nav-links { 
-            list-style: none; display: flex; flex-direction: column; 
-            gap: 12px; margin-top: 35px; flex: 1;
-        }
+        .mobile-nav-links { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 35px; flex: 1; }
         .mobile-nav-links li a { 
             text-decoration: none; color: #E2E8F0; font-family: 'Oswald', sans-serif; 
-            font-size: 19px !important; letter-spacing: 3px; text-transform: uppercase; 
-            font-weight: 500; transition: 0.3s; display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 16px; border: 1px solid transparent; background: transparent;
-        }
-        .mobile-nav-links li a:hover, .mobile-nav-links li a:active { 
-            color: #FFFFFF; background: rgba(255, 255, 255, 0.04); 
-            border-color: rgba(255, 255, 255, 0.1); transform: translateX(-6px);
+            font-size: 18px !important; letter-spacing: 3px; text-transform: uppercase; font-weight: 500;
+            display: block; padding: 10px 0;
         }
 
-        .mobile-nav-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;
-        }
-        .mobile-nav-footer p { 
-            font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 3px; 
-            color: var(--text-muted); text-transform: uppercase; text-align: center; font-weight: 400;
-        }
+        .mobile-nav-footer p { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; text-align: center; }
 
         @media (max-width: 950px) {
             .main-header { flex-direction: row; height: 70px; padding: 0 5%; background: rgba(4, 6, 10, 0.98); border-bottom: 1px solid var(--line-color);}
@@ -212,6 +164,7 @@
             .cursor-wrapper { display: none !important; }
         }
 
+        /* Cart */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.9); z-index: 90000; opacity: 0; visibility: hidden; transition: 0.4s; backdrop-filter: blur(8px); }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: -450px; width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding: 40px 30px; display: flex; flex-direction: column; }
@@ -329,7 +282,7 @@
         .carousel-btn:hover { opacity: 1; color: #fff;}
         .carousel-hint { font-family: 'Oswald', sans-serif; font-size: 10px; color: var(--text-muted); letter-spacing: 6px; text-transform: uppercase;}
 
-        /* ================= مسرح عرض الإكسسوارات ================= */
+        /* مسرح الإكسسوارات */
         .accessories-stage-wrapper {
             position: relative; width: 100%; max-width: 1400px; margin: 0 auto;
             padding: 20px 0 60px; overflow: hidden;
@@ -737,39 +690,23 @@
         function addHover() { cursorWrapper.classList.add('hovered'); }
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
 
-        function updateLoader(percent, statusText) {
-            const line = document.getElementById('loader-line');
-            const txt = document.getElementById('loaderStatusText');
-            if (line) line.style.width = percent + '%';
-            if (txt && statusText) txt.innerText = statusText;
-        }
-
         function hideLoader() {
-            updateLoader(100, "ARCHIVE READY");
             setTimeout(() => {
                 document.body.classList.add('loaded');
-            }, 200);
+            }, 300);
         }
 
-        async function runRealApplicationLoader() {
-            updateLoader(30, "CONNECTING DATABASE...");
-
-            const fetchTasks = Promise.all([
-                loadAboutUs(),
-                loadDropCountdown(),
-                loadProductsFromCloud(),
-                loadAccessoriesFromCloud()
-            ]);
-
-            const timeoutFallback = new Promise((resolve) => setTimeout(resolve, 2500));
-            await Promise.race([fetchTasks, timeoutFallback]);
+        window.addEventListener('load', () => {
             hideLoader();
-        }
+        });
 
         window.addEventListener('DOMContentLoaded', () => {
             updateCartUI();
             attachCursorEffects();
-            runRealApplicationLoader();
+            loadAboutUs();
+            loadDropCountdown();
+            loadProductsFromCloud();
+            loadAccessoriesFromCloud();
 
             const openMobileNavBtn = document.getElementById('openMobileNav');
             const closeMobileNavBtn = document.getElementById('closeMobileNav');
@@ -799,26 +736,22 @@
             document.getElementById('cartOverlay')?.addEventListener('click', () => { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); });
         });
 
-        async function loadAboutUs() {
-            try {
-                const doc = await db.collection("settings").doc("about").get();
+        function loadAboutUs() {
+            db.collection("settings").doc("about").get().then(doc => {
                 const contentDiv = document.getElementById('aboutContent');
                 if (doc.exists && doc.data().text) { 
                     contentDiv.innerHTML = doc.data().text.replace(/\n/g, "<br>"); 
                 } 
-            } catch (e) { console.error(e); }
+            }).catch(e => console.error(e));
         }
 
         let countdownInterval;
-        async function loadDropCountdown() {
-            try {
-                const doc = await db.collection("settings").doc("drop").get();
+        function loadDropCountdown() {
+            db.collection("settings").doc("drop").get().then(doc => {
                 const dropSection = document.getElementById('dropSection');
-                
                 if (doc.exists && doc.data().active) {
                     const data = doc.data();
                     document.getElementById('dropTitle').innerHTML = (data.title || "COMING SOON").replace(" ", "<br>");
-                    
                     if(data.time) {
                         dropSection.style.display = 'flex';
                         startCountdown(data.time);
@@ -828,13 +761,12 @@
                 } else {
                     dropSection.style.display = 'none';
                 }
-            } catch (e) { console.error("خطأ في جلب العداد", e); }
+            }).catch(e => console.error(e));
         }
 
         function startCountdown(targetDateStr) {
             const targetDate = new Date(targetDateStr).getTime();
             clearInterval(countdownInterval);
-            
             countdownInterval = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = targetDate - now;
@@ -939,9 +871,8 @@
             else if (diffX < -40) prevCard(); 
         });
 
-        async function loadProductsFromCloud() {
-            try {
-                const snapshot = await db.collection("products").orderBy("createdAt", "desc").limit(10).get();
+        function loadProductsFromCloud() {
+            db.collection("products").onSnapshot((snapshot) => {
                 carouselWrapper.innerHTML = '';
                 if (snapshot.empty) { 
                     carouselWrapper.innerHTML = '<p class="empty-msg" style="width:100%;">EMPTY ARCHIVE.</p>'; 
@@ -989,18 +920,15 @@
                 currentCardIndex = 0; 
                 updateCarouselCards();
                 attachCursorEffects(); 
-            } catch (err) {
-                console.error(err);
-            }
+            }, err => console.error(err));
         }
 
-        /* ================= مسرح الإكسسوارات السريع ================= */
+        /* ================= مسرح الإكسسوارات المباشر ================= */
         let totalAccessoriesCount = 0;
         let currentAccFocusIndex = 0;
 
-        async function loadAccessoriesFromCloud() {
-            try {
-                const snapshot = await db.collection("accessories").limit(20).get();
+        function loadAccessoriesFromCloud() {
+            db.collection("accessories").onSnapshot(snapshot => {
                 const container = document.getElementById('accessoriesContainer');
                 if (!container) return;
                 container.innerHTML = '';
@@ -1018,11 +946,8 @@
                     items.push(acc);
                 });
 
-                for (let i = items.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [items[i], items[j]] = [items[j], items[i]];
-                }
-
+                // خلط عشوائي خفيف
+                items.sort(() => 0.5 - Math.random());
                 const selectedItems = items.slice(0, 6);
                 totalAccessoriesCount = selectedItems.length + 1;
 
@@ -1074,9 +999,7 @@
                 updateStageCounter(0);
                 setupStageObservers();
                 attachCursorEffects();
-            } catch (err) {
-                console.error("Accessories Loading Error:", err);
-            }
+            }, err => console.error(err));
         }
 
         function updateStageCounter(idx) {
