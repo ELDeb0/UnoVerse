@@ -44,6 +44,7 @@
             color: var(--text-cream); 
             font-family: 'Tajawal', sans-serif; 
             overflow-x: hidden; 
+            width: 100%;
             -webkit-font-smoothing: antialiased; 
             background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='400' cy='400' r='399' fill='none' stroke='%23E6E1D6' stroke-opacity='0.03' stroke-width='1' stroke-dasharray='4 12'/%3E%3Ccircle cx='400' cy='400' r='200' fill='none' stroke='%23E6E1D6' stroke-opacity='0.02' stroke-width='1' stroke-dasharray='4 12'/%3E%3C/svg%3E");
             background-attachment: fixed;
@@ -64,7 +65,6 @@
             will-change: transform; transform: translateZ(0); 
         }
 
-        /* شاشة التحميل التفاعلية */
         #loader-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: var(--bg-deep); z-index: 9999999; display: flex; flex-direction: column; 
@@ -203,7 +203,7 @@
         .catalog-banner {
             position: relative;
             width: 100%;
-            height: 380px;
+            height: 340px;
             margin-top: 85px;
             overflow: hidden;
             display: flex;
@@ -236,11 +236,11 @@
         }
         .banner-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(38px, 6vw, 68px);
+            font-size: clamp(34px, 5vw, 60px);
             font-style: italic;
             color: #FFFFFF;
             margin-bottom: 10px;
-            line-height: 1;
+            line-height: 1.1;
         }
         .banner-sub {
             font-family: 'Oswald', sans-serif;
@@ -252,19 +252,21 @@
 
         /* Catalog Layout */
         .catalog-container {
-            max-width: 1400px;
+            width: 100%;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 50px 6% 80px;
+            padding: 40px 4% 70px;
             position: relative;
             z-index: 10;
+            box-sizing: border-box;
         }
         .catalog-stats-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--line-color);
-            padding-bottom: 15px;
-            margin-bottom: 30px;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
         }
         .catalog-count-text {
             font-family: 'Oswald', sans-serif;
@@ -277,47 +279,53 @@
         .catalog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 24px;
+            gap: 16px;
+            width: 100%;
         }
 
         .accessory-card {
-            background: linear-gradient(180deg, rgba(8, 12, 20, 0.85), rgba(4, 6, 10, 0.95));
+            background: #080C14;
             border: 1px solid var(--line-color);
-            padding: 14px;
+            padding: 12px;
             text-decoration: none;
             display: flex;
             flex-direction: column;
-            transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: 0.3s ease;
             position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            overflow: hidden;
         }
         .accessory-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-4px);
             border-color: rgba(255, 255, 255, 0.35);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
         }
         .accessory-card .card-img-wrap {
             width: 100%;
             aspect-ratio: 1/1;
             background: #020408;
             overflow: hidden;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .accessory-card .card-img-wrap img {
             width: 100%; height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.4s ease;
         }
         .accessory-card:hover .card-img-wrap img {
             transform: scale(1.05);
         }
         .card-stock-badge {
             position: absolute;
-            top: 10px; right: 10px;
+            top: 8px; right: 8px;
             font-family: 'Oswald', sans-serif;
-            font-size: 9px;
-            padding: 4px 8px;
+            font-size: 8.5px;
+            padding: 3px 6px;
             letter-spacing: 1px;
             text-transform: uppercase;
             font-weight: 600;
@@ -334,28 +342,30 @@
             flex-direction: column;
             gap: 4px;
             text-align: right;
+            width: 100%;
+            overflow: hidden;
         }
         .accessory-card h3 {
             color: var(--text-cream);
             font-family: 'Oswald', sans-serif;
-            font-size: 15px;
+            font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            width: 100%;
         }
         .card-price-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 3px;
         }
         .card-price-row .price {
             color: #FFFFFF;
             font-family: 'Oswald', sans-serif;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 600;
         }
         .card-price-row .price .old {
@@ -365,39 +375,38 @@
             margin-left: 6px;
         }
 
-        /* شريط عرض دوائر الألوان تحت المنتج */
         .card-colors-row {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             margin-top: 6px;
             padding-top: 6px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            min-height: 22px;
+            min-height: 20px;
         }
         .color-circle-indicator {
-            width: 11px;
-            height: 11px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.4);
             display: inline-block;
         }
         .color-count-label {
             font-family: 'Oswald', sans-serif;
-            font-size: 10px;
+            font-size: 9.5px;
             color: var(--accent-blue);
             letter-spacing: 1px;
-            margin-right: 4px;
+            margin-right: 2px;
         }
 
-        /* أدوات التنقل بين الصفحات (Pagination) */
+        /* Pagination */
         .pagination-bar {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            margin-top: 50px;
-            padding-top: 25px;
+            gap: 15px;
+            margin-top: 40px;
+            padding-top: 20px;
             border-top: 1px solid var(--line-color);
         }
         .page-btn {
@@ -405,9 +414,9 @@
             border: 1px solid var(--line-color);
             color: var(--text-cream);
             font-family: 'Oswald', sans-serif;
-            font-size: 12px;
+            font-size: 11.5px;
             letter-spacing: 2px;
-            padding: 10px 22px;
+            padding: 8px 18px;
             cursor: pointer !important;
             transition: 0.3s;
             text-transform: uppercase;
@@ -423,14 +432,14 @@
         }
         .page-indicator {
             font-family: 'Oswald', sans-serif;
-            font-size: 12px;
+            font-size: 11.5px;
             color: var(--text-muted);
-            letter-spacing: 3px;
+            letter-spacing: 2px;
         }
 
         /* Footer */
-        .main-footer { padding: 50px 6% 30px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 30px;}
-        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px; margin-bottom: 30px; }
+        .main-footer { padding: 40px 5% 30px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 30px;}
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 30px; margin-bottom: 30px; }
         .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 4px; color: var(--text-cream); margin-bottom: 10px;}
         .footer-brand h2 span { color: var(--text-muted); font-weight: 300;}
         .footer-brand p { font-family: 'Tajawal', sans-serif; color: var(--text-muted); font-size: 11px; letter-spacing: 1.5px; line-height: 2; text-transform: uppercase;}
@@ -442,12 +451,66 @@
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 20px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase;}
 
         @media (max-width: 768px) {
-            .catalog-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            .accessory-card { padding: 10px !important; }
-            .accessory-card h3 { font-size: 13px !important; }
-            .card-price-row .price { font-size: 12px !important; }
-            .catalog-banner { height: 260px !important; }
-            .banner-title { font-size: 36px !important; }
+            .catalog-container { 
+                padding: 20px 3% 40px !important;
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+            }
+            
+            .catalog-grid { 
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+                width: 100% !important;
+            }
+            
+            .accessory-card { 
+                padding: 8px 6px !important; 
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+            
+            .accessory-card .card-img-wrap {
+                margin-bottom: 6px !important;
+            }
+            
+            .accessory-card h3 { 
+                font-size: 11.5px !important; 
+                letter-spacing: 0px !important;
+            }
+            
+            .card-price-row .price { 
+                font-size: 11.5px !important; 
+            }
+            .card-price-row .price .old { 
+                font-size: 9.5px !important;
+                margin-left: 3px !important;
+            }
+
+            .card-colors-row {
+                margin-top: 4px !important;
+                padding-top: 4px !important;
+                gap: 3px !important;
+            }
+            .color-circle-indicator {
+                width: 8px !important;
+                height: 8px !important;
+            }
+            .color-count-label {
+                font-size: 8.5px !important;
+            }
+
+            .catalog-banner { height: 210px !important; margin-top: 70px !important; }
+            .banner-title { font-size: 28px !important; }
+            .banner-tag { font-size: 10px !important; letter-spacing: 2px !important; }
+            .banner-sub { font-size: 10.5px !important; letter-spacing: 1.5px !important; }
+
+            .catalog-stats-bar {
+                margin-bottom: 16px !important;
+                padding-bottom: 8px !important;
+            }
+            .catalog-count-text { font-size: 10px !important; }
+
             .main-nav { display: none; }
             .mobile-menu-btn { display: flex !important; }
             .cursor-wrapper { display: none !important; }
@@ -458,7 +521,6 @@
 
     <div class="cinematic-grain"></div>
 
-    <!-- شاشة التحميل التفاعلية -->
     <div id="loader-overlay">
         <div class="loader-logo"><span dir="ltr">UNO<span>VERSE</span></span></div>
         <div class="loader-subtitle">ACCESSORIES ARCHIVE</div>
@@ -467,13 +529,12 @@
         </div>
         <div class="loader-notice-box">
             <span class="loader-status-text" id="loaderStatusText">SYNCHRONIZING ARCHIVE...</span>
-            <p class="loader-hint-text">قد يستغرق التحميل بضع ثوانٍ لضمان مزامنة القطع والبيانات الحصرية بالكامل.</p>
+            <p class="loader-hint-text">قد يستغرق التحميل ثوانٍ معدودة لمزامنة القطع والبيانات الحصرية بالكامل.</p>
         </div>
     </div>
 
     <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
-    <!-- Mobile Drawer -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
     <div class="mobile-nav-drawer" id="mobileNavDrawer">
         <div class="mobile-nav-header">
@@ -491,7 +552,6 @@
         </div>
     </div>
 
-    <!-- Cart Drawer -->
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -526,7 +586,6 @@
         </div>
     </header>
 
-    <!-- بنر الإكسسوارات المحمل ديناميكياً -->
     <section class="catalog-banner" id="catalogBanner">
         <img id="bannerImg" src="image_28480a.jpg" alt="Accessories Archive">
         <div class="catalog-banner-content">
@@ -544,7 +603,6 @@
 
         <div class="catalog-grid" id="accessoriesGrid"></div>
 
-        <!-- أزرار التنقل (Pagination) -->
         <div class="pagination-bar">
             <button class="page-btn" id="btnPrevPage" onclick="goToPrevPage()">❮ PREV</button>
             <span class="page-indicator" id="pageIndicator">PAGE 01 / 01</span>
@@ -594,9 +652,7 @@
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
 
-        // الماوس
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
         if (!window.matchMedia("(max-width: 768px)").matches) {
@@ -618,22 +674,20 @@
 
         function hideLoader() {
             updateLoader(100, "READY // OPENING");
-            setTimeout(() => { document.body.classList.add('loaded'); }, 250);
+            setTimeout(() => { document.body.classList.add('loaded'); }, 150);
         }
 
-        // متغيرات التنقل وتقسيم الـ 10 منتجات
         const ITEMS_PER_PAGE = 10;
         let allAccessories = [];
         let currentPage = 1;
         let totalPages = 1;
 
         async function loadAccessoriesCatalog() {
-            updateLoader(30, "FETCHING CATALOG ARCHIVES...");
+            updateLoader(35, "FETCHING CATALOG...");
             try {
-                // جلب البنر والمنتجات بالتوازي
                 const [bannerDoc, snapshot] = await Promise.all([
                     db.collection("settings").doc("accessoriesBanner").get(),
-                    db.collection("accessories").orderBy("createdAt", "desc").get()
+                    db.collection("accessories").get()
                 ]);
 
                 if (bannerDoc.exists) {
@@ -651,9 +705,15 @@
                     allAccessories.push(d);
                 });
 
+                // ترتيب داخلي برمجي آمن لا يعتمد على فهارس مركبة
+                allAccessories.sort((a, b) => {
+                    const tA = a.createdAt ? (a.createdAt.toMillis ? a.createdAt.toMillis() : a.createdAt) : 0;
+                    const tB = b.createdAt ? (b.createdAt.toMillis ? b.createdAt.toMillis() : b.createdAt) : 0;
+                    return tB - tA;
+                });
+
                 totalPages = Math.ceil(allAccessories.length / ITEMS_PER_PAGE) || 1;
                 renderPage(1);
-                updateLoader(80, "RENDERING ACCESSORIES...");
                 hideLoader();
             } catch (err) {
                 console.error(err);
@@ -686,16 +746,15 @@
                     ? `<span class="price">${discount} EGP <span class="old">${price} EGP</span></span>` 
                     : `<span class="price">${price} EGP</span>`;
 
-                // بناء شريط الألوان المتوفرة تحت المنتج
                 let colorsHtml = '';
                 if (item.colors && item.colors.length > 0) {
                     colorsHtml = `
                         <div class="card-colors-row">
                             <span class="color-count-label">${item.colors.length} COLORS:</span>
-                            ${item.colors.slice(0, 5).map(c => `
+                            ${item.colors.slice(0, 4).map(c => `
                                 <span class="color-circle-indicator" style="background-color: ${c.hex || '#fff'};" title="${c.name}"></span>
                             `).join('')}
-                            ${item.colors.length > 5 ? `<span style="font-size:10px; color:var(--text-muted); font-family:'Oswald';">+${item.colors.length - 5}</span>` : ''}
+                            ${item.colors.length > 4 ? `<span style="font-size:9px; color:var(--text-muted); font-family:'Oswald';">+${item.colors.length - 4}</span>` : ''}
                         </div>
                     `;
                 }

@@ -7,9 +7,14 @@
     
     <link rel="icon" type="image/png" href="icon.png">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
+    <!-- UnoVerse Minimal Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -59,50 +64,6 @@
             will-change: transform; transform: translateZ(0); 
         }
 
-        #loader-overlay { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: var(--bg-deep); z-index: 9999999; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; 
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease; 
-        }
-        .loader-logo { 
-            font-family: 'Oswald', sans-serif; font-size: 42px; color: var(--text-cream); 
-            letter-spacing: 10px; margin-bottom: 8px; font-weight: 700; direction: ltr;
-        }
-        .loader-logo span { color: var(--text-muted); }
-        .loader-subtitle {
-            font-family: 'Oswald', sans-serif; font-size: 10px; color: var(--text-muted);
-            letter-spacing: 6px; text-transform: uppercase; margin-bottom: 25px; font-weight: 300;
-        }
-        .loader-line-container { width: 180px; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; position: relative;}
-        #loader-line { 
-            position: absolute; top: 0; left: 0; 
-            width: 15%; height: 100%; background: var(--text-cream); 
-            transition: width 0.35s ease-out; 
-        }
-        .loader-notice-box {
-            margin-top: 20px;
-            max-width: 320px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .loader-status-text {
-            font-family: 'Oswald', sans-serif;
-            font-size: 11px;
-            letter-spacing: 2.5px;
-            color: #7EADDB;
-            text-transform: uppercase;
-        }
-        .loader-hint-text {
-            font-family: 'Tajawal', sans-serif;
-            font-size: 11.5px;
-            color: #8899A6;
-            line-height: 1.6;
-        }
-        body.loaded #loader-overlay { transform: translateY(-100%); opacity: 0; pointer-events: none; }
-
         .cursor-wrapper { 
             position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; 
             will-change: transform; mix-blend-mode: exclusion;
@@ -117,6 +78,7 @@
             background-color: transparent; border: 1.5px solid var(--text-cream); 
         }
 
+        /* Header */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
             width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
@@ -178,6 +140,7 @@
             border-top: 1px solid var(--line-color); padding-top: 20px; font-weight: 400; 
         }
 
+        /* Cart Drawer */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
@@ -192,15 +155,16 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream); font-weight: 500;}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
+        /* Desktop Layout */
         .product-wrapper { 
             position: relative; 
             z-index: 10; 
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.1fr 0.9fr;
             align-items: start; 
             min-height: 80vh; 
             padding: 130px 6% 40px; 
-            max-width: 1400px; 
+            max-width: 1350px; 
             margin: 0 auto; 
             gap: 50px; 
         }
@@ -209,33 +173,32 @@
             display: flex; 
             flex-direction: column; 
             text-align: right;
+            gap: 15px;
         }
-        .product-tag { font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 4px; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 12px; font-weight: 600;}
-        .product-name { font-family: 'Oswald', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.2; margin-bottom: 18px; color: var(--text-cream); letter-spacing: 1px; text-transform: uppercase;}
+        .product-tag { font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 3px; color: var(--accent-blue); text-transform: uppercase; font-weight: 600;}
+        .product-name { font-family: 'Oswald', sans-serif; font-size: 38px; font-weight: 600; line-height: 1.2; color: var(--text-cream); letter-spacing: 1px; text-transform: uppercase;}
         
         .product-price-box { 
             display: inline-flex;
             align-items: baseline;
             gap: 14px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(126, 173, 219, 0.08));
-            border: 1px solid rgba(255, 255, 255, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-right: 4px solid var(--accent-blue);
-            padding: 12px 22px;
-            margin-bottom: 24px;
+            padding: 10px 20px;
             width: fit-content;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         .product-price-box #dynamicPrice {
             font-family: 'Oswald', sans-serif; 
-            font-size: 34px; 
+            font-size: 30px; 
             color: #FFFFFF; 
             letter-spacing: 2px; 
             font-weight: 700;
-            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
         }
         .product-price-box .old { 
             font-family: 'Oswald', sans-serif;
-            font-size: 18px; 
+            font-size: 16px; 
             color: var(--text-muted); 
             text-decoration: line-through; 
             opacity: 0.65;
@@ -244,25 +207,24 @@
         .meta-specs { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
-            gap: 15px; 
+            gap: 12px; 
             border-top: 1px solid var(--line-color); 
             border-bottom: 1px solid var(--line-color); 
-            padding: 16px 0; 
-            margin-bottom: 22px;
+            padding: 14px 0; 
         }
-        .spec-item { display: flex; flex-direction: column; gap: 4px;}
-        .spec-item .label { font-family: 'Oswald', sans-serif; font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; font-weight: 500;}
-        .spec-item .val { font-family: 'Oswald', sans-serif; font-size: 14px; color: var(--text-cream); font-weight: 500; letter-spacing: 1px;}
+        .spec-item { display: flex; flex-direction: column; gap: 3px;}
+        .spec-item .label { font-family: 'Oswald', sans-serif; font-size: 10.5px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500;}
+        .spec-item .val { font-family: 'Oswald', sans-serif; font-size: 13.5px; color: var(--text-cream); font-weight: 500;}
 
-        .product-desc { font-family: 'Tajawal', sans-serif; font-size: 15px; line-height: 2; color: #E2E8F0; font-weight: 400; margin-bottom: 24px; }
+        .product-desc { font-family: 'Tajawal', sans-serif; font-size: 14.5px; line-height: 1.9; color: #E2E8F0; font-weight: 400; }
 
         .product-ticker-container {
             width: 100%; overflow: hidden; background: rgba(126, 173, 219, 0.08); 
-            border: 1px dashed rgba(126, 173, 219, 0.4); padding: 10px 14px; margin-bottom: 22px;
+            border: 1px dashed rgba(126, 173, 219, 0.4); padding: 8px 12px;
         }
         .product-ticker-text {
-            font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--text-cream); 
-            letter-spacing: 3px; text-transform: uppercase; white-space: nowrap; animation: productTickerScroll 22s linear infinite; display: inline-block; font-weight: 500;
+            font-family: 'Oswald', sans-serif; font-size: 11.5px; color: var(--text-cream); 
+            letter-spacing: 2.5px; text-transform: uppercase; white-space: nowrap; animation: productTickerScroll 22s linear infinite; display: inline-block; font-weight: 500;
         }
         @keyframes productTickerScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
@@ -273,7 +235,6 @@
             background: var(--bg-card);
             border: 1px solid var(--line-color);
             padding: 14px 18px;
-            margin-bottom: 20px;
         }
         .color-selector-header {
             display: flex;
@@ -282,8 +243,8 @@
         }
         .color-selector-header .color-label {
             font-family: 'Oswald', sans-serif;
-            font-size: 13px;
-            letter-spacing: 2px;
+            font-size: 12.5px;
+            letter-spacing: 1.5px;
             color: var(--text-cream);
             text-transform: uppercase;
             font-weight: 500;
@@ -296,9 +257,8 @@
         }
         .color-options-container {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-top: 4px;
         }
         .color-option-btn {
             display: flex;
@@ -331,8 +291,7 @@
             justify-content: space-between;
             background: var(--bg-card);
             border: 1px solid var(--line-color);
-            padding: 14px 18px;
-            margin-bottom: 20px;
+            padding: 12px 18px;
         }
         .quantity-controller-wrapper .qty-label {
             font-family: 'Oswald', sans-serif;
@@ -349,8 +308,8 @@
             background: #020408;
         }
         .quantity-selector button {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             background: transparent;
             color: var(--text-cream);
             border: none;
@@ -371,8 +330,8 @@
             cursor: not-allowed !important;
         }
         .quantity-selector input {
-            width: 48px;
-            height: 38px;
+            width: 44px;
+            height: 36px;
             text-align: center;
             background: transparent;
             border: none;
@@ -385,30 +344,29 @@
             outline: none;
         }
 
-        .custom-design-card { background: var(--bg-card); border: 1px solid var(--line-color); padding: 16px; margin-bottom: 22px; }
+        .custom-design-card { background: var(--bg-card); border: 1px solid var(--line-color); padding: 14px 18px; }
         .custom-header { display: flex; align-items: center; justify-content: space-between; }
-        .custom-header label { font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 1.5px; color: var(--text-cream); text-transform: uppercase; font-weight: 500;}
-        .custom-price-tag { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;}
-        .custom-input-box { margin-top: 12px; display: none; }
-        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 12px; font-family: 'Tajawal', sans-serif; font-size: 13.5px; outline: none; resize: none; height: 70px; user-select: text !important;}
+        .custom-header label { font-family: 'Oswald', sans-serif; font-size: 12.5px; letter-spacing: 1.5px; color: var(--text-cream); text-transform: uppercase; font-weight: 500;}
+        .custom-price-tag { color: var(--text-cream); font-family: 'Oswald', sans-serif; font-size: 13.5px; font-weight: 600;}
+        .custom-input-box { margin-top: 10px; display: none; }
+        .custom-input-box textarea { width: 100%; background: var(--bg-deep); border: 1px solid var(--line-color); color: var(--text-cream); padding: 12px; font-family: 'Tajawal', sans-serif; font-size: 13px; outline: none; resize: none; height: 65px; user-select: text !important;}
 
         .archive-perks-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 24px;
         }
         .perk-card {
             background: rgba(8, 12, 20, 0.7);
             border: 1px solid var(--line-color);
-            padding: 14px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
         .perk-card .perk-title {
             font-family: 'Oswald', sans-serif;
-            font-size: 12px;
+            font-size: 11.5px;
             letter-spacing: 1.5px;
             color: var(--text-cream);
             text-transform: uppercase;
@@ -416,7 +374,7 @@
         }
         .perk-card .perk-sub {
             font-family: 'Tajawal', sans-serif;
-            font-size: 12.5px;
+            font-size: 12px;
             color: var(--text-muted);
             font-weight: 400;
         }
@@ -430,19 +388,21 @@
             font-family: 'Oswald', sans-serif; 
             font-size: 14px; 
             font-weight: 700; 
-            letter-spacing: 5px; 
+            letter-spacing: 4px; 
             text-transform: uppercase; 
             transition: 0.3s; 
+            margin-top: 5px;
         }
         .btn-add-cart:hover:not(:disabled) { background: transparent; color: var(--text-cream); }
         .btn-add-cart:disabled {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border-color: rgba(255, 255, 255, 0.15) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
             color: var(--text-muted) !important;
             cursor: not-allowed !important;
-            opacity: 0.7;
+            opacity: 0.6;
         }
 
+        /* Product Gallery */
         .product-gallery-panel { 
             display: flex; 
             flex-direction: column; 
@@ -453,31 +413,28 @@
         }
         .main-frame { 
             display: inline-flex;
-            width: fit-content;
-            max-width: 100%;
-            height: auto;
-            background: transparent; 
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1/1;
+            background: #020408; 
             border: 1px solid var(--line-color); 
             overflow: hidden; 
             position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            padding: 0;
-            line-height: 0;
-            touch-action: pan-y;
+            align-items: center;
+            justify-content: center;
         }
         .main-frame img { 
             display: block;
-            width: auto;
-            max-width: 100%;
-            height: auto;
-            max-height: 70vh;
+            width: 90%;
+            height: 90%;
             object-fit: contain; 
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             transform-origin: center center;
             will-change: transform;
         }
         .main-frame:hover img { 
-            transform: scale(1.35); 
+            transform: scale(1.3); 
         }
         .main-frame.mobile-zoomed img {
             transform: scale(2.0) !important;
@@ -488,14 +445,16 @@
         .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
 
-        /* ================= 4 منتجات بحجم مصغر ومناسب جداً ================= */
+        /* ================= قسم المقترحات الموحد بدقة في كل الأجهزة ================= */
         .related-section { 
-            padding: 35px 5% 25px; 
-            max-width: 1150px; 
+            padding: 35px 5% 30px; 
+            max-width: 1350px; 
             margin: 0 auto; 
             position: relative; 
             z-index: 10; 
             border-top: 1px solid var(--line-color); 
+            box-sizing: border-box;
+            width: 100%;
         }
         .related-header {
             display: flex;
@@ -523,11 +482,17 @@
         .related-view-all:hover {
             color: #FFFFFF;
         }
+
+        /* 4 أعمدة متساوية بنسبة 100% وبدون انكسار */
         .related-grid { 
-            display: grid; 
+            display: grid !important; 
             grid-template-columns: repeat(4, 1fr) !important; 
             gap: 10px; 
+            width: 100%;
+            box-sizing: border-box;
+            align-items: stretch;
         }
+        
         .related-card { 
             background: #080C14;
             border: 1px solid rgba(255, 255, 255, 0.08); 
@@ -535,16 +500,22 @@
             text-decoration: none; 
             display: flex; 
             flex-direction: column; 
+            justify-content: space-between;
             transition: 0.25s ease;
-            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
         .related-card:hover { 
             transform: translateY(-3px); 
             border-color: rgba(255, 255, 255, 0.3);
         }
+        
+        /* تثبيت المربع 1:1 للصور في كل الكروت */
         .related-card .img-wrap {
             width: 100%;
-            aspect-ratio: 1/1;
+            aspect-ratio: 1 / 1 !important;
             background: #020408;
             overflow: hidden;
             margin-bottom: 6px;
@@ -552,26 +523,31 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
         .related-card img { 
             width: 100%; 
             height: 100%; 
-            object-fit: cover; 
+            object-fit: cover !important; 
             transition: transform 0.4s ease;
+            display: block;
         }
         .related-card:hover img {
             transform: scale(1.05);
         }
+        
         .related-card .card-info {
             display: flex;
             flex-direction: column;
             gap: 2px;
             text-align: right;
+            width: 100%;
+            overflow: hidden;
         }
         .related-card h4 { 
             color: var(--text-cream); 
             font-family: 'Oswald', sans-serif; 
-            font-size: 11.5px; 
+            font-size: 11px; 
             text-transform: uppercase; 
             letter-spacing: 0.5px; 
             font-weight: 500;
@@ -579,16 +555,18 @@
             overflow: hidden;
             text-overflow: ellipsis;
             margin: 0;
+            line-height: 1.2;
         }
         .related-card .price-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
+            margin-top: 2px;
         }
         .related-card .price { 
             color: #FFFFFF; 
             font-family: 'Oswald', sans-serif; 
-            font-size: 11.5px; 
+            font-size: 11px; 
             font-weight: 600;
         }
 
@@ -604,38 +582,32 @@
         .social-links a:hover { color: #FFFFFF; padding-right: 5px;}
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 20px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase;}
 
-        /* حجم متناسق وصغير في الموبايل */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .product-wrapper { 
                 display: flex !important;
                 flex-direction: column !important;
-                padding: 80px 0 15px 0 !important;
-                gap: 0 !important;
+                padding: 85px 4% 20px !important;
+                gap: 20px !important;
                 min-height: auto !important;
             }
             
             .product-gallery-panel { 
                 width: 100% !important; 
-                max-width: 100% !important;
                 position: static !important;
-                gap: 0 !important;
-                padding: 0 !important;
+                gap: 10px !important;
             }
             
             .main-frame {
-                width: 100vw !important;
-                max-width: 100vw !important;
-                height: 56vh !important;
-                aspect-ratio: auto !important;
-                border: none !important;
-                border-bottom: 1px solid var(--line-color) !important;
-                box-shadow: none !important;
-                background: #020408 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                aspect-ratio: 1/1 !important;
+                border-radius: 4px;
             }
 
             .gallery-thumbs {
-                padding: 10px 4% 0 !important;
+                padding: 0 !important;
                 gap: 8px !important;
+                justify-content: center !important;
             }
 
             .gallery-thumbs .thumb-item {
@@ -645,17 +617,18 @@
 
             .product-info-panel { 
                 width: 100% !important; 
-                padding: 20px 4% 12px !important;
-                background: var(--bg-deep) !important;
-                border-top: 1px solid var(--line-color) !important;
-                margin-top: 10px !important;
+                padding: 0 !important;
+                gap: 12px !important;
             }
             
-            .product-name { font-size: 24px !important; margin-bottom: 8px !important; }
-            .product-price-box { padding: 8px 14px !important; margin-bottom: 12px !important; }
-            .product-price-box #dynamicPrice { font-size: 22px !important; }
+            .product-name { font-size: 26px !important; }
+            .product-price-box { padding: 8px 16px !important; }
+            .product-price-box #dynamicPrice { font-size: 24px !important; }
             
-            .related-section { padding: 20px 2.5% 10px !important; }
+            /* الحفاظ على 4 خانات متطابقة الحجم في الموبايل */
+            .related-section { 
+                padding: 20px 2.5% 15px !important; 
+            }
             .related-grid { 
                 grid-template-columns: repeat(4, 1fr) !important; 
                 gap: 5px !important; 
@@ -663,8 +636,12 @@
             .related-card { 
                 padding: 5px 3px !important; 
             }
-            .related-card h4 { font-size: 9px !important; letter-spacing: 0px !important; }
-            .related-card .price { font-size: 9.5px !important; }
+            .related-card h4 { 
+                font-size: 8.5px !important; 
+            }
+            .related-card .price { 
+                font-size: 9px !important; 
+            }
             
             .main-nav { display: none; }
             .mobile-menu-btn { display: flex !important; }
@@ -675,18 +652,6 @@
 <body>
 
     <div class="cinematic-grain"></div>
-
-    <div id="loader-overlay">
-        <div class="loader-logo"><span dir="ltr">UNO<span>VERSE</span></span></div>
-        <div class="loader-subtitle">ARCHIVE ACCESSORY</div>
-        <div class="loader-line-container">
-            <div id="loader-line"></div>
-        </div>
-        <div class="loader-notice-box">
-            <span class="loader-status-text" id="loaderStatusText">SYNCHRONIZING PIECE...</span>
-            <p class="loader-hint-text">قد يستغرق التحميل بضع ثوانٍ لضمان مزامنة القطع والبيانات الحصرية بالكامل.</p>
-        </div>
-    </div>
 
     <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
@@ -747,7 +712,7 @@
         </div>
     </main>
 
-    <!-- 4 كروت صغيرة ومتناسقة في جميع الأجهزة -->
+    <!-- 4 كروت صغيرة ومتطابقة في جميع الأجهزة والشاشات -->
     <section class="related-section">
         <div class="related-header">
             <h3 class="related-title">EXPLORE MORE ACCESSORIES //</h3>
@@ -799,16 +764,12 @@
             document.addEventListener('copy', function(e){ e.preventDefault(); });
             document.addEventListener('cut', function(e){ e.preventDefault(); });
             document.addEventListener('dragstart', function(e){ e.preventDefault(); });
-
-            setInterval(function(){
-                (function(){ return false; }['constructor']('debugger')());
-            }, 500);
         })();
 
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
 
-        if (!window.matchMedia("(max-width: 768px)").matches) {
+        if (!window.matchMedia("(max-width: 900px)").matches) {
             window.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
@@ -870,20 +831,6 @@
             });
         }
 
-        function updateLoader(percent, statusText) {
-            const line = document.getElementById('loader-line');
-            const txt = document.getElementById('loaderStatusText');
-            if (line) line.style.width = percent + '%';
-            if (txt && statusText) txt.innerText = statusText;
-        }
-
-        function hideLoader() {
-            updateLoader(100, "READY // OPENING");
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-            }, 200);
-        }
-
         const _0xAccessoryEngine = (function(){
             const _0xcfg = {
                 apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
@@ -910,29 +857,22 @@
                 const wrapper = document.getElementById('accessoryContent');
                 if (!accessoryId) {
                     wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">NO ACCESSORY SELECTED.</h2>';
-                    hideLoader();
                     return;
                 }
                 try {
-                    updateLoader(35, "LOADING ACCESSORY DATA...");
-                    
-                    const [doc, _] = await Promise.all([
-                        _0xdb.collection("accessories").doc(accessoryId).get(),
-                        _0xloadRandomRelated(accessoryId)
-                    ]);
+                    const doc = await _0xdb.collection("accessories").doc(accessoryId).get();
 
                     if (!doc.exists) {
                         wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">ACCESSORY NOT FOUND.</h2>';
-                        hideLoader();
                         return;
                     }
                     accessoryData = doc.data();
                     accessoryData.id = doc.id;
                     _0xrender(accessoryData);
-                    hideLoader();
+                    _0xloadRandomRelated(accessoryId);
                 } catch (err) {
-                    console.error(err);
-                    hideLoader();
+                    console.error("Fetch Error:", err);
+                    wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">ERROR LOADING ACCESSORY.</h2>';
                 }
             }
 
@@ -1045,6 +985,7 @@
 
                 wrapper.innerHTML = `
                     <div class="product-wrapper">
+                        <!-- معرض الصور -->
                         <div class="product-gallery-panel">
                             <div class="main-frame">
                                 <img id="mainDisplayImg" src="${selectedImage}" alt="${item.name}">
@@ -1052,6 +993,7 @@
                             ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
                         </div>
 
+                        <!-- تفاصيل المنتج -->
                         <div class="product-info-panel">
                             <div>
                                 <div class="product-tag">ACCESSORY // STOCK: ${availableStock}</div>
@@ -1239,7 +1181,7 @@
                     });
                     attachCursorEffects();
                 } catch (e) {
-                    console.error(e);
+                    console.error("Related Loading Error:", e);
                 }
             }
 
