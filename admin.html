@@ -116,6 +116,59 @@
 
         .order-status-select { background: #111; color: #fff; border: 1px solid #333; padding: 8px; font-family: 'Tajawal', sans-serif; outline: none; cursor: pointer; transition: 0.3s; border-radius: 2px; width: 100%;}
         .order-status-select:focus { border-color: var(--accent-yellow); }
+
+        /* ================= تصميم إدارة الألوان المتعددة للإكسسوار ================= */
+        .color-row-item {
+            display: grid;
+            grid-template-columns: 1.5fr 110px 2fr 45px;
+            gap: 12px;
+            align-items: center;
+            background: #111;
+            border: 1px solid #333;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .color-row-item input[type="color"] {
+            width: 45px;
+            height: 40px;
+            padding: 0;
+            background: transparent;
+            border: 1px solid #444;
+            cursor: pointer;
+        }
+        .btn-remove-color {
+            background: transparent;
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            font-size: 16px;
+            height: 40px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-remove-color:hover {
+            background: #ff3333;
+            color: #fff;
+        }
+        .btn-add-color-slot {
+            background: transparent;
+            border: 1px dashed var(--accent-yellow);
+            color: var(--accent-yellow);
+            padding: 12px 20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .btn-add-color-slot:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #fff;
+        }
+        @media (max-width: 768px) {
+            .color-row-item { grid-template-columns: 1fr; gap: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -350,13 +403,25 @@
                     </div>
                 </div>
 
+                <!-- خيارات الألوان المتعددة وصورها -->
+                <div class="form-group">
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                        <input type="checkbox" id="accHasColors" onchange="toggleColorManager(this)">
+                        <span>تفعيل خيارات ألوان متعددة (مع صورة مخصصة لكل لون)</span>
+                    </label>
+                    <div id="colorManagerBox" style="display:none; margin-top:15px; background:#000; padding:15px; border:1px solid #222;">
+                        <div id="colorRowsContainer"></div>
+                        <button type="button" class="btn-add-color-slot" onclick="addColorRow()">+ إضافة لون جديد وصورة</button>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>شريط الأخبار المخصص للإكسسوار (Ticker Text)</label>
                     <input type="text" id="accTickerText" placeholder="مثال: نحت يدوي خالص عالي الجودة...">
                 </div>
 
                 <div class="form-group">
-                    <label>معرض صور الإكسسوار (من الجهاز أو عبر رابط)</label>
+                    <label>معرض صور الإكسسوار الافتراضي (من الجهاز أو عبر رابط)</label>
                     <div class="image-inputs">
                         <input type="file" id="accFileInput" accept="image/*" onchange="addFromFile(event, 'accessories')">
                         <input type="text" id="accUrlInput" placeholder="أو أدخل رابط صورة خارجية">
@@ -379,7 +444,7 @@
                 <div style="overflow-x:auto;">
                     <table class="admin-table">
                         <thead>
-                            <tr><th>الصورة</th><th>الاسم</th><th>السعر</th><th>الاستوك</th><th>تخصيص</th><th>إجراءات</th></tr>
+                            <tr><th>الصورة</th><th>الاسم</th><th>السعر</th><th>الاستوك</th><th>الألوان</th><th>تخصيص</th><th>إجراءات</th></tr>
                         </thead>
                         <tbody id="accessoriesBody"></tbody>
                     </table>
@@ -459,8 +524,8 @@
             if(e.ctrlKey && e.keyCode == 80) { e.preventDefault(); return false; }
         });
 
-        // حماية الـ IP[cite: 7]
-        const ALLOWED_IP = "41.235.196.152"; 
+        // حماية الـ IP[cite: 1]
+        const ALLOWED_IP = "41.235.240.79"; 
 
         async function verifyConnection() {
             try {
@@ -484,7 +549,7 @@
         }
         window.onload = verifyConnection;
 
-        // إعدادات Firebase[cite: 7]
+        // إعدادات Firebase[cite: 1]
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -496,25 +561,25 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        function switchTab(tabId, btnElement) {
+        window.switchTab = function(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
-        }
+        };
 
         const SECRET_PASSWORD = "uno";
 
-        function checkPassword() {
+        window.checkPassword = function() {
             if (document.getElementById('adminPassword').value === SECRET_PASSWORD) {
                 sessionStorage.setItem('isAdminLogged', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 initAdmin();
             } else { document.getElementById('loginError').style.display = 'block'; }
-        }
+        };
 
-        function logout() { sessionStorage.removeItem('isAdminLogged'); location.reload(); }
+        window.logout = function() { sessionStorage.removeItem('isAdminLogged'); location.reload(); };
 
         function initAdmin() {
             listenToOrders(); 
@@ -668,7 +733,8 @@
                                     <img src="${item.image || ''}" style="width:40px; height:50px; object-fit:cover; border:1px solid #333; border-radius:2px;">
                                     <div style="text-align:right; font-size:12px; line-height:1.4;">
                                         <strong style="color:var(--accent-yellow); font-family:'Oswald', sans-serif; font-size:14px;">${item.name || 'Piece'}</strong><br>
-                                        مقاس/نوع: ${item.size || 'N/A'}
+                                        مقاس/نوع: ${item.size || 'N/A'} ${item.color ? ` | <span style="color:#7EADDB;">لون: ${item.color}</span>` : ''}
+                                        ${item.quantity ? ` | كمية: ${item.quantity}` : ''}
                                         ${item.customDetails ? `<br><small style="color:#2ecc71;">تخصيص: ${item.customDetails}</small>` : ''}
                                     </div>
                                 </div>`;
@@ -740,7 +806,7 @@
             try {
                 await db.collection("orders").doc(orderId).update({ paymentStatus: newStatus });
             } catch (error) { alert("حدث خطأ أثناء تحديث حالة الدفع."); }
-        }
+        };
 
         window.printOrder = function(orderId) {
             const order = loadedOrders.find(o => o.id === orderId);
@@ -749,7 +815,7 @@
             let itemsHtml = '';
             if (order.items && Array.isArray(order.items)) {
                 order.items.forEach(item => {
-                    itemsHtml += `<tr><td>${item.name} ${item.customDetails ? `(${item.customDetails})` : ''}</td><td>${item.size || 'Accessory'}</td><td>${item.price} ج.م</td></tr>`;
+                    itemsHtml += `<tr><td>${item.name} ${item.color ? `(لون: ${item.color})` : ''} ${item.customDetails ? `(${item.customDetails})` : ''}</td><td>${item.size || 'Accessory'}</td><td>${item.quantity || 1}</td><td>${item.price} ج.م</td></tr>`;
                 });
             }
 
@@ -790,7 +856,7 @@
                             <strong>العنوان بالتفصيل:</strong> ${order.customerInfo ? order.customerInfo.city : ''} - ${order.customerInfo ? order.customerInfo.address : ''}
                         </div>
                         <table class="items-table">
-                            <tr><th>القطعة</th><th>المقاس</th><th>السعر</th></tr>
+                            <tr><th>القطعة</th><th>المقاس</th><th>الكمية</th><th>السعر</th></tr>
                             ${itemsHtml}
                         </table>
                         ${collectAmountHtml}
@@ -801,11 +867,11 @@
                 </html>
             `);
             printWindow.document.close();
-        }
+        };
 
         window.copyToClipboard = function(text) {
             navigator.clipboard.writeText(text).then(() => alert('تم نسخ رابط التتبع للعميل بنجاح! ✦'));
-        }
+        };
 
         async function updateOrderStatus(orderId, newStatus) {
             try {
@@ -819,7 +885,7 @@
             }
         }
 
-        // ================= ضاغط الصور الذكي التلقائي لمنع تجاوز حجم 1MB =================
+        // ضاغط الصور الذكي
         function compressImage(file, maxWidth = 1000, maxHeight = 1000, quality = 0.75) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -849,7 +915,6 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // التحويل لـ JPEG عالي الجودة وخفيف جداً (أقل من 150KB)
                         const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
                         resolve(compressedBase64);
                     };
@@ -865,7 +930,7 @@
         let dropImage = "";
         let bannerImage = "";
 
-        function addFromUrl(type) {
+        window.addFromUrl = function(type) {
             if (type === 'products') {
                 const url = document.getElementById('urlInput').value.trim();
                 if (url) { currentProdImages.push(url); document.getElementById('urlInput').value = ''; renderGallery('products'); }
@@ -879,9 +944,9 @@
                 const url = document.getElementById('dropUrlInput').value.trim();
                 if (url) { dropImage = url; document.getElementById('dropUrlInput').value = ''; renderGallery('drop'); }
             }
-        }
+        };
 
-        async function addFromFile(e, type) {
+        window.addFromFile = async function(e, type) {
             const file = e.target.files[0];
             if (file) {
                 try {
@@ -896,14 +961,14 @@
                 }
                 e.target.value = '';
             }
-        }
+        };
 
-        function removeGalleryImage(idx, type) {
+        window.removeGalleryImage = function(idx, type) {
             if (type === 'products') { currentProdImages.splice(idx, 1); renderGallery('products'); }
             else if (type === 'accessories') { currentAccImages.splice(idx, 1); renderGallery('accessories'); }
             else if (type === 'banner') { bannerImage = ""; renderGallery('banner'); }
             else { dropImage = ""; renderGallery('drop'); }
-        }
+        };
 
         function renderGallery(type) {
             if (type === 'products') {
@@ -925,6 +990,71 @@
             }
         }
 
+        // ================= إدارة الألوان المتعددة للإكسسوار =================
+        let colorCounter = 0;
+        
+        window.toggleColorManager = function(checkbox) {
+            const box = document.getElementById('colorManagerBox');
+            box.style.display = checkbox.checked ? 'block' : 'none';
+            if (checkbox.checked && document.getElementById('colorRowsContainer').children.length === 0) {
+                window.addColorRow();
+            }
+        };
+
+        window.addColorRow = function(existingData = null) {
+            colorCounter++;
+            const container = document.getElementById('colorRowsContainer');
+            const row = document.createElement('div');
+            row.className = 'color-row-item';
+            row.id = `colorRow_${colorCounter}`;
+
+            const nameVal = existingData ? (existingData.name || '') : '';
+            const hexVal = existingData ? (existingData.hex || '#7EADDB') : '#7EADDB';
+            const imgVal = existingData ? (existingData.image || '') : '';
+
+            if (imgVal) {
+                row.dataset.imageData = imgVal;
+            }
+
+            row.innerHTML = `
+                <div>
+                    <input type="text" class="color-name-input" placeholder="اسم اللون (مثال: فضي)" value="${nameVal}">
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <input type="color" class="color-hex-input" value="${hexVal}">
+                    <span style="font-size:12px; color:#888;">الدرجة</span>
+                </div>
+                <div>
+                    <input type="file" accept="image/*" class="color-file-input" style="margin-bottom:4px; font-size:12px;" onchange="handleColorFile(event, '${row.id}')">
+                    <input type="text" class="color-img-input" placeholder="أو رابط الصورة..." value="${imgVal.startsWith('data:') ? 'صورة مرفوعة من الجهاز ✦' : imgVal}">
+                </div>
+                <button type="button" class="btn-remove-color" onclick="removeColorRow('${row.id}')">✕</button>
+            `;
+            container.appendChild(row);
+        };
+
+        window.handleColorFile = async function(e, rowId) {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    const compressed = await compressImage(file);
+                    const row = document.getElementById(rowId);
+                    if (row) {
+                        row.dataset.imageData = compressed;
+                        const textInput = row.querySelector('.color-img-input');
+                        if (textInput) textInput.value = 'صورة مرفوعة من الجهاز ✦';
+                    }
+                } catch(err) { 
+                    alert("حدث خطأ أثناء معالجة صورة اللون."); 
+                }
+            }
+        };
+
+        window.removeColorRow = function(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) row.remove();
+        };
+
         // ================= بنر الإكسسوارات =================
         async function loadAccessoriesBanner() {
             try {
@@ -939,7 +1069,7 @@
             } catch (e) { console.error(e); }
         }
 
-        async function saveAccessoriesBanner() {
+        window.saveAccessoriesBanner = async function() {
             const btn = document.getElementById('bannerSaveBtn'); btn.disabled = true;
             try {
                 await db.collection("settings").doc("accessoriesBanner").set({
@@ -950,16 +1080,35 @@
                 });
                 alert("تم تحديث بنر صفحة الإكسسوارات بنجاح! 🚀");
             } catch (e) { alert("حدث خطأ أثناء الحفظ!"); } finally { btn.disabled = false; }
-        }
+        };
 
-        // ================= إدارة الإكسسوارات بدون أخطاء حجم =================
+        // ================= إدارة الإكسسوارات =================
         let loadedAccessories = [];
         let editingAccessoryId = null;
 
-        async function saveAccessory(e) {
+        window.saveAccessory = async function(e) {
             e.preventDefault();
-            if (currentAccImages.length === 0) { 
-                alert("يجب إضافة صورة واحدة على الأقل للإكسسوار!"); 
+
+            let colorsArray = [];
+            const hasColors = document.getElementById('accHasColors').checked;
+            if (hasColors) {
+                const rows = document.querySelectorAll('.color-row-item');
+                rows.forEach(r => {
+                    const cName = r.querySelector('.color-name-input').value.trim();
+                    const cHex = r.querySelector('.color-hex-input').value;
+                    const textImg = r.querySelector('.color-img-input').value.trim();
+                    const fileImg = r.dataset.imageData || '';
+                    const finalImg = fileImg || (textImg !== 'صورة مرفوعة من الجهاز ✦' ? textImg : '');
+
+                    if (cName) {
+                        colorsArray.push({ name: cName, hex: cHex, image: finalImg });
+                    }
+                });
+            }
+
+            let fallbackImage = currentAccImages.length > 0 ? currentAccImages[0] : (colorsArray.length > 0 && colorsArray[0].image ? colorsArray[0].image : '');
+            if (!fallbackImage) { 
+                alert("يجب إضافة صورة واحدة على الأقل للإكسسوار سواء بالمعرض أو بأحد الألوان!"); 
                 return; 
             }
 
@@ -978,6 +1127,11 @@
                 const tickerTextVal = document.getElementById('accTickerText').value.trim();
                 const descVal = document.getElementById('accDesc').value.trim();
 
+                colorsArray = colorsArray.map(c => ({
+                    ...c,
+                    image: c.image || fallbackImage
+                }));
+
                 const accData = {
                     name: nameVal,
                     price: priceVal,
@@ -986,8 +1140,9 @@
                     allowCustomDesign: allowCustom,
                     customDesignPrice: customPriceVal,
                     tickerText: tickerTextVal,
-                    image: currentAccImages[0],
-                    gallery: currentAccImages,
+                    image: fallbackImage,
+                    gallery: currentAccImages.length > 0 ? currentAccImages : [fallbackImage],
+                    colors: colorsArray,
                     description: descVal || "قطعة إكسسوار حصرية من أرشيف UnoVerse.",
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
@@ -1009,27 +1164,32 @@
                 btn.disabled = false;
                 btn.innerText = editingAccessoryId ? "تحديث بيانات الإكسسوار" : "إضافة قطعة الإكسسوار";
             }
-        }
+        };
 
         function listenToAccessories() {
             const tbody = document.getElementById('accessoriesBody');
             db.collection("accessories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
                 tbody.innerHTML = ''; loadedAccessories = [];
-                let accCount = 0;
                 if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888;">لا توجد إكسسوارات مسجلة.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#888;">لا توجد إكسسوارات مسجلة.</td></tr>';
                     document.getElementById('statAccessories').innerText = 0; return;
                 }
                 snapshot.forEach(doc => {
-                    accCount++;
                     const acc = doc.data(); acc.id = doc.id;
                     loadedAccessories.push(acc);
+                    
+                    let colorsText = '-';
+                    if (acc.colors && acc.colors.length > 0) {
+                        colorsText = acc.colors.map(c => `<span style="display:inline-block; margin-left:4px; padding:2px 6px; background:#111; border:1px solid #333; font-size:11px;">● ${c.name}</span>`).join('');
+                    }
+
                     tbody.innerHTML += `
                         <tr>
                             <td><img src="${acc.image || (acc.gallery ? acc.gallery[0] : '')}"></td>
                             <td style="color:#fff;">${acc.name}</td>
                             <td>${acc.discount < acc.price ? acc.discount : acc.price} ج.م</td>
                             <td><strong style="color:${acc.stock > 0 ? '#2ecc71' : '#ff3333'}">${acc.stock}</strong></td>
+                            <td>${colorsText}</td>
                             <td>${acc.allowCustomDesign ? `+${acc.customDesignPrice} ج.م` : 'غير مفعل'}</td>
                             <td>
                                 <button class="action-btn edit-btn" onclick="editAccessory('${acc.id}')">تعديل</button>
@@ -1042,7 +1202,7 @@
             });
         }
 
-        function editAccessory(id) {
+        window.editAccessory = function(id) {
             const acc = loadedAccessories.find(a => a.id === id);
             if (!acc) return;
 
@@ -1057,34 +1217,47 @@
             document.getElementById('accTickerText').value = acc.tickerText || '';
             document.getElementById('accDesc').value = acc.description || '';
 
+            const colorsContainer = document.getElementById('colorRowsContainer');
+            colorsContainer.innerHTML = '';
+            if (acc.colors && acc.colors.length > 0) {
+                document.getElementById('accHasColors').checked = true;
+                document.getElementById('colorManagerBox').style.display = 'block';
+                acc.colors.forEach(c => addColorRow(c));
+            } else {
+                document.getElementById('accHasColors').checked = false;
+                document.getElementById('colorManagerBox').style.display = 'none';
+            }
+
             currentAccImages = acc.gallery && acc.gallery.length > 0 ? [...acc.gallery] : (acc.image ? [acc.image] : []);
             renderGallery('accessories');
 
             document.getElementById('accSubmitBtn').innerText = "تحديث بيانات الإكسسوار";
             document.getElementById('cancelAccEditBtn').style.display = "block";
             window.scrollTo(0, document.getElementById('addAccessoryForm').offsetTop - 100);
-        }
+        };
 
-        function cancelAccEdit() {
+        window.cancelAccEdit = function() {
             editingAccessoryId = null;
             document.getElementById('addAccessoryForm').reset();
             currentAccImages = [];
             renderGallery('accessories');
             document.getElementById('customPriceGroup').style.display = 'none';
+            document.getElementById('colorManagerBox').style.display = 'none';
+            document.getElementById('colorRowsContainer').innerHTML = '';
             document.getElementById('accSubmitBtn').innerText = "إضافة قطعة الإكسسوار";
             document.getElementById('cancelAccEditBtn').style.display = "none";
-        }
+        };
 
-        async function deleteAccessory(id) {
+        window.deleteAccessory = async function(id) {
             if (confirm("هل أنت متأكد من حذف هذه القطعة؟")) {
                 await db.collection("accessories").doc(id).delete();
             }
-        }
+        };
 
         // ================= إدارة الملابس =================
         let loadedProducts = [], editingProductId = null;
 
-        async function saveProduct(e) {
+        window.saveProduct = async function(e) {
             e.preventDefault();
             if (currentProdImages.length === 0) { alert("يجب إضافة صورة!"); return; }
             const sizes = Array.from(document.querySelectorAll('input[name="prodSizes"]:checked')).map(cb => cb.value);
@@ -1108,7 +1281,7 @@
                 else { productData.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection("products").add(productData); }
                 alert("تم الحفظ بنجاح!"); cancelEdit();
             } catch (error) { alert("خطأ أثناء الحفظ!"); } finally { submitBtn.disabled = false; }
-        }
+        };
 
         function listenToInventory() {
             const tbody = document.getElementById('inventoryBody');
@@ -1135,11 +1308,11 @@
             });
         }
 
-        async function deleteProduct(id) {
+        window.deleteProduct = async function(id) {
             if(confirm("هل أنت متأكد من الحذف؟")) await db.collection("products").doc(id).delete();
-        }
+        };
 
-        function editProduct(id) {
+        window.editProduct = function(id) {
             let prod = loadedProducts.find(p => p.id === id); if(!prod) return;
             document.getElementById('prodName').value = prod.name;
             document.getElementById('prodPrice').value = prod.price;
@@ -1150,14 +1323,13 @@
             document.querySelectorAll('input[name="prodSizes"]').forEach(cb => cb.checked = prod.sizes && prod.sizes.includes(cb.value));
             currentProdImages = prod.gallery ? [...prod.gallery] : [prod.image]; renderGallery('products');
             editingProductId = id; document.getElementById('submitBtn').innerText = "تحديث بيانات القطعة"; document.getElementById('cancelEditBtn').style.display = "block"; window.scrollTo(0,0);
-        }
+        };
 
-        function cancelEdit() {
+        window.cancelEdit = function() {
             editingProductId = null; document.getElementById('addProductForm').reset(); currentProdImages = []; renderGallery('products');
             document.getElementById('submitBtn').innerText = "إضافة القطعة"; document.getElementById('cancelEditBtn').style.display = "none";
-        }
+        };
 
-        // Drop & About
         async function loadDropData() {
             try {
                 const doc = await db.collection("settings").doc("drop").get();
@@ -1171,7 +1343,7 @@
             } catch (e) { console.error(e); }
         }
 
-        async function saveDropData() {
+        window.saveDropData = async function() {
             const btn = document.getElementById('dropSaveBtn'); btn.disabled = true;
             try {
                 await db.collection("settings").doc("drop").set({
@@ -1182,7 +1354,7 @@
                 });
                 alert("تم تحديث إعدادات الإطلاق! 🚀");
             } catch (e) { alert("حدث خطأ!"); } finally { btn.innerText = "حفظ إعدادات الإطلاق"; btn.disabled = false; }
-        }
+        };
 
         async function loadAboutData() {
             try {
@@ -1191,13 +1363,13 @@
             } catch (error) { console.error(error); }
         }
 
-        async function saveAboutUs() {
+        window.saveAboutUs = async function() {
             const btn = document.getElementById('aboutBtn'); btn.innerText = "جاري الحفظ..."; btn.disabled = true;
             try {
                 await db.collection("settings").doc("about").set({ text: document.getElementById('aboutInput').value }, { merge: true });
                 alert("تم التحديث بنجاح!");
             } catch (error) { alert("خطأ!"); } finally { btn.innerText = "حفظ وتحديث النص"; btn.disabled = false; }
-        }
+        };
     </script>
     <script src="developer-credit.js"></script>
 </body>
