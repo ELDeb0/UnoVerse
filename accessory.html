@@ -7,11 +7,9 @@
     
     <link rel="icon" type="image/png" href="icon.png">
     
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <!-- UnoVerse Minimal Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -61,6 +59,50 @@
             will-change: transform; transform: translateZ(0); 
         }
 
+        #loader-overlay { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: var(--bg-deep); z-index: 9999999; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease; 
+        }
+        .loader-logo { 
+            font-family: 'Oswald', sans-serif; font-size: 42px; color: var(--text-cream); 
+            letter-spacing: 10px; margin-bottom: 8px; font-weight: 700; direction: ltr;
+        }
+        .loader-logo span { color: var(--text-muted); }
+        .loader-subtitle {
+            font-family: 'Oswald', sans-serif; font-size: 10px; color: var(--text-muted);
+            letter-spacing: 6px; text-transform: uppercase; margin-bottom: 25px; font-weight: 300;
+        }
+        .loader-line-container { width: 180px; height: 2px; background: rgba(255,255,255,0.08); overflow: hidden; position: relative;}
+        #loader-line { 
+            position: absolute; top: 0; left: 0; 
+            width: 15%; height: 100%; background: var(--text-cream); 
+            transition: width 0.35s ease-out; 
+        }
+        .loader-notice-box {
+            margin-top: 20px;
+            max-width: 320px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .loader-status-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            color: #7EADDB;
+            text-transform: uppercase;
+        }
+        .loader-hint-text {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 11.5px;
+            color: #8899A6;
+            line-height: 1.6;
+        }
+        body.loaded #loader-overlay { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+
         .cursor-wrapper { 
             position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999999; 
             will-change: transform; mix-blend-mode: exclusion;
@@ -75,26 +117,6 @@
             background-color: transparent; border: 1.5px solid var(--text-cream); 
         }
 
-        .eng-typography-bg { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            pointer-events: none; z-index: 0; overflow: hidden; 
-            display: flex; flex-direction: column; justify-content: center; gap: 6vh; 
-        }
-        .eng-typography-bg .word-1 { 
-            font-family: 'Oswald', sans-serif; font-size: 15vw; font-weight: 700; 
-            color: rgba(107, 154, 196, 0.04); line-height: 0.8; white-space: nowrap; 
-            animation: smoothPanRight 45s linear infinite; transform: translateZ(0);
-        }
-        .eng-typography-bg .word-2 { 
-            font-family: 'Oswald', sans-serif; font-size: 13vw; font-weight: 600; 
-            color: rgba(245, 242, 235, 0.025); line-height: 0.8; white-space: nowrap; 
-            animation: smoothPanLeft 55s linear infinite; transform: translateZ(0);
-            letter-spacing: 6px;
-        }
-        @keyframes smoothPanRight { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(50%, 0, 0); } }
-        @keyframes smoothPanLeft { 0% { transform: translate3d(50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
-
-        /* Header */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
             width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
@@ -143,8 +165,7 @@
         }
         .mobile-nav-links li a { 
             text-decoration: none; color: var(--text-cream); font-family: 'Oswald', sans-serif; 
-            font-size: 20px !important;
-            letter-spacing: 4px; text-transform: uppercase; font-weight: 600; 
+            font-size: 20px !important; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; 
             transition: 0.3s; display: inline-block; 
         }
         .mobile-nav-links li a:hover, .mobile-nav-links li a.active { 
@@ -157,7 +178,6 @@
             border-top: 1px solid var(--line-color); padding-top: 20px; font-weight: 400; 
         }
 
-        /* Cart Drawer */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
@@ -172,7 +192,6 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream); font-weight: 500;}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
-        /* Desktop Layout */
         .product-wrapper { 
             position: relative; 
             z-index: 10; 
@@ -180,7 +199,7 @@
             grid-template-columns: 1fr 1fr;
             align-items: start; 
             min-height: 80vh; 
-            padding: 130px 6% 60px; 
+            padding: 130px 6% 40px; 
             max-width: 1400px; 
             margin: 0 auto; 
             gap: 50px; 
@@ -194,7 +213,6 @@
         .product-tag { font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 4px; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 12px; font-weight: 600;}
         .product-name { font-family: 'Oswald', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.2; margin-bottom: 18px; color: var(--text-cream); letter-spacing: 1px; text-transform: uppercase;}
         
-        /* علبة السعر */
         .product-price-box { 
             display: inline-flex;
             align-items: baseline;
@@ -248,7 +266,6 @@
         }
         @keyframes productTickerScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* وحدة اختيار اللون */
         .color-selector-wrapper {
             display: flex;
             flex-direction: column;
@@ -308,7 +325,6 @@
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        /* وحدة اختيار كمية القطع */
         .quantity-controller-wrapper {
             display: flex !important;
             align-items: center;
@@ -427,7 +443,6 @@
             opacity: 0.7;
         }
 
-        /* معرض الصور وتأثير الزوم المحسن */
         .product-gallery-panel { 
             display: flex; 
             flex-direction: column; 
@@ -473,10 +488,10 @@
         .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
 
-        /* ================= تصميم قسم المقترحات الفاخر والأنيق ================= */
+        /* ================= 4 منتجات بحجم مصغر ومناسب جداً ================= */
         .related-section { 
-            padding: 50px 6% 35px; 
-            max-width: 1400px; 
+            padding: 35px 5% 25px; 
+            max-width: 1150px; 
             margin: 0 auto; 
             position: relative; 
             z-index: 10; 
@@ -486,20 +501,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 16px;
         }
         .related-title { 
             font-family: 'Oswald', sans-serif; 
-            font-size: 14px; 
-            letter-spacing: 3px; 
+            font-size: 13px; 
+            letter-spacing: 2px; 
             color: var(--text-cream); 
             text-transform: uppercase; 
             font-weight: 600;
         }
         .related-view-all {
             font-family: 'Oswald', sans-serif;
-            font-size: 12px;
-            letter-spacing: 2px;
+            font-size: 11px;
+            letter-spacing: 1.5px;
             color: var(--accent-blue);
             text-decoration: none;
             transition: 0.3s ease;
@@ -510,37 +525,39 @@
         }
         .related-grid { 
             display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 20px; 
+            grid-template-columns: repeat(4, 1fr) !important; 
+            gap: 10px; 
         }
         .related-card { 
-            background: linear-gradient(180deg, rgba(8, 12, 20, 0.8), rgba(4, 6, 10, 0.95));
-            border: 1px solid var(--line-color); 
-            padding: 12px; 
+            background: #080C14;
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 8px; 
             text-decoration: none; 
             display: flex; 
             flex-direction: column; 
-            transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
+            transition: 0.25s ease;
+            max-width: 100%;
         }
         .related-card:hover { 
-            transform: translateY(-5px); 
-            border-color: rgba(255, 255, 255, 0.35);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            transform: translateY(-3px); 
+            border-color: rgba(255, 255, 255, 0.3);
         }
         .related-card .img-wrap {
             width: 100%;
             aspect-ratio: 1/1;
             background: #020408;
             overflow: hidden;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .related-card img { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            transition: transform 0.5s ease;
+            transition: transform 0.4s ease;
         }
         .related-card:hover img {
             transform: scale(1.05);
@@ -548,41 +565,33 @@
         .related-card .card-info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
             text-align: right;
         }
         .related-card h4 { 
             color: var(--text-cream); 
             font-family: 'Oswald', sans-serif; 
-            font-size: 13.5px; 
+            font-size: 11.5px; 
             text-transform: uppercase; 
-            letter-spacing: 1px; 
+            letter-spacing: 0.5px; 
             font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin: 0;
         }
         .related-card .price-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 4px;
         }
         .related-card .price { 
             color: #FFFFFF; 
             font-family: 'Oswald', sans-serif; 
-            font-size: 13px; 
+            font-size: 11.5px; 
             font-weight: 600;
         }
-        .related-card .tag {
-            font-family: 'Oswald', sans-serif;
-            font-size: 10px;
-            color: var(--accent-blue);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
 
-        /* Footer */
         .main-footer { padding: 50px 6% 30px; background-color: var(--bg-deep); position: relative; z-index: 10; border-top: 1px solid var(--line-color); margin-top: 30px;}
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px; margin-bottom: 30px; }
         .footer-brand h2 { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 4px; color: var(--text-cream); margin-bottom: 10px;}
@@ -595,12 +604,12 @@
         .social-links a:hover { color: #FFFFFF; padding-right: 5px;}
         .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid var(--line-color); padding-top: 20px; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase;}
 
-        /* تجاوب الموبايل */
+        /* حجم متناسق وصغير في الموبايل */
         @media (max-width: 768px) {
             .product-wrapper { 
                 display: flex !important;
                 flex-direction: column !important;
-                padding: 80px 0 30px 0 !important;
+                padding: 80px 0 15px 0 !important;
                 gap: 0 !important;
                 min-height: auto !important;
             }
@@ -616,94 +625,46 @@
             .main-frame {
                 width: 100vw !important;
                 max-width: 100vw !important;
-                height: 60vh !important;
+                height: 56vh !important;
                 aspect-ratio: auto !important;
                 border: none !important;
                 border-bottom: 1px solid var(--line-color) !important;
                 box-shadow: none !important;
                 background: #020408 !important;
             }
-            
-            .main-frame img {
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: cover !important;
-            }
 
             .gallery-thumbs {
-                padding: 12px 5% 0 !important;
-                justify-content: flex-start !important;
-                gap: 10px !important;
+                padding: 10px 4% 0 !important;
+                gap: 8px !important;
             }
 
             .gallery-thumbs .thumb-item {
-                width: 55px !important;
-                height: 55px !important;
-                border: 1px solid var(--line-color) !important;
+                width: 50px !important;
+                height: 50px !important;
             }
 
             .product-info-panel { 
                 width: 100% !important; 
-                padding: 25px 5% 15px !important;
+                padding: 20px 4% 12px !important;
                 background: var(--bg-deep) !important;
                 border-top: 1px solid var(--line-color) !important;
-                margin-top: 15px !important;
-                box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.5) !important;
+                margin-top: 10px !important;
             }
             
-            .product-name { font-size: 26px !important; margin-bottom: 10px !important; }
-            .product-tag { font-size: 11px !important; letter-spacing: 2.5px !important; margin-bottom: 6px !important; }
+            .product-name { font-size: 24px !important; margin-bottom: 8px !important; }
+            .product-price-box { padding: 8px 14px !important; margin-bottom: 12px !important; }
+            .product-price-box #dynamicPrice { font-size: 22px !important; }
             
-            .product-price-box { 
-                padding: 10px 18px !important; 
-                margin-bottom: 16px !important; 
+            .related-section { padding: 20px 2.5% 10px !important; }
+            .related-grid { 
+                grid-template-columns: repeat(4, 1fr) !important; 
+                gap: 5px !important; 
             }
-            .product-price-box #dynamicPrice { 
-                font-size: 26px !important; 
+            .related-card { 
+                padding: 5px 3px !important; 
             }
-            .product-price-box .old { 
-                font-size: 15px !important; 
-            }
-            
-            .meta-specs { 
-                grid-template-columns: repeat(3, 1fr) !important; 
-                gap: 10px !important; 
-                padding: 12px 0 !important; 
-                margin-bottom: 15px !important;
-            }
-            .spec-item .label { font-size: 10px !important; letter-spacing: 1px !important; }
-            .spec-item .val { font-size: 12.5px !important; }
-            
-            .product-desc { font-size: 14px !important; line-height: 1.8 !important; margin-bottom: 16px !important; }
-            .product-ticker-container { padding: 6px 10px !important; margin-bottom: 15px !important; }
-            .product-ticker-text { font-size: 10.5px !important; letter-spacing: 2px !important; }
-            
-            .color-selector-wrapper { padding: 12px 14px !important; margin-bottom: 15px !important; }
-            
-            .quantity-controller-wrapper { 
-                display: flex !important;
-                padding: 12px 14px !important; 
-                margin-bottom: 15px !important; 
-            }
-            .quantity-controller-wrapper .qty-label { font-size: 12px !important; }
-            .quantity-selector button { width: 34px !important; height: 34px !important; }
-            .quantity-selector input { width: 40px !important; height: 34px !important; font-size: 14px !important; }
-
-            .archive-perks-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; margin-bottom: 15px !important; }
-            .perk-card { padding: 10px !important; }
-            .perk-card .perk-title { font-size: 10px !important; }
-            .perk-card .perk-sub { font-size: 10.5px !important; }
-            
-            .custom-design-card { padding: 12px !important; margin-bottom: 15px !important; }
-            .custom-header label { font-size: 11.5px !important; }
-            .custom-price-tag { font-size: 12.5px !important; }
-            .custom-input-box textarea { height: 60px !important; font-size: 12.5px !important; }
-            
-            .btn-add-cart { padding: 16px !important; font-size: 13px !important; letter-spacing: 3px !important; }
-            
-            .related-section { padding: 35px 4% 20px !important; }
-            .related-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            .related-card { padding: 10px !important; }
+            .related-card h4 { font-size: 9px !important; letter-spacing: 0px !important; }
+            .related-card .price { font-size: 9.5px !important; }
             
             .main-nav { display: none; }
             .mobile-menu-btn { display: flex !important; }
@@ -714,12 +675,20 @@
 <body>
 
     <div class="cinematic-grain"></div>
-    <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
-    <div class="eng-typography-bg">
-        <div class="word-1">UNOVERSE</div>
-        <div class="word-2">ACCESSORIES ARCHIVE</div>
+    <div id="loader-overlay">
+        <div class="loader-logo"><span dir="ltr">UNO<span>VERSE</span></span></div>
+        <div class="loader-subtitle">ARCHIVE ACCESSORY</div>
+        <div class="loader-line-container">
+            <div id="loader-line"></div>
+        </div>
+        <div class="loader-notice-box">
+            <span class="loader-status-text" id="loaderStatusText">SYNCHRONIZING PIECE...</span>
+            <p class="loader-hint-text">قد يستغرق التحميل بضع ثوانٍ لضمان مزامنة القطع والبيانات الحصرية بالكامل.</p>
+        </div>
     </div>
+
+    <div class="cursor-wrapper" id="cursorWrapper"><div class="cursor-dot"></div></div>
 
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
     <div class="mobile-nav-drawer" id="mobileNavDrawer">
@@ -778,7 +747,7 @@
         </div>
     </main>
 
-    <!-- قسم المقترحات المحدث -->
+    <!-- 4 كروت صغيرة ومتناسقة في جميع الأجهزة -->
     <section class="related-section">
         <div class="related-header">
             <h3 class="related-title">EXPLORE MORE ACCESSORIES //</h3>
@@ -836,10 +805,8 @@
             }, 500);
         })();
 
-        // حركة الماوس للديسكتوب
         const cursorWrapper = document.getElementById('cursorWrapper');
-        let mouseX = -100, mouseY = -100;
-        let cursorX = -100, cursorY = -100;
+        let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
 
         if (!window.matchMedia("(max-width: 768px)").matches) {
             window.addEventListener('mousemove', (e) => {
@@ -866,13 +833,11 @@
             });
         }
 
-        // تحسين الزوم للموبايل والكمبيوتر
         function setupAdvancedImageZoom() {
             const frame = document.querySelector('.main-frame');
             const img = document.getElementById('mainDisplayImg');
             if (!frame || !img) return;
 
-            // 1. زوم الكمبيوتر عبر تحريك الماوس
             frame.addEventListener('mousemove', (e) => {
                 const rect = frame.getBoundingClientRect();
                 const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -884,13 +849,11 @@
                 img.style.transformOrigin = 'center center';
             });
 
-            // 2. زوم اللمس المريح للموبايل (Double Tap / Single Tap toggle)
             let lastTap = 0;
             frame.addEventListener('touchend', function (e) {
                 const currentTime = new Date().getTime();
                 const tapLength = currentTime - lastTap;
                 if (tapLength < 350 && tapLength > 0) {
-                    // Double Tap Zoom
                     e.preventDefault();
                     frame.classList.toggle('mobile-zoomed');
                     if (frame.classList.contains('mobile-zoomed')) {
@@ -907,7 +870,20 @@
             });
         }
 
-        // محرك تشغيل صفحة الإكسسوار
+        function updateLoader(percent, statusText) {
+            const line = document.getElementById('loader-line');
+            const txt = document.getElementById('loaderStatusText');
+            if (line) line.style.width = percent + '%';
+            if (txt && statusText) txt.innerText = statusText;
+        }
+
+        function hideLoader() {
+            updateLoader(100, "READY // OPENING");
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 200);
+        }
+
         const _0xAccessoryEngine = (function(){
             const _0xcfg = {
                 apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
@@ -934,20 +910,29 @@
                 const wrapper = document.getElementById('accessoryContent');
                 if (!accessoryId) {
                     wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">NO ACCESSORY SELECTED.</h2>';
+                    hideLoader();
                     return;
                 }
                 try {
-                    const doc = await _0xdb.collection("accessories").doc(accessoryId).get();
+                    updateLoader(35, "LOADING ACCESSORY DATA...");
+                    
+                    const [doc, _] = await Promise.all([
+                        _0xdb.collection("accessories").doc(accessoryId).get(),
+                        _0xloadRandomRelated(accessoryId)
+                    ]);
+
                     if (!doc.exists) {
                         wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">ACCESSORY NOT FOUND.</h2>';
+                        hideLoader();
                         return;
                     }
                     accessoryData = doc.data();
                     accessoryData.id = doc.id;
                     _0xrender(accessoryData);
-                    _0xloadRandomRelated(accessoryId);
+                    hideLoader();
                 } catch (err) {
                     console.error(err);
+                    hideLoader();
                 }
             }
 
@@ -977,7 +962,6 @@
                     </div>
                 ` : '';
 
-                // معالجة الألوان
                 let colorsHTML = '';
                 const colorsList = item.colors || [];
                 if (colorsList.length > 0) {
@@ -1061,7 +1045,6 @@
 
                 wrapper.innerHTML = `
                     <div class="product-wrapper">
-                        <!-- معرض الصور -->
                         <div class="product-gallery-panel">
                             <div class="main-frame">
                                 <img id="mainDisplayImg" src="${selectedImage}" alt="${item.name}">
@@ -1069,7 +1052,6 @@
                             ${images.length > 1 ? `<div class="gallery-thumbs">${thumbsHTML}</div>` : ''}
                         </div>
 
-                        <!-- تفاصيل القطعة -->
                         <div class="product-info-panel">
                             <div>
                                 <div class="product-tag">ACCESSORY // STOCK: ${availableStock}</div>
@@ -1216,9 +1198,9 @@
                 document.getElementById('cartOverlay').classList.add('active');
             };
 
-            // جلب 4 منتجات عشوائية لقسم المقترحات في كل زيارة
-            function _0xloadRandomRelated(currentId) {
-                _0xdb.collection("accessories").get().then(snapshot => {
+            async function _0xloadRandomRelated(currentId) {
+                try {
+                    const snapshot = await _0xdb.collection("accessories").limit(12).get();
                     const grid = document.getElementById('relatedGrid');
                     if (!grid) return;
                     grid.innerHTML = '';
@@ -1232,13 +1214,11 @@
                         }
                     });
 
-                    // خوارزمية Fisher-Yates للخلط العشوائي
                     for (let i = items.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [items[i], items[j]] = [items[j], items[i]];
                     }
 
-                    // أخذ 4 قطع عشوائية
                     const selectedItems = items.slice(0, 4);
 
                     selectedItems.forEach(d => {
@@ -1249,7 +1229,6 @@
                                     <img src="${d.image || (d.gallery ? d.gallery[0] : '')}" alt="${d.name}">
                                 </div>
                                 <div class="card-info">
-                                    <span class="tag">ACCESSORY</span>
                                     <h4>${d.name}</h4>
                                     <div class="price-row">
                                         <span class="price">${p} EGP</span>
@@ -1259,7 +1238,9 @@
                         `;
                     });
                     attachCursorEffects();
-                });
+                } catch (e) {
+                    console.error(e);
+                }
             }
 
             function _0xcartUI() {
