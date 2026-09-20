@@ -474,8 +474,8 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // بيانات بوت التليجرام الخاص بك لتلقي الإشعارات الفورية
-        const TELEGRAM_BOT_TOKEN = "8809995602: AAHkF1TeMGV7Dn12A5V52 dLynDVuw1_Dlrw";
+        // التوكن الصحيح والـ Chat ID الخاصين بك
+        const TELEGRAM_BOT_TOKEN = "8809995602:AAHkF1TeMGV7Dn12A5V52dLynDVuw1_Dlrw";
         const TELEGRAM_CHAT_ID = "1895384542";
 
         async function sendTelegramAlert(orderId, orderData) {
@@ -487,18 +487,17 @@
                     return `${idx + 1}. ${item.name} ${size} ${color} ${custom} × ${item.quantity || 1} - ${item.price} EGP`;
                 }).join('\n');
 
-                let message = `🚨 *طلب جديد وصل على UNOVERSE!* 🚨\n\n` +
-                    `🆔 *رقم الطلب:* #${orderId.slice(-6).toUpperCase()}\n` +
-                    `👤 *العميل:* ${orderData.customerInfo.name}\n` +
-                    `📞 *الهاتف:* ${orderData.customerInfo.phone}\n` +
-                    (orderData.customerInfo.altPhone ? `📱 *هاتف بديل:* ${orderData.customerInfo.altPhone}\n` : '') +
-                    `📍 *العنوان:* ${orderData.customerInfo.governorate} - ${orderData.customerInfo.city}\n` +
-                    `🏠 *التفاصيل:* ${orderData.customerInfo.address}\n\n` +
-                    `📦 *القطع المطلوبة:*\n${itemsDetails}\n\n` +
-                    `💵 *تكلفة القطع:* ${orderData.subtotalAmount} EGP\n` +
-                    `🚚 *الشحن:* ${orderData.shippingAmount} EGP\n` +
-                    `💰 *الإجمالي النهائي:* ${orderData.totalAmount} EGP\n\n` +
-                    `🔗 [رابط بوليصة الأوردر في الإدارة](${window.location.origin}/admin.html)`;
+                let message = `🚨 طلب جديد وصل على UNOVERSE!\n\n` +
+                    `🆔 رقم الطلب: #${orderId.slice(-6).toUpperCase()}\n` +
+                    `👤 العميل: ${orderData.customerInfo.name}\n` +
+                    `📞 الهاتف: ${orderData.customerInfo.phone}\n` +
+                    (orderData.customerInfo.altPhone ? `📱 هاتف بديل: ${orderData.customerInfo.altPhone}\n` : '') +
+                    `📍 المحافظة: ${orderData.customerInfo.governorate} - ${orderData.customerInfo.city}\n` +
+                    `🏠 العنوان: ${orderData.customerInfo.address}\n\n` +
+                    `📦 القطع المطلوبة:\n${itemsDetails}\n\n` +
+                    `💵 تكلفة القطع: ${orderData.subtotalAmount} EGP\n` +
+                    `🚚 الشحن: ${orderData.shippingAmount} EGP\n` +
+                    `💰 الإجمالي النهائي: ${orderData.totalAmount} EGP`;
 
                 let url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
@@ -507,8 +506,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: TELEGRAM_CHAT_ID,
-                        text: message,
-                        parse_mode: 'Markdown'
+                        text: message
                     })
                 });
             } catch (err) {
