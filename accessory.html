@@ -3,9 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UnoVerse | ACCESSORY DETAILS</title>
+    <title id="pageTitle">UnoVerse | ACCESSORY DETAILS</title>
     
+    <!-- وسوم الـ SEO وتحسين الظهور على محركات البحث وشبكات التواصل -->
+    <meta name="description" id="metaDescription" content="اكتشف تفاصيل القطع الأرشيفية الحصرية من إكسسوارات UnoVerse المصنعة بأعلى درجات الجودة والمعدن الفاخر.">
+    <link rel="canonical" href="" id="canonicalUrl">
+    
+    <!-- Open Graph / WhatsApp / Facebook -->
+    <meta property="og:type" content="product">
+    <meta property="og:site_name" content="UnoVerse Archive">
+    <meta property="og:title" id="ogTitle" content="UnoVerse | Exclusive Accessory Piece">
+    <meta property="og:description" id="ogDescription" content="قطعة إكسسوار فريدة مصنعة بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.">
+    <meta property="og:image" id="ogImage" content="icon.png">
+    <meta property="og:url" id="ogUrl" content="">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitterTitle" content="UnoVerse | Exclusive Accessory Piece">
+    <meta name="twitter:description" id="twitterDescription" content="قطعة إكسسوار فريدة مصنعة بأعلى معايير الجودة.">
+    <meta name="twitter:image" id="twitterImage" content="icon.png">
+
     <link rel="icon" type="image/png" href="icon.png">
+    
+    <!-- تحسين سرعة الاتصال بالخطوط وقواعد البيانات -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -75,6 +98,7 @@
             background-color: transparent; border: 1.5px solid var(--text-cream); 
         }
 
+        /* Header */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
             width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
@@ -136,6 +160,7 @@
             border-top: 1px solid var(--line-color); padding-top: 20px; font-weight: 400; 
         }
 
+        /* Cart Drawer */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
@@ -150,6 +175,7 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream); font-weight: 500;}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
+        /* Desktop Layout */
         .product-wrapper { 
             position: relative; 
             z-index: 10; 
@@ -222,7 +248,7 @@
         }
         @keyframes productTickerScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* وحدة اختيار المقاس */
+        /* وحدة المقاسات */
         .size-selector-wrapper {
             display: flex;
             flex-direction: column;
@@ -273,7 +299,7 @@
             font-weight: bold;
         }
 
-        /* وحدة اختيار اللون */
+        /* وحدة الألوان */
         .color-selector-wrapper {
             display: flex;
             flex-direction: column;
@@ -796,6 +822,9 @@
     </footer>
 
     <script>
+        document.getElementById('canonicalUrl').href = window.location.href;
+        document.getElementById('ogUrl').content = window.location.href;
+
         (function(_0xGuard){
             document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
             document.addEventListener('keydown', function(e){
@@ -912,11 +941,32 @@
                     }
                     accessoryData = doc.data();
                     accessoryData.id = doc.id;
+                    updateSeoTags(accessoryData);
                     _0xrender(accessoryData);
                     _0xloadRandomRelated(accessoryId);
                 } catch (err) {
                     console.error("Fetch Error:", err);
                     wrapper.innerHTML = '<h2 style="text-align:center; padding:200px 0; color:var(--text-muted); font-family:Oswald; letter-spacing:4px;">ERROR LOADING ACCESSORY.</h2>';
+                }
+            }
+
+            /* تحديث وسوم الـ SEO ديناميكياً بناءً على بيانات القطعة */
+            function updateSeoTags(data) {
+                if (!data) return;
+                const pageTitle = `${data.name} | UnoVerse Archive`;
+                const desc = data.description || 'قطعة إكسسوار فريدة مصنعة بأعلى معايير الجودة لتكتمل بها شخصية إطلالتك.';
+                const img = data.image || (data.gallery ? data.gallery[0] : '');
+
+                document.title = pageTitle;
+                document.getElementById('pageTitle').innerText = pageTitle;
+                document.getElementById('metaDescription').setAttribute('content', desc);
+                document.getElementById('ogTitle').setAttribute('content', pageTitle);
+                document.getElementById('ogDescription').setAttribute('content', desc);
+                document.getElementById('twitterTitle').setAttribute('content', pageTitle);
+                document.getElementById('twitterDescription').setAttribute('content', desc);
+                if (img) {
+                    document.getElementById('ogImage').setAttribute('content', img);
+                    document.getElementById('twitterImage').setAttribute('content', img);
                 }
             }
 

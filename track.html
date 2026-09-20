@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UnoVerse</title>
+    <title>UnoVerse | Order Confirmation & Tracking</title>
     
+    <!-- وسوم الـ SEO وتحسين الظهور -->
+    <meta name="description" content="تتبع طلبك وشهادة تملك قطعتك الحصرية من أرشيف UnoVerse بدقة وتحديث لحظي لحالة الشحن.">
+    <meta property="og:title" content="UnoVerse | Order Tracking & Ownership">
+    <meta property="og:description" content="متابعة مسار الشحنة وشهادة ملكية القطعة الفردية من UnoVerse.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#04060A">
+
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="stylesheet" href="responsive.css">
     
@@ -53,7 +60,7 @@
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
 
-        /* ================= النسيج السينمائي الأصلي (الـ SVG Filter) ================= */
+        /* ================= النسيج السينمائي الأصلي ================= */
         .cinematic-grain { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             pointer-events: none; z-index: 99998; opacity: 0.05; 
@@ -118,11 +125,47 @@
         .tracking-container { position: relative; z-index: 10; max-width: 900px; margin: 150px auto 100px; padding: 0 5%; text-align: center; }
         
         .success-msg { color: var(--text-cream); font-family: 'Tajawal', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 15px;}
-        .save-link-msg { font-size: 14px; color: var(--text-muted); margin-bottom: 50px; line-height: 2; font-weight: 300;}
+        .save-link-msg { font-size: 14px; color: var(--text-muted); margin-bottom: 35px; line-height: 2; font-weight: 300;}
         .order-id-display { 
             color: var(--text-cream); font-family: 'Oswald', sans-serif; letter-spacing: 4px; 
             background: var(--bg-card); padding: 8px 20px; border: 1px solid var(--line-color); 
             display: inline-block; margin-top: 15px; font-weight: 300;
+        }
+
+        /* ================= بطاقة شهادة الشكر والتملك الأرشيفي الحصري ================= */
+        .ownership-certificate-card {
+            background: linear-gradient(145deg, rgba(8, 12, 20, 0.95), rgba(4, 6, 10, 0.98));
+            border: 1px solid var(--line-color);
+            border-top: 2px solid var(--accent-blue);
+            padding: 30px;
+            margin: 0 auto 40px auto;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+        .certificate-badge {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .certificate-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-style: italic;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+        .certificate-desc {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 650px;
+            margin: 0 auto 20px auto;
         }
 
         .copy-actions { display: flex; justify-content: center; gap: 15px; margin-top: 25px; flex-wrap: wrap;}
@@ -133,6 +176,16 @@
         }
         .copy-btn:hover { border-color: var(--text-cream); color: var(--bg-deep); background: var(--text-cream); }
         .copy-btn.copied { background: var(--text-muted); color: var(--bg-deep); border-color: var(--text-muted); }
+        .share-ownership-btn {
+            background: rgba(126, 173, 219, 0.1);
+            border: 1px solid var(--accent-blue);
+            color: var(--text-cream);
+        }
+        .share-ownership-btn:hover {
+            background: var(--accent-blue);
+            color: var(--bg-deep);
+            border-color: var(--accent-blue);
+        }
 
         /* ================= TIMELINE ================= */
         .timeline { display: flex; justify-content: space-between; align-items: center; margin: 80px 0; position: relative; }
@@ -193,7 +246,6 @@
             .copy-actions { flex-direction: column; gap: 10px; }
             .copy-btn { width: 100%; }
 
-            /* إخفاء الماوس المخصص نهائياً في الموبايل لتوفير المعالجة */
             .cursor-wrapper { display: none !important; }
         }
     </style>
@@ -226,6 +278,18 @@
     </header>
 
     <div class="tracking-container" id="trackingContainer">
+        <!-- بطاقة الشكر وإثبات التملك الحصرية المخصصة -->
+        <div class="ownership-certificate-card">
+            <span class="certificate-badge">ACQUISITION CONFIRMED // شهادة اقتناء</span>
+            <h2 class="certificate-title">Thank You For Securing The Piece.</h2>
+            <p class="certificate-desc">
+                تم تثبيت طلبك وتخصيص القطعة باسمك رسمياً. في UnoVerse، كل قطعة يتم صياغتها لمرة واحدة ولا تتكرر؛ أصبحت الآن جزءاً من أرشيفك الشخصي.
+            </p>
+            <div class="copy-actions" style="margin-top: 0;">
+                <button class="copy-btn share-ownership-btn" onclick="shareOwnership()">SHARE OWNERSHIP // مشاركة الاقتناء ✦</button>
+            </div>
+        </div>
+
         <h1 class="success-msg">ORDER RECEIVED ✦</h1>
         <p class="save-link-msg">
             نحن نجهّز قطعتك الحصرية الآن. يرجى الاحتفاظ ببيانات التتبع لمتابعة حالة الطلب:<br>
@@ -306,7 +370,6 @@
     </footer>
 
     <script>
-        // ================= حماية صارمة للصفحة ومنع التحديد والنسخ =================
         document.addEventListener('contextmenu', event => event.preventDefault()); 
         
         document.addEventListener('keydown', function(e) {
@@ -318,7 +381,6 @@
             if(e.ctrlKey && e.keyCode == 80) { e.preventDefault(); return false; }
         });
 
-        // Firebase 
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -330,7 +392,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // حركة الماوس المخصص
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100;
         let cursorX = -100, cursorY = -100;
@@ -347,7 +408,6 @@
             animateCursor();
         }
 
-        // إظهار تأثير الماوس المفرغ على العناصر (Hover Effect)
         function addHover() { cursorWrapper.classList.add('hovered'); }
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
 
@@ -373,6 +433,7 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const globalOrderId = urlParams.get('id');
+        let currentOrderRecord = null;
 
         function fetchOrderDetails() {
             if (!globalOrderId) {
@@ -385,6 +446,7 @@
             db.collection("orders").doc(globalOrderId).onSnapshot((doc) => {
                 if (doc.exists) {
                     const order = doc.data();
+                    currentOrderRecord = order;
                     renderOrderData(order);
                     updateTimeline(order.status);
                 } else {
@@ -470,6 +532,26 @@
                     btn.classList.remove('copied');
                 }, 3000);
             });
+        }
+
+        /* دالة مشاركة شهادة الاقتناء على السوشيال ميديا */
+        function shareOwnership() {
+            if (!globalOrderId) return;
+            const shortId = globalOrderId.slice(-6).toUpperCase();
+            const shareText = `✦ لقد قمت باقتناء قطعة أرشيفية حصرية 1 of 1 من UnoVerse! رقم القطعة: #${shortId}`;
+            const shareUrl = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'UnoVerse | Archive Ownership',
+                    text: shareText,
+                    url: shareUrl
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(`${shareText}\n${shareUrl}`).then(() => {
+                    alert("تم نسخ إثبات الاقتناء ورابط القطعة لمشاركتها على إنستجرام أو وسائل التواصل! ✦");
+                });
+            }
         }
     </script>
     <script src="developer-credit.js"></script>
