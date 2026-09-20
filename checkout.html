@@ -240,7 +240,6 @@
             gap: 14px;
         }
 
-        /* عرض صورة المنتج بوضوح دون تشويه */
         .summary-item img {
             width: 70px;
             height: 85px;
@@ -331,7 +330,6 @@
             color: var(--text-cream);
         }
 
-        /* Mobile Layout */
         @media (max-width: 900px) {
             .checkout-wrapper {
                 grid-template-columns: 1fr;
@@ -392,7 +390,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>المحافظة // GOVERNORATE <span class="sub">(مطلوب إجباري)</span></label>
-                        <select id="custGov" required>
+                        <select id="custGov" required onchange="handleGovChange(this.value)">
                             <option value="">-- اختر المحافظة --</option>
                             <option value="القاهرة">القاهرة</option>
                             <option value="الجيزة">الجيزة</option>
@@ -454,7 +452,7 @@
                 </div>
                 <div class="total-line">
                     <span>SHIPPING</span>
-                    <span style="color:var(--accent-blue);">TO BE DETERMINED</span>
+                    <span id="shippingPriceDisplay" style="color:var(--accent-blue);">TO BE DETERMINED</span>
                 </div>
                 <div class="total-line final">
                     <span>TOTAL</span>
@@ -476,6 +474,48 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // بيانات بوت التليجرام الخاص بك لتلقي الإشعارات الفورية
+        const TELEGRAM_BOT_TOKEN = "8809995602: AAHkF1TeMGV7Dn12A5V52 dLynDVuw1_Dlrw";
+        const TELEGRAM_CHAT_ID = "1895384542";
+
+        async function sendTelegramAlert(orderId, orderData) {
+            try {
+                let itemsDetails = orderData.items.map((item, idx) => {
+                    let size = (item.size && item.size !== 'Standard') ? `(مقاس: ${item.size})` : '';
+                    let color = item.color ? `(لون: ${item.color})` : '';
+                    let custom = item.customDetails ? `[تخصيص: ${item.customDetails}]` : '';
+                    return `${idx + 1}. ${item.name} ${size} ${color} ${custom} × ${item.quantity || 1} - ${item.price} EGP`;
+                }).join('\n');
+
+                let message = `🚨 *طلب جديد وصل على UNOVERSE!* 🚨\n\n` +
+                    `🆔 *رقم الطلب:* #${orderId.slice(-6).toUpperCase()}\n` +
+                    `👤 *العميل:* ${orderData.customerInfo.name}\n` +
+                    `📞 *الهاتف:* ${orderData.customerInfo.phone}\n` +
+                    (orderData.customerInfo.altPhone ? `📱 *هاتف بديل:* ${orderData.customerInfo.altPhone}\n` : '') +
+                    `📍 *العنوان:* ${orderData.customerInfo.governorate} - ${orderData.customerInfo.city}\n` +
+                    `🏠 *التفاصيل:* ${orderData.customerInfo.address}\n\n` +
+                    `📦 *القطع المطلوبة:*\n${itemsDetails}\n\n` +
+                    `💵 *تكلفة القطع:* ${orderData.subtotalAmount} EGP\n` +
+                    `🚚 *الشحن:* ${orderData.shippingAmount} EGP\n` +
+                    `💰 *الإجمالي النهائي:* ${orderData.totalAmount} EGP\n\n` +
+                    `🔗 [رابط بوليصة الأوردر في الإدارة](${window.location.origin}/admin.html)`;
+
+                let url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch (err) {
+                console.error("فشل إرسال إشعار تليجرام:", err);
+            }
+        }
+
         const cursorWrapper = document.getElementById('cursorWrapper');
         let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
         if (!window.matchMedia("(max-width: 900px)").matches) {
@@ -489,7 +529,21 @@
         }
 
         let cartItems = [];
-        let totalCartSum = 0;
+        let subtotalCartSum = 0;
+        let shippingRatesMap = {};
+        let currentShippingRate = 0;
+        let isGovSelected = false;
+
+        async function fetchShippingRates() {
+            try {
+                const doc = await db.collection("settings").doc("shippingRates").get();
+                if (doc.exists) {
+                    shippingRatesMap = doc.data() || {};
+                }
+            } catch (err) {
+                console.error("Shipping rates fetch error:", err);
+            }
+        }
 
         function loadSummary() {
             cartItems = JSON.parse(localStorage.getItem('unoCart')) || [];
@@ -498,6 +552,7 @@
             if (cartItems.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted); font-size:12px; text-align:center; padding: 20px 0;">السلة فارغة حالياً.</p>';
                 document.getElementById('subtotalPrice').innerText = '0 EGP';
+                document.getElementById('shippingPriceDisplay').innerText = '0 EGP';
                 document.getElementById('totalPrice').innerText = '0 EGP';
                 document.getElementById('submitOrderBtn').disabled = true;
                 return;
@@ -518,9 +573,29 @@
                 </div>
             `).join('');
 
-            totalCartSum = cartItems.reduce((sum, item) => sum + (parseFloat(item.price || 0) * (item.quantity || 1)), 0);
-            document.getElementById('subtotalPrice').innerText = `${totalCartSum} EGP`;
-            document.getElementById('totalPrice').innerText = `${totalCartSum} EGP`;
+            subtotalCartSum = cartItems.reduce((sum, item) => sum + (parseFloat(item.price || 0) * (item.quantity || 1)), 0);
+            document.getElementById('subtotalPrice').innerText = `${subtotalCartSum} EGP`;
+            updateTotalDisplay();
+        }
+
+        window.handleGovChange = function(selectedGov) {
+            if (!selectedGov) {
+                isGovSelected = false;
+                currentShippingRate = 0;
+                document.getElementById('shippingPriceDisplay').innerText = 'TO BE DETERMINED';
+                document.getElementById('shippingPriceDisplay').style.color = 'var(--accent-blue)';
+            } else {
+                isGovSelected = true;
+                currentShippingRate = shippingRatesMap[selectedGov] !== undefined ? parseFloat(shippingRatesMap[selectedGov]) : 50;
+                document.getElementById('shippingPriceDisplay').innerText = `${currentShippingRate} EGP`;
+                document.getElementById('shippingPriceDisplay').style.color = '#FFFFFF';
+            }
+            updateTotalDisplay();
+        };
+
+        function updateTotalDisplay() {
+            const finalTotal = subtotalCartSum + currentShippingRate;
+            document.getElementById('totalPrice').innerText = `${finalTotal} EGP`;
         }
 
         function isValidEgyptianPhone(phone) {
@@ -601,6 +676,8 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "PROCESSING PROTOCOL...";
 
+            const finalCalculatedTotal = subtotalCartSum + currentShippingRate;
+
             const orderData = {
                 customerInfo: {
                     name: name,
@@ -611,7 +688,9 @@
                     address: address
                 },
                 items: cartItems,
-                totalAmount: totalCartSum,
+                subtotalAmount: subtotalCartSum,
+                shippingAmount: currentShippingRate,
+                totalAmount: finalCalculatedTotal,
                 status: "قيد المراجعة",
                 paymentStatus: "غير مدفوع",
                 paymentInfo: { method: "الدفع عند الاستلام / تحويل" },
@@ -620,6 +699,10 @@
 
             try {
                 const docRef = await db.collection("orders").add(orderData);
+
+                // إرسال الإشعار التلقائي إلى تليجرام فوراً
+                await sendTelegramAlert(docRef.id, orderData);
+
                 localStorage.removeItem('unoCart');
                 window.location.href = `track.html?id=${docRef.id}`;
             } catch (err) {
@@ -630,7 +713,10 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadSummary);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchShippingRates();
+            loadSummary();
+        });
     </script>
     <script src="developer-credit.js"></script>
 </body>

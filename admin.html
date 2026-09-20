@@ -166,8 +166,49 @@
             background: rgba(255, 215, 0, 0.1);
             color: #fff;
         }
+
+        /* ================= تصميم جدول مصاريف الشحن ================= */
+        .shipping-rates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .gov-shipping-card {
+            background: #111;
+            border: 1px solid #222;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 4px;
+        }
+        .gov-shipping-card label {
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 0;
+        }
+        .gov-shipping-card input {
+            width: 90px;
+            padding: 8px;
+            background: #000;
+            border: 1px solid #444;
+            color: var(--accent-yellow);
+            font-family: 'Oswald', sans-serif;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+            border-radius: 2px;
+        }
+        .gov-shipping-card input:focus {
+            border-color: var(--accent-yellow);
+        }
+
         @media (max-width: 768px) {
             .color-row-item { grid-template-columns: 1fr; gap: 8px; }
+            .shipping-rates-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -198,6 +239,7 @@
             <button class="tab-btn" onclick="switchTab('ordersTab', this)">الطلبات الواردة</button>
             <button class="tab-btn" onclick="switchTab('productsTab', this)">إدارة الملابس (Archive)</button>
             <button class="tab-btn" onclick="switchTab('accessoriesTab', this)">إدارة الإكسسوارات (Accessories)</button>
+            <button class="tab-btn" onclick="switchTab('shippingTab', this)">مصاريف الشحن (Shipping)</button>
             <button class="tab-btn" onclick="switchTab('bannerTab', this)">بنر الإكسسوارات (Banner)</button>
             <button class="tab-btn" onclick="switchTab('dropTab', this)">إعدادات الإطلاق (Drop)</button>
             <button class="tab-btn" onclick="switchTab('aboutTab', this)">إعدادات (من نحن)</button>
@@ -392,6 +434,19 @@
                     </div>
                 </div>
 
+                <!-- خيار تفعيل المقاسات للإكسسوار -->
+                <div class="form-group">
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                        <input type="checkbox" id="accHasSizes" onchange="document.getElementById('accSizesBox').style.display = this.checked ? 'block' : 'none'">
+                        <span>تفعيل خيارات المقاسات للإكسسوار (مثل: أرقام الخواتم، أطوال السلاسل)</span>
+                    </label>
+                    <div id="accSizesBox" style="display:none; margin-top:15px;">
+                        <label>أدخل المقاسات أو الأرقام المتاحة (افصل بينها بفاصلة ، أو مسافة)</label>
+                        <input type="text" id="accSizesInput" placeholder="مثال: 6, 7, 8, 9 أو 45cm, 50cm, 60cm">
+                        <small style="color:#888; font-size:12px; margin-top:5px; display:block;">سيتمكن المشتري من اختيار مقاسه وسيظهر في تفاصيل الطلب.</small>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
                         <input type="checkbox" id="accAllowCustom" onchange="document.getElementById('customPriceGroup').style.display = this.checked ? 'block' : 'none'">
@@ -444,11 +499,32 @@
                 <div style="overflow-x:auto;">
                     <table class="admin-table">
                         <thead>
-                            <tr><th>الصورة</th><th>الاسم</th><th>السعر</th><th>الاستوك</th><th>الألوان</th><th>تخصيص</th><th>إجراءات</th></tr>
+                            <tr><th>الصورة</th><th>الاسم</th><th>السعر</th><th>الاستوك</th><th>المقاسات</th><th>الألوان</th><th>تخصيص</th><th>إجراءات</th></tr>
                         </thead>
                         <tbody id="accessoriesBody"></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <!-- ================= إدارة مصاريف الشحن لكل محافظة ================= -->
+        <div id="shippingTab" class="tab-content">
+            <div class="form-group" style="margin-top: 0;">
+                <h2 style="font-family: 'Oswald', sans-serif; color: var(--accent-yellow); margin-bottom: 10px;">إدارة تسعير الشحن للمحافظات (Shipping Rates)</h2>
+                <p style="color:#aaa; font-size:13px; line-height:1.7; margin-bottom:20px;">
+                    حدد تكلفة الشحن لكل محافظة بالجنيه المصري (EGP). سيتم تطبيق هذا السعر آلياً وإضافته إلى إجمالي الفاتورة بمجرد أن يختار العميل محافظته في صفحة الدفع.
+                </p>
+
+                <!-- تعيين سريع لكافة المحافظات -->
+                <div style="display:flex; gap:12px; align-items:center; background:#111; padding:15px; border:1px solid #333; margin-bottom:20px; flex-wrap:wrap;">
+                    <span style="font-weight:bold; color:#fff; font-size:14px;">تطبيق سعر شحن موحد لجميع المحافظات:</span>
+                    <input type="number" id="quickShippingRate" placeholder="مثال: 50" style="width:110px; padding:8px; background:#000; border:1px solid #444; color:#fff; text-align:center;">
+                    <button type="button" class="action-btn" style="background:var(--accent-yellow); color:#000; padding:9px 18px;" onclick="applyQuickShipping()">تطبيق على الكل</button>
+                </div>
+
+                <div class="shipping-rates-grid" id="shippingRatesContainer"></div>
+
+                <button type="button" class="submit-btn" style="width: auto; padding: 14px 35px; margin-top: 25px;" onclick="saveShippingRates()" id="saveShippingBtn">حفظ أسعار الشحن ✦</button>
             </div>
         </div>
 
@@ -513,7 +589,6 @@
     </div>
 
     <script>
-        // حماية الكود
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             if(e.keyCode == 123) { e.preventDefault(); return false; }
@@ -524,8 +599,7 @@
             if(e.ctrlKey && e.keyCode == 80) { e.preventDefault(); return false; }
         });
 
-        // حماية الـ IP[cite: 1]
-        const ALLOWED_IP = "41.235.134.75"; 
+        const ALLOWED_IP = "41.235.190.223"; 
 
         async function verifyConnection() {
             try {
@@ -549,7 +623,6 @@
         }
         window.onload = verifyConnection;
 
-        // إعدادات Firebase[cite: 1]
         const firebaseConfig = {
             apiKey: "AIzaSyDlDEAKoMteNLtvbSaq5I9VKpGq29gLDmY",
             authDomain: "unoverse-5babd.firebaseapp.com",
@@ -585,13 +658,13 @@
             listenToOrders(); 
             listenToInventory(); 
             listenToAccessories();
+            loadShippingRates();
             loadAboutData(); 
             loadDropData();
             loadAccessoriesBanner();
             startOnlineUsersSimulation();
         }
 
-        // ================= التحليلات البيانية =================
         let statusChartInstance = null;
         let salesChartInstance = null;
 
@@ -697,7 +770,78 @@
             setInterval(updateOnline, 12000);
         }
 
-        // ================= إدارة الطلبات والطباعة =================
+        // ================= قائمة المحافظات المصرية =================
+        const EGYPT_GOVERNORATES = [
+            "القاهرة", "الجيزة", "الإسكندرية", "الدقهلية", "البحر الأحمر", "البحيرة", 
+            "الفيوم", "الغربية", "الإسماعيلية", "المنوفية", "المنيا", "القليوبية", 
+            "الوادي الجديد", "السويس", "أسوان", "أسيوط", "بني سويف", "بورسعيد", 
+            "دمياط", "الشرقية", "جنوب سيناء", "كفر الشيخ", "مطروح", "الأقصر", 
+            "قنا", "شمال سيناء", "سوهـاج"
+        ];
+
+        // ================= إدارة مصاريف الشحن =================
+        async function loadShippingRates() {
+            const container = document.getElementById('shippingRatesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let savedRates = {};
+            try {
+                const doc = await db.collection("settings").doc("shippingRates").get();
+                if (doc.exists) {
+                    savedRates = doc.data() || {};
+                }
+            } catch (e) { console.error("Error loading shipping rates:", e); }
+
+            EGYPT_GOVERNORATES.forEach(gov => {
+                const currentVal = savedRates[gov] !== undefined ? savedRates[gov] : 50;
+                container.innerHTML += `
+                    <div class="gov-shipping-card">
+                        <label>${gov}</label>
+                        <div>
+                            <input type="number" class="gov-rate-input" data-gov="${gov}" value="${currentVal}" min="0">
+                            <span style="font-size:12px; color:#888; margin-right:4px;">ج.م</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.applyQuickShipping = function() {
+            const val = document.getElementById('quickShippingRate').value;
+            if (val === '') {
+                alert("يرجى كتابة السعر الذي تريد تطبيقه أولاً.");
+                return;
+            }
+            document.querySelectorAll('.gov-rate-input').forEach(input => {
+                input.value = val;
+            });
+        };
+
+        window.saveShippingRates = async function() {
+            const btn = document.getElementById('saveShippingBtn');
+            btn.disabled = true;
+            btn.innerText = "جاري الحفظ...";
+
+            const ratesObj = {};
+            document.querySelectorAll('.gov-rate-input').forEach(input => {
+                const gov = input.dataset.gov;
+                const rate = parseFloat(input.value) || 0;
+                ratesObj[gov] = rate;
+            });
+
+            try {
+                await db.collection("settings").doc("shippingRates").set(ratesObj);
+                alert("تم حفظ وتحديث مصاريف الشحن لجميع المحافظات بنجاح! ✦");
+            } catch (e) {
+                console.error(e);
+                alert("حدث خطأ أثناء حفظ مصاريف الشحن.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "حفظ أسعار الشحن ✦";
+            }
+        };
+
         let loadedOrders = []; 
 
         function listenToOrders() {
@@ -728,12 +872,14 @@
                     let itemsHtml = `<div style="display:flex; flex-direction:column; gap:8px;">`;
                     if (order.items && Array.isArray(order.items)) {
                         order.items.forEach(item => {
+                            let sizeLabel = (item.size && item.size !== 'Standard') ? item.size : (item.type === 'accessory' ? 'قياسي' : 'N/A');
                             itemsHtml += `
                                 <div style="display:flex; align-items:center; gap:10px; background:#111; padding:8px; border:1px solid #222; border-radius:4px;">
                                     <img src="${item.image || ''}" style="width:40px; height:50px; object-fit:cover; border:1px solid #333; border-radius:2px;">
                                     <div style="text-align:right; font-size:12px; line-height:1.4;">
                                         <strong style="color:var(--accent-yellow); font-family:'Oswald', sans-serif; font-size:14px;">${item.name || 'Piece'}</strong><br>
-                                        مقاس/نوع: ${item.size || 'N/A'} ${item.color ? ` | <span style="color:#7EADDB;">لون: ${item.color}</span>` : ''}
+                                        <span style="color:#FFD700;">مقاس: ${sizeLabel}</span>
+                                        ${item.color ? ` | <span style="color:#7EADDB;">لون: ${item.color}</span>` : ''}
                                         ${item.quantity ? ` | كمية: ${item.quantity}` : ''}
                                         ${item.customDetails ? `<br><small style="color:#2ecc71;">تخصيص: ${item.customDetails}</small>` : ''}
                                     </div>
@@ -751,9 +897,13 @@
                     let paymentTxIDHtml = (order.paymentInfo && order.paymentInfo.transactionID) ? `<br><span style="color:#aaa; font-size:11px;">إيصال: ${order.paymentInfo.transactionID}</span>` : '';
                     let paymentStatus = order.paymentStatus || 'غير مدفوع';
                     
+                    let shippingAmount = parseFloat(order.shippingAmount) || 0;
+                    let subtotal = parseFloat(order.subtotalAmount) || (parseFloat(order.totalAmount) - shippingAmount) || parseFloat(order.totalAmount);
+                    
                     let financeHtml = `
                         <div style="font-family:'Oswald', sans-serif; font-size:18px; color:var(--accent-yellow); font-weight:bold;">${order.totalAmount} ج.م</div>
-                        <div style="font-size:13px; color:#fff; margin-top:5px;">طريقة: ${paymentMethod} ${paymentTxIDHtml}</div>
+                        <div style="font-size:11px; color:#888; margin-top:3px;">القطع: ${subtotal} + الشحن: ${shippingAmount} ج.م</div>
+                        <div style="font-size:12px; color:#fff; margin-top:5px;">طريقة: ${paymentMethod} ${paymentTxIDHtml}</div>
                         <select class="order-status-select" style="margin-top:10px; padding:4px; font-size:12px;" onchange="updatePaymentStatus('${orderId}', this.value)">
                             <option value="غير مدفوع" ${paymentStatus === 'غير مدفوع' ? 'selected' : ''}>🔴 غير مدفوع</option>
                             <option value="مدفوع" ${paymentStatus === 'مدفوع' ? 'selected' : ''}>🟢 مدفوع</option>
@@ -815,14 +965,18 @@
             let itemsHtml = '';
             if (order.items && Array.isArray(order.items)) {
                 order.items.forEach(item => {
-                    itemsHtml += `<tr><td>${item.name} ${item.color ? `(لون: ${item.color})` : ''} ${item.customDetails ? `(${item.customDetails})` : ''}</td><td>${item.size || 'Accessory'}</td><td>${item.quantity || 1}</td><td>${item.price} ج.م</td></tr>`;
+                    let sizeLabel = (item.size && item.size !== 'Standard') ? item.size : (item.type === 'accessory' ? 'Standard' : 'N/A');
+                    itemsHtml += `<tr><td>${item.name} ${item.color ? `(لون: ${item.color})` : ''} ${item.customDetails ? `(${item.customDetails})` : ''}</td><td>${sizeLabel}</td><td>${item.quantity || 1}</td><td>${item.price} ج.م</td></tr>`;
                 });
             }
 
             let paymentStatus = order.paymentStatus || 'غير مدفوع';
+            let shippingAmount = parseFloat(order.shippingAmount) || 0;
+            let subtotal = parseFloat(order.subtotalAmount) || (parseFloat(order.totalAmount) - shippingAmount) || parseFloat(order.totalAmount);
+
             let collectAmountHtml = (paymentStatus === 'مدفوع')
-                ? `<div class="total" style="background:#e6ffe6; border: 2px solid #00cc00; padding:10px;">🟢 الأوردر مدفوع مسبقاً - لا تقم بتحصيل أموال من العميل (غير رسوم الشحن إن وُجدت)</div>`
-                : `<div class="total" style="background:#fff; padding:10px;">المطلوب تحصيله من العميل: ${order.totalAmount} ج.م (بالإضافة لرسوم الشحن)</div>`;
+                ? `<div class="total" style="background:#e6ffe6; border: 2px solid #00cc00; padding:10px;">🟢 الأوردر مدفوع مسبقاً بالكامل - لا تقم بتحصيل أي أموال من العميل</div>`
+                : `<div class="total" style="background:#fff; padding:10px;">المطلوب تحصيله شاملاً الشحن: ${order.totalAmount} ج.م (القطع: ${subtotal} ج.م + الشحن: ${shippingAmount} ج.م)</div>`;
 
             const printWindow = window.open('', '_blank', 'width=800,height=600');
             printWindow.document.write(`
@@ -1106,6 +1260,16 @@
                 });
             }
 
+            // قراءة المقاسات
+            const hasSizes = document.getElementById('accHasSizes').checked;
+            let sizesArray = [];
+            if (hasSizes) {
+                const rawSizes = document.getElementById('accSizesInput').value.trim();
+                if (rawSizes) {
+                    sizesArray = rawSizes.split(/[,،\s]+/).filter(Boolean);
+                }
+            }
+
             let fallbackImage = currentAccImages.length > 0 ? currentAccImages[0] : (colorsArray.length > 0 && colorsArray[0].image ? colorsArray[0].image : '');
             if (!fallbackImage) { 
                 alert("يجب إضافة صورة واحدة على الأقل للإكسسوار سواء بالمعرض أو بأحد الألوان!"); 
@@ -1137,6 +1301,8 @@
                     price: priceVal,
                     discount: discountVal,
                     stock: stockVal,
+                    hasSizes: hasSizes,
+                    sizes: sizesArray,
                     allowCustomDesign: allowCustom,
                     customDesignPrice: customPriceVal,
                     tickerText: tickerTextVal,
@@ -1171,7 +1337,7 @@
             db.collection("accessories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
                 tbody.innerHTML = ''; loadedAccessories = [];
                 if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#888;">لا توجد إكسسوارات مسجلة.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888;">لا توجد إكسسوارات مسجلة.</td></tr>';
                     document.getElementById('statAccessories').innerText = 0; return;
                 }
                 snapshot.forEach(doc => {
@@ -1183,12 +1349,15 @@
                         colorsText = acc.colors.map(c => `<span style="display:inline-block; margin-left:4px; padding:2px 6px; background:#111; border:1px solid #333; font-size:11px;">● ${c.name}</span>`).join('');
                     }
 
+                    let sizesText = (acc.sizes && acc.sizes.length > 0) ? acc.sizes.join(' | ') : 'بدون مقاس';
+
                     tbody.innerHTML += `
                         <tr>
                             <td><img src="${acc.image || (acc.gallery ? acc.gallery[0] : '')}"></td>
                             <td style="color:#fff;">${acc.name}</td>
                             <td>${acc.discount < acc.price ? acc.discount : acc.price} ج.م</td>
                             <td><strong style="color:${acc.stock > 0 ? '#2ecc71' : '#ff3333'}">${acc.stock}</strong></td>
+                            <td style="color:var(--accent-yellow); font-family:'Oswald';">${sizesText}</td>
                             <td>${colorsText}</td>
                             <td>${acc.allowCustomDesign ? `+${acc.customDesignPrice} ج.م` : 'غير مفعل'}</td>
                             <td>
@@ -1211,6 +1380,13 @@
             document.getElementById('accPrice').value = acc.price;
             document.getElementById('accDiscount').value = acc.discount !== acc.price ? acc.discount : '';
             document.getElementById('accStock').value = acc.stock;
+            
+            // تحميل المقاسات
+            const hasSizes = acc.hasSizes || (acc.sizes && acc.sizes.length > 0);
+            document.getElementById('accHasSizes').checked = !!hasSizes;
+            document.getElementById('accSizesBox').style.display = hasSizes ? 'block' : 'none';
+            document.getElementById('accSizesInput').value = (acc.sizes && Array.isArray(acc.sizes)) ? acc.sizes.join(', ') : '';
+
             document.getElementById('accAllowCustom').checked = acc.allowCustomDesign || false;
             document.getElementById('customPriceGroup').style.display = acc.allowCustomDesign ? 'block' : 'none';
             document.getElementById('accCustomPrice').value = acc.customDesignPrice || '';
@@ -1241,6 +1417,8 @@
             document.getElementById('addAccessoryForm').reset();
             currentAccImages = [];
             renderGallery('accessories');
+            document.getElementById('accSizesBox').style.display = 'none';
+            document.getElementById('accSizesInput').value = '';
             document.getElementById('customPriceGroup').style.display = 'none';
             document.getElementById('colorManagerBox').style.display = 'none';
             document.getElementById('colorRowsContainer').innerHTML = '';

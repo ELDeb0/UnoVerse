@@ -7,9 +7,6 @@
     
     <link rel="icon" type="image/png" href="icon.png">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -78,7 +75,6 @@
             background-color: transparent; border: 1.5px solid var(--text-cream); 
         }
 
-        /* Header */
         .main-header { 
             display: flex; justify-content: space-between; align-items: center; 
             width: 100%; height: 85px; padding: 0 6%; position: fixed; top: 0; right: 0; 
@@ -140,7 +136,6 @@
             border-top: 1px solid var(--line-color); padding-top: 20px; font-weight: 400; 
         }
 
-        /* Cart Drawer */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 6, 10, 0.95); z-index: 90000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: 0; transform: translate3d(100%, 0, 0); width: 450px; max-width: 100%; height: 100vh; background: var(--bg-deep); border-left: 1px solid var(--line-color); z-index: 99999; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 40px 30px; display: flex; flex-direction: column; }
@@ -155,7 +150,6 @@
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-cream); font-weight: 500;}
         .checkout-btn { width: 100%; padding: 18px; background-color: var(--text-cream); color: var(--bg-deep); border: none; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;}
 
-        /* Desktop Layout */
         .product-wrapper { 
             position: relative; 
             z-index: 10; 
@@ -228,6 +222,58 @@
         }
         @keyframes productTickerScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
+        /* وحدة اختيار المقاس */
+        .size-selector-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--line-color);
+            padding: 14px 18px;
+        }
+        .size-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .size-selector-header .size-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 12.5px;
+            letter-spacing: 1.5px;
+            color: var(--text-cream);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .selected-size-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 13px;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+        .size-options-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .size-option-btn {
+            padding: 8px 16px;
+            background: #020408;
+            border: 1px solid var(--line-color);
+            color: var(--text-muted);
+            font-family: 'Oswald', sans-serif;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+        .size-option-btn.active, .size-option-btn:hover {
+            border-color: #FFFFFF;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.08);
+            font-weight: bold;
+        }
+
+        /* وحدة اختيار اللون */
         .color-selector-wrapper {
             display: flex;
             flex-direction: column;
@@ -445,7 +491,7 @@
         .thumb-item.active, .thumb-item:hover { opacity: 1; border-color: var(--text-cream); }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover;}
 
-        /* ================= قسم المقترحات الموحد بدقة في كل الأجهزة ================= */
+        /* قسم المقترحات */
         .related-section { 
             padding: 35px 5% 30px; 
             max-width: 1350px; 
@@ -483,7 +529,6 @@
             color: #FFFFFF;
         }
 
-        /* 4 أعمدة متساوية بنسبة 100% وبدون انكسار */
         .related-grid { 
             display: grid !important; 
             grid-template-columns: repeat(4, 1fr) !important; 
@@ -512,7 +557,6 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
         
-        /* تثبيت المربع 1:1 للصور في كل الكروت */
         .related-card .img-wrap {
             width: 100%;
             aspect-ratio: 1 / 1 !important;
@@ -625,7 +669,6 @@
             .product-price-box { padding: 8px 16px !important; }
             .product-price-box #dynamicPrice { font-size: 24px !important; }
             
-            /* الحفاظ على 4 خانات متطابقة الحجم في الموبايل */
             .related-section { 
                 padding: 20px 2.5% 15px !important; 
             }
@@ -712,7 +755,7 @@
         </div>
     </main>
 
-    <!-- 4 كروت صغيرة ومتطابقة في جميع الأجهزة والشاشات -->
+    <!-- 4 كروت صغيرة ومتطابقة -->
     <section class="related-section">
         <div class="related-header">
             <h3 class="related-title">EXPLORE MORE ACCESSORIES //</h3>
@@ -786,7 +829,7 @@
         function addHover() { cursorWrapper.classList.add('hovered'); }
         function removeHover() { cursorWrapper.classList.remove('hovered'); }
         function attachCursorEffects() {
-            document.querySelectorAll('a, button, input, textarea, label, .thumb-item, .related-card, .color-option-btn').forEach(el => {
+            document.querySelectorAll('a, button, input, textarea, label, .thumb-item, .related-card, .color-option-btn, .size-option-btn').forEach(el => {
                 el.removeEventListener('mouseenter', addHover);
                 el.removeEventListener('mouseleave', removeHover);
                 el.addEventListener('mouseenter', addHover);
@@ -851,6 +894,7 @@
             let currentQuantity = 1;
             let availableStock = 0;
             let selectedColor = null;
+            let selectedSize = null;
             let selectedImage = null;
 
             async function _0xfetch() {
@@ -877,8 +921,10 @@
             }
 
             function isItemAlreadyInCart(id) {
-                const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
-                return cart.some(item => item.id === id);
+                try {
+                    const cart = JSON.parse(localStorage.getItem('unoCart')) || [];
+                    return cart.some(item => item && String(item.id) === String(id));
+                } catch(e) { return false; }
             }
 
             function _0xrender(item) {
@@ -902,6 +948,32 @@
                     </div>
                 ` : '';
 
+                // معالجة المقاسات المتاحة
+                let sizesHTML = '';
+                const sizesList = (item.sizes && Array.isArray(item.sizes)) ? item.sizes : [];
+                if (sizesList.length > 0) {
+                    selectedSize = sizesList[0];
+                    sizesHTML = `
+                        <div class="size-selector-wrapper">
+                            <div class="size-selector-header">
+                                <span class="size-label">SELECT SIZE // اختيار المقاس</span>
+                                <span class="selected-size-name" id="displaySizeName">${selectedSize}</span>
+                            </div>
+                            <div class="size-options-container">
+                                ${sizesList.map((s, i) => `
+                                    <button type="button" class="size-option-btn ${i === 0 ? 'active' : ''}" 
+                                            onclick="_0xselectSize('${s}', this)">
+                                        ${s}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    selectedSize = 'Standard';
+                }
+
+                // معالجة الألوان
                 let colorsHTML = '';
                 const colorsList = item.colors || [];
                 if (colorsList.length > 0) {
@@ -1029,6 +1101,7 @@
                                     </div>
                                 </div>
 
+                                ${sizesHTML}
                                 ${colorsHTML}
                                 ${quantityHTML}
                                 ${customDesignHTML}
@@ -1042,6 +1115,14 @@
                 setupAdvancedImageZoom();
                 _0xupdateQtyButtons();
             }
+
+            window._0xselectSize = function(sizeVal, btnEl) {
+                selectedSize = sizeVal;
+                const display = document.getElementById('displaySizeName');
+                if (display) display.innerText = sizeVal;
+                document.querySelectorAll('.size-option-btn').forEach(b => b.classList.remove('active'));
+                btnEl.classList.add('active');
+            };
 
             window._0xselectColor = function(colorName, colorImg, btnEl) {
                 selectedColor = colorName;
@@ -1102,7 +1183,7 @@
 
                 let cart = JSON.parse(localStorage.getItem('unoCart')) || [];
                 
-                if (cart.some(item => item.id === accessoryData.id)) {
+                if (cart.some(item => item && String(item.id) === String(accessoryData.id))) {
                     const addBtn = document.getElementById('mainAddCartBtn');
                     if (addBtn) {
                         addBtn.disabled = true;
@@ -1119,7 +1200,7 @@
                     name: accessoryData.name + (isCustom ? ' (Custom Engraved)' : ''),
                     price: currentFinalPrice,
                     image: selectedImage || accessoryData.image || (accessoryData.gallery ? accessoryData.gallery[0] : ''),
-                    size: 'Standard',
+                    size: selectedSize || 'Standard',
                     color: selectedColor || null,
                     quantity: currentQuantity,
                     customDetails: customDetails,
@@ -1142,7 +1223,7 @@
 
             async function _0xloadRandomRelated(currentId) {
                 try {
-                    const snapshot = await _0xdb.collection("accessories").limit(12).get();
+                    const snapshot = await _0xdb.collection("accessories").limit(10).get();
                     const grid = document.getElementById('relatedGrid');
                     if (!grid) return;
                     grid.innerHTML = '';
@@ -1201,7 +1282,7 @@
                             <img src="${item.image}">
                             <div style="flex:1; padding:0 15px; text-align:left;">
                                 <h4 style="color:#FFFFFF; font-family:'Oswald'; font-weight:500; font-size:13px;">${item.name}</h4>
-                                <p style="color:var(--text-muted); font-size:12px; margin-top:3px; font-family:'Tajawal';">${item.color ? 'اللون: ' + item.color + ' | ' : ''}${item.price} EGP × ${item.quantity || 1}</p>
+                                <p style="color:var(--text-muted); font-size:12px; margin-top:3px; font-family:'Tajawal';">${item.size && item.size !== 'Standard' ? 'مقاس: ' + item.size + ' | ' : ''}${item.color ? 'اللون: ' + item.color + ' | ' : ''}${item.price} EGP × ${item.quantity || 1}</p>
                             </div>
                             <button onclick="_0xdelItem(${idx})" style="background:none; border:none; color:var(--text-muted); font-size:16px;">✕</button>
                         </div>
