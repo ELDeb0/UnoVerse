@@ -474,7 +474,7 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // التوكن الصحيح والـ Chat ID الخاصين بك
+        // بيانات بوت التليجرام الخاص بك لتلقي الإشعارات الفورية
         const TELEGRAM_BOT_TOKEN = "8809995602:AAHkF1TeMGV7Dn12A5V52dLynDVuw1_Dlrw";
         const TELEGRAM_CHAT_ID = "1895384542";
 
@@ -512,6 +512,35 @@
             } catch (err) {
                 console.error("فشل إرسال إشعار تليجرام:", err);
             }
+        }
+
+        // دالة الخصم التلقائي للمخزون وتحديث حالة القطع الحصرية
+        async function updateInventoryStock(items) {
+            if (!items || items.length === 0) return;
+            const batch = db.batch();
+
+            for (const item of items) {
+                if (!item.id) continue;
+                const qty = parseInt(item.quantity) || 1;
+
+                if (item.type === 'accessory') {
+                    // خصم المخزون لقطع الإكسسوار
+                    const accRef = db.collection("accessories").doc(item.id);
+                    batch.update(accRef, {
+                        stock: firebase.firestore.FieldValue.increment(-qty),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } else {
+                    // تحويل حالة قطع الملابس الفردية 1/1 إلى منتهية ومؤرشفة
+                    const prodRef = db.collection("products").doc(item.id);
+                    batch.update(prodRef, {
+                        status: 'out',
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            }
+
+            await batch.commit();
         }
 
         const cursorWrapper = document.getElementById('cursorWrapper');
@@ -696,11 +725,20 @@
             };
 
             try {
+                // 1. تسجيل الطلب في قاعدة البيانات
                 const docRef = await db.collection("orders").add(orderData);
 
-                // إرسال الإشعار التلقائي إلى تليجرام فوراً
+                // 2. الخصم التلقائي للمخزون وتحويل حالة القطع الحصرية تلقائياً
+                try {
+                    await updateInventoryStock(cartItems);
+                } catch(invErr) {
+                    console.error("Inventory update error:", invErr);
+                }
+
+                // 3. إرسال الإشعار التلقائي إلى تليجرام
                 await sendTelegramAlert(docRef.id, orderData);
 
+                // 4. تفريغ السلة والانتقال لصفحة التتبع
                 localStorage.removeItem('unoCart');
                 window.location.href = `track.html?id=${docRef.id}`;
             } catch (err) {
